@@ -1,0 +1,76 @@
+/* Add Meal page */
+.add-meal {
+  width: min(600px, 100%);
+  margin: 40px auto;
+  padding: 24px;
+}
+
+/* Page heading */
+.add-meal h1 {
+  margin-bottom: 24px;
+  color: var(--green-dark);
+}
+
+/* Form card */
+.meal-form {
+  padding: 28px;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: var(--white);
+  box-shadow: 0 12px 35px rgba(5, 42, 28, 0.12);
+}
+
+/* Label and input group */
+.form-field {
+  margin-bottom: 18px;
+}
+
+.form-field label {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--text);
+  font-weight: 600;
+}
+
+/* Form input */
+.meal-input {
+  width: 100%;
+  min-height: 48px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+.meal-input:focus {
+  border-color: var(--green);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(25, 135, 84, 0.15);
+}
+
+/* Save button */
+.save-button {
+  width: 100%;
+  min-height: 48px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--green);
+  color: var(--white);
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.save-button:hover {
+  background: var(--green-dark);
+}
+
+/* Mobile Add Meal layout */
+@media (max-width: 600px) {
+  .add-meal {
+    margin: 20px auto;
+    padding: 16px;
+  }
+
+  .meal-form {
+    padding: 22px 18px;
+  }
+}

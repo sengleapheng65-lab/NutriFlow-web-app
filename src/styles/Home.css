@@ -1,0 +1,347 @@
+/* =========================
+   DESKTOP NAVIGATION
+   ========================= */
+
+/* Public Home page navigation */
+.home-nav {
+  position: relative;
+  z-index: 100;
+  min-height: 72px;
+  padding: 12px 10%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(
+    135deg,
+    var(--green-deep) 0%,
+    #1e6949 50%,
+    #8fc5a8 100%
+  );
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+/* Nourivio logo link */
+.home-brand {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+/* Nourivio logo */
+.home-logo {
+  width: 64px;
+  height: 64px;
+  display: block;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+/* Desktop navigation links */
+.home-links {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+/* Regular navigation links */
+.home-links a {
+  position: relative;
+  color: var(--white);
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+/* Regular link hover effect */
+.home-links a:hover {
+  color: var(--green-light);
+}
+
+/* Animated underline for regular links */
+.home-links a:not(.get-started-button)::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: -5px;
+  left: 0;
+  height: 2px;
+  background: var(--green-light);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.3s ease;
+}
+
+/* Display underline when hovering */
+.home-links a:not(.get-started-button):hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* Separator between links and buttons */
+.nav-divider {
+  color: rgba(255, 255, 255, 0.45);
+}
+
+/* Get Started button */
+.home-links .get-started-button {
+  padding: 9px 17px;
+  border: 2px solid var(--green);
+  border-radius: 9px;
+  background: var(--green);
+  color: var(--white);
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease,
+    transform 0.3s ease;
+}
+
+/* Get Started button hover effect */
+.home-links .get-started-button:hover {
+  background: var(--white);
+  color: var(--green);
+  transform: translateY(-2px);
+}
+
+/* Remove the underline from Get Started */
+.home-links .get-started-button::after {
+  display: none;
+}
+
+.app_adv {
+  display: flex;
+  padding-top: 1.5rem;
+  padding: 100px 150px;
+  font-family: "DM Sans", sans-serif;
+  min-height: 50vh;
+  justify-content: center;
+  gap: 100px;
+  margin: 50px 50px 0 50px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  border: #fff solid;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+/* Hide mobile elements on larger screens */
+.menu-button,
+.menu-overlay,
+.mobile-drawer {
+  display: none;
+}
+
+/* =========================
+   MOBILE NAVIGATION
+   ========================= */
+
+@media (max-width: 600px) {
+  /* Mobile navigation bar */
+  .home-nav {
+    min-height: 66px;
+    padding: 9px 16px;
+  }
+
+  /* Smaller logo on phones */
+  .home-logo {
+    width: 50px;
+    height: 50px;
+  }
+
+  /* Hide desktop navigation links */
+  .home-links {
+    display: none;
+  }
+
+  /* Hamburger button */
+  .menu-button {
+    width: 44px;
+    height: 44px;
+    display: grid;
+    place-items: center;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--white);
+    color: var(--green-dark);
+    font-size: 1.5rem;
+    cursor: pointer;
+  }
+
+  /* Hamburger button hover */
+  .menu-button:hover {
+    background: var(--green-light);
+  }
+
+  /* Blurred background behind the drawer */
+  .menu-overlay {
+    position: fixed;
+    z-index: 900;
+    inset: 0;
+    display: block;
+    padding: 0;
+    border: 0;
+    background: rgba(13, 27, 21, 0.4);
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+
+  /* Show the background overlay */
+  .menu-overlay.overlay-open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* Mobile side drawer */
+  .mobile-drawer {
+    position: fixed;
+    z-index: 1000;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: min(330px, 86vw);
+    display: block;
+    padding: 18px 16px;
+    overflow-y: auto;
+    background: var(--white);
+    box-shadow: 12px 0 35px rgba(5, 42, 28, 0.25);
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+  }
+
+  /* Slide the drawer onto the screen */
+  .mobile-drawer.drawer-open {
+    transform: translateX(0);
+  }
+
+  /* Drawer heading */
+  .drawer-header {
+    padding-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* Drawer logo and application name */
+  .drawer-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  /* Drawer logo */
+  .drawer-brand img {
+    width: 46px;
+    height: 46px;
+    border-radius: 10px;
+    object-fit: cover;
+  }
+
+  /* Place name and subtitle vertically */
+  .drawer-brand div {
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Application name */
+  .drawer-brand strong {
+    color: var(--green);
+    font-size: 1.1rem;
+  }
+
+  /* Application subtitle */
+  .drawer-brand small {
+    color: var(--muted);
+    font-size: 0.75rem;
+  }
+
+  /* Drawer close button */
+  .close-button {
+    width: 40px;
+    height: 40px;
+    display: grid;
+    place-items: center;
+    border: 0;
+    background: transparent;
+    color: var(--text);
+    font-size: 1.3rem;
+    cursor: pointer;
+  }
+
+  /* Close button hover */
+  .close-button:hover {
+    border-radius: 8px;
+    background: var(--green-light);
+    color: var(--green-dark);
+  }
+
+  /* Drawer navigation links container */
+  .drawer-links {
+    padding: 20px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  /* Drawer navigation links */
+  .drawer-links a {
+    padding: 13px 12px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    border-radius: 9px;
+    color: var(--text);
+    text-decoration: none;
+    font-weight: 600;
+    transition:
+      background-color 0.2s ease,
+      color 0.2s ease;
+  }
+
+  /* Drawer link hover */
+  .drawer-links a:hover {
+    background: var(--green-light);
+    color: var(--green-dark);
+  }
+
+  /* Drawer link icons */
+  .drawer-links i {
+    width: 22px;
+    color: var(--green);
+    font-size: 1.1rem;
+    text-align: center;
+  }
+
+  /* Project information card */
+  .drawer-card {
+    padding: 16px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: var(--green-pale);
+  }
+
+  /* Information card heading */
+  .drawer-card h3 {
+    margin: 0 0 14px;
+    color: var(--green-dark);
+    font-size: 0.9rem;
+  }
+
+  /* Information rows */
+  .drawer-card div {
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+
+  /* Information values */
+  .drawer-card strong {
+    color: var(--text);
+    text-align: right;
+  }
+}

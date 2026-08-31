@@ -1,0 +1,45 @@
+/* Shared colors used throughout the application */
+:root {
+  --green: #198754;
+  --green-dark: #0f5132;
+  --green-deep: #083d27;
+  --green-light: #dff3e8;
+  --green-pale: #f5fcf8;
+  --text: #183b2b;
+  --muted: #668073;
+  --border: #c9ded3;
+  --white: #ffffff;
+
+  font-family:
+    Inter,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+}
+
+/* Apply predictable sizing to every element */
+* {
+  box-sizing: border-box;
+}
+
+/* Global page defaults */
+html,
+body,
+#root {
+  min-width: 320px;
+  min-height: 100%;
+  margin: 0;
+}
+
+body {
+  background: var(--green-pale);
+  color: var(--text);
+}
+
+/* Use the same font inside controls */
+button,
+input {
+  font: inherit;
+}

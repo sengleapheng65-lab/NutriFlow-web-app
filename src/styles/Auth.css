@@ -1,0 +1,446 @@
+/* Login and Register page background */
+.login-page {
+  min-height: 100vh;
+  padding: 32px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(
+    135deg,
+    var(--green-deep) 0%,
+    #1e6949 50%,
+    #8fc5a8 100%
+  );
+}
+
+/* Main authentication card */
+.login-box {
+  width: min(1050px, 100%);
+  min-height: 650px;
+  display: grid;
+  grid-template-columns: 44% 56%;
+  padding: 14px;
+  overflow: hidden;
+  background: var(--green-pale);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 28px;
+  box-shadow: 0 25px 70px rgba(5, 42, 28, 0.35);
+}
+
+/* Login and Register form section */
+.login-form {
+  padding: 60px 55px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  color: var(--text);
+}
+
+/* Form heading */
+.login-form h1 {
+  margin-bottom: 8px;
+  color: var(--green-dark);
+  font-weight: 750;
+}
+
+/* Form description */
+.login-form .text-muted {
+  color: var(--muted) !important;
+}
+
+/* Nourivio logo container */
+.login-logo {
+  width: 105px;
+  height: 105px;
+  margin-bottom: 22px;
+  overflow: hidden;
+  border-radius: 18px;
+  background: transparent;
+  box-shadow: 0 8px 20px rgba(5, 42, 28, 0.2);
+}
+
+/* Nourivio logo image */
+.login-logo img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+/* Form labels */
+.login-form .form-label {
+  color: var(--text);
+  font-weight: 600;
+}
+
+/* Input and password-button height */
+.login-form .form-control,
+.login-form .input-group .btn {
+  min-height: 50px;
+}
+
+/* Form input fields */
+.login-form .form-control {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background-color: var(--white);
+  color: var(--text);
+}
+
+/* Input placeholder text */
+.login-form .form-control::placeholder {
+  color: #94a69d;
+}
+
+/* Input focus effect */
+.login-form .form-control:focus {
+  border-color: var(--green);
+  box-shadow: 0 0 0 0.2rem rgba(25, 135, 84, 0.15);
+}
+
+/* Password input */
+.login-form .input-group .form-control {
+  border-radius: 10px 0 0 10px;
+}
+
+/* Password show-and-hide button */
+.login-form .input-group .btn {
+  border-color: var(--border);
+  border-radius: 0 10px 10px 0;
+  background: var(--white);
+  color: var(--muted);
+}
+
+/* Password button hover effect */
+.login-form .input-group .btn:hover {
+  border-color: var(--green);
+  background: var(--green-light);
+  color: var(--green-dark);
+}
+
+/* Sign In and Create Account buttons */
+.btn.login-button {
+  min-height: 50px;
+  border: 1px solid var(--green);
+  border-radius: 10px;
+  background-color: var(--green);
+  color: var(--white);
+  font-weight: 650;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+/* Main button hover and focus effects */
+.btn.login-button:hover,
+.btn.login-button:focus {
+  border-color: var(--green-dark);
+  background-color: var(--green-dark);
+  color: var(--white);
+  transform: translateY(-1px);
+}
+
+/* Forgot password and page-navigation links */
+.forgot-link {
+  color: var(--green);
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+/* Link hover effect */
+.forgot-link:hover {
+  color: var(--green-dark);
+  text-decoration: underline;
+}
+
+/* Divider above social-login buttons */
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+/* Divider lines */
+.divider::before,
+.divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* Social-login button container */
+.social-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+}
+
+/* Google and Facebook buttons */
+.social-button {
+  width: 50px;
+  height: 45px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--white);
+  font-size: 19px;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+/* Social button hover effect */
+.social-button:hover {
+  border-color: var(--green);
+  background: var(--green-light);
+  transform: translateY(-2px);
+}
+
+/* Facebook icon color */
+.facebook-button {
+  color: #1877f2;
+}
+
+/* Login-page illustration */
+.login-image {
+  position: relative;
+  min-height: 620px;
+  overflow: hidden;
+  border-radius: 22px;
+  background:
+    linear-gradient(rgba(15, 81, 50, 0.08), rgba(8, 55, 33, 0.6)),
+    url("/nutrition-login1.png") center / cover,
+    var(--green);
+}
+
+/* Text displayed over the illustration */
+.image-text {
+  position: absolute;
+  right: 40px;
+  bottom: 40px;
+  left: 40px;
+  color: var(--white);
+  text-shadow: 0 2px 14px rgba(5, 42, 28, 0.45);
+}
+
+/* Illustration heading */
+.image-text h2 {
+  margin-bottom: 8px;
+  font-size: 2rem;
+  font-weight: 750;
+}
+
+/* Illustration description */
+.image-text p {
+  margin: 0;
+  font-size: 1rem;
+}
+
+/* Place the Register form on the right */
+.register-box .login-form {
+  grid-column: 2;
+  grid-row: 1;
+  animation: slide-from-right 0.5s ease;
+}
+
+/* Place the Register image on the left */
+.register-box .login-image {
+  grid-column: 1;
+  grid-row: 1;
+  background:
+    linear-gradient(rgba(15, 81, 50, 0.08), rgba(8, 55, 33, 0.6)),
+    url("/nutrition-register.png") center / cover,
+    var(--green);
+  animation: slide-from-left 0.5s ease;
+}
+
+/* Login form entrance animation */
+.login-box:not(.register-box) .login-form {
+  animation: slide-from-left 0.5s ease;
+}
+
+/* Login image entrance animation */
+.login-box:not(.register-box) .login-image {
+  animation: slide-from-right 0.5s ease;
+}
+
+/* Animation from the right */
+@keyframes slide-from-right {
+  from {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Animation from the left */
+@keyframes slide-from-left {
+  from {
+    opacity: 0;
+    transform: translateX(-40px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Tablet and mobile layout */
+@media (max-width: 800px) {
+  /* Mobile page background */
+  .login-page {
+    min-height: 100vh;
+    padding: 24px 14px;
+    display: grid;
+    place-items: center;
+    background: linear-gradient(
+      135deg,
+      var(--green-deep) 0%,
+      #1e6949 50%,
+      #8fc5a8 100%
+    );
+  }
+
+  /* Mobile authentication card */
+  .login-box {
+    width: 100%;
+    max-width: 480px;
+    min-height: auto;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: 22px;
+    background: var(--white);
+    box-shadow: 0 12px 35px rgba(5, 42, 28, 0.15);
+  }
+
+  /* Put the image above the form */
+  .login-image,
+  .register-box .login-image {
+    order: 1;
+    display: block;
+    width: 100%;
+    min-height: 190px;
+    border-radius: 0;
+  }
+
+  /* Put the form below the image */
+  .login-form,
+  .register-box .login-form {
+    order: 2;
+    display: flex;
+    padding: 30px 22px;
+  }
+
+  /* Login mobile animations */
+  .login-box:not(.register-box) .login-form {
+    animation: slide-from-left 0.5s ease;
+  }
+
+  .login-box:not(.register-box) .login-image {
+    animation: slide-from-right 0.5s ease;
+  }
+
+  /* Register mobile animations */
+  .register-box .login-form {
+    animation: slide-from-right 0.5s ease;
+  }
+
+  .register-box .login-image {
+    animation: slide-from-left 0.5s ease;
+  }
+
+  /* Mobile logo */
+  .login-logo {
+    width: 78px;
+    height: 78px;
+    margin-bottom: 20px;
+    border-radius: 14px;
+  }
+
+  /* Mobile heading */
+  .login-form h1 {
+    font-size: 1.75rem;
+  }
+
+  /* Mobile form controls */
+  .login-form .form-control,
+  .login-form .input-group .btn,
+  .btn.login-button {
+    min-height: 48px;
+  }
+
+  /* Mobile illustration text */
+  .image-text {
+    right: 22px;
+    bottom: 20px;
+    left: 22px;
+  }
+
+  .image-text h2 {
+    margin-bottom: 4px;
+    font-size: 1.35rem;
+  }
+
+  .image-text p {
+    font-size: 0.875rem;
+  }
+
+  /* Mobile social buttons */
+  .social-button {
+    width: 52px;
+    height: 46px;
+  }
+}
+
+/* Very small phones */
+@media (max-width: 400px) {
+  .login-page {
+    padding: 16px 10px;
+  }
+
+  .login-box {
+    min-height: auto;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+  }
+
+  .login-image,
+  .register-box .login-image {
+    min-height: 155px;
+  }
+
+  .login-form,
+  .register-box .login-form {
+    padding: 24px 18px;
+  }
+
+  .login-form h1 {
+    font-size: 1.55rem;
+  }
+}
+
+/* Disable animations when the user prefers reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .login-form,
+  .login-image,
+  .social-button,
+  .login-button {
+    animation: none !important;
+    transition: none !important;
+  }
+}
