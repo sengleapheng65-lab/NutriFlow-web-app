@@ -1,8 +1,8 @@
 # Nutrition App — Team Project Survey (Draft)
 
 **Team member name:** _______________
-**Team #:** _______________
-**Course / Semester:** _______________
+**Team #:** #9
+**Course / Semester:** FA26: CS-160 Sec 05
 
 ---
 
