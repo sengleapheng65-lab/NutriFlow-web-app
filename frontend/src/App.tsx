@@ -33,7 +33,7 @@ function AppContent() {
         <nav className="navbar navbar-dark bg-success px-4">
           {/* Clicking the application name opens the Dashboard */}
           <Link className="navbar-brand" to="/dashboard">
-            Nourivio
+            <img className="navbar-logo" src="/NutriFlow.png" alt="NutriFlow" />
           </Link>
 
           {/* Main navigation buttons */}

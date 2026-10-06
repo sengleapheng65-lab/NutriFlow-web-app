@@ -17,6 +17,13 @@
   font-size: 1.35rem;
   font-weight: 750;
 }
+.navbar-logo {
+  width: 64px;
+  height: 64px;
+  display: block;
+  border-radius: 12px;
+  object-fit: cover;
+}
 
 /* Keep the application name white when hovered */
 .navbar-brand:hover,
