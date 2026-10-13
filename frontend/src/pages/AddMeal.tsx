@@ -1,6 +1,8 @@
 import { useState, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import type { Meal } from "../types/Meal";
+
+import { createMeal } from "../services/mealApi";
+
 import "../styles/AddMeal.css";
 
 function AddMeal() {
@@ -12,33 +14,37 @@ function AddMeal() {
   const [protein, setProtein] = useState("");
   const [fat, setFat] = useState("");
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  // Track the backend request
+  const [isSaving, setIsSaving] = useState(false);
+  const [error, setError] = useState("");
+
+  // Send the new meal to the Spring Boot backend
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    // Create a meal using the information entered by the user
-    const newMeal: Meal = {
-      id: Date.now(),
-      name: name.trim(),
-      calories: Number(calories),
-      protein: Number(protein),
-      fat: Number(fat),
-    };
-
-    // Load previously saved meals
-    let savedMeals: Meal[] = [];
+    setIsSaving(true);
+    setError("");
 
     try {
-      const storedMeals = localStorage.getItem("meals");
-      savedMeals = storedMeals ? JSON.parse(storedMeals) : [];
-    } catch {
-      savedMeals = [];
+      // POST the meal to /api/meals
+      await createMeal({
+        name: name.trim(),
+        calories: Number(calories),
+        protein: Number(protein),
+        fat: Number(fat),
+      });
+
+      // Return to the Dashboard after saving
+      navigate("/dashboard");
+    } catch (requestError) {
+      console.error(requestError);
+
+      setError(
+        "Could not save the meal. Make sure the Spring Boot backend is running.",
+      );
+    } finally {
+      setIsSaving(false);
     }
-
-    // Save the new meal with the previous meals
-    localStorage.setItem("meals", JSON.stringify([...savedMeals, newMeal]));
-
-    // Return to the Dashboard
-    navigate("/dashboard");
   }
 
   return (
@@ -53,6 +59,7 @@ function AddMeal() {
 
         <Link className="back-dashboard-button" to="/dashboard">
           <i className="bi bi-arrow-left" aria-hidden="true" />
+
           <span>Dashboard</span>
         </Link>
       </header>
@@ -65,7 +72,7 @@ function AddMeal() {
             <p>All fields are required before saving.</p>
           </div>
 
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} aria-busy={isSaving}>
             {/* Meal name */}
             <div className="meal-form-field">
               <label htmlFor="mealName">Meal name</label>
@@ -80,6 +87,7 @@ function AddMeal() {
                   onChange={(event) => setName(event.target.value)}
                   placeholder="For example, chicken rice bowl"
                   autoComplete="off"
+                  disabled={isSaving}
                   required
                 />
               </div>
@@ -101,6 +109,7 @@ function AddMeal() {
                     value={calories}
                     onChange={(event) => setCalories(event.target.value)}
                     placeholder="0"
+                    disabled={isSaving}
                     required
                   />
                 </div>
@@ -123,6 +132,7 @@ function AddMeal() {
                     value={protein}
                     onChange={(event) => setProtein(event.target.value)}
                     placeholder="0"
+                    disabled={isSaving}
                     required
                   />
                 </div>
@@ -145,6 +155,7 @@ function AddMeal() {
                     value={fat}
                     onChange={(event) => setFat(event.target.value)}
                     placeholder="0"
+                    disabled={isSaving}
                     required
                   />
                 </div>
@@ -153,19 +164,43 @@ function AddMeal() {
               </div>
             </div>
 
+            {/* Display an error if the request fails */}
+            {error && (
+              <div className="alert alert-danger" role="alert">
+                {error}
+              </div>
+            )}
+
             {/* Form buttons */}
             <div className="meal-form-actions">
               <button
                 className="cancel-meal-button"
                 type="button"
                 onClick={() => navigate("/dashboard")}
+                disabled={isSaving}
               >
                 Cancel
               </button>
 
-              <button className="save-meal-button" type="submit">
-                <i className="bi bi-check-lg" aria-hidden="true" />
-                Save Meal
+              <button
+                className="save-meal-button"
+                type="submit"
+                disabled={isSaving}
+              >
+                {isSaving ? (
+                  <>
+                    <span
+                      className="spinner-border spinner-border-sm"
+                      aria-hidden="true"
+                    />
+                    Saving...
+                  </>
+                ) : (
+                  <>
+                    <i className="bi bi-check-lg" aria-hidden="true" />
+                    Save Meal
+                  </>
+                )}
               </button>
             </div>
           </form>

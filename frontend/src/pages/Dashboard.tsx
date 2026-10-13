@@ -1,6 +1,9 @@
-import { useState, type CSSProperties } from "react";
+import { useEffect, useState, type CSSProperties } from "react";
 import { Link } from "react-router-dom";
+
 import type { Meal } from "../types/Meal";
+import { deleteMeal as deleteMealFromApi, getMeals } from "../services/mealApi";
+
 import "../styles/Dashboard.css";
 
 // Temporary daily nutrition goals
@@ -9,17 +12,34 @@ const proteinGoal = 120;
 const fatGoal = 65;
 
 function Dashboard() {
-  // Load saved meals from localStorage
-  const [meals, setMeals] = useState<Meal[]>(() => {
-    try {
-      const storedMeals = localStorage.getItem("meals");
-      const parsedMeals = storedMeals ? JSON.parse(storedMeals) : [];
+  // Meals returned by the Spring Boot backend
+  const [meals, setMeals] = useState<Meal[]>([]);
 
-      return Array.isArray(parsedMeals) ? parsedMeals : [];
-    } catch {
-      return [];
+  // Track loading and error states
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  // Load meals when the Dashboard opens
+  useEffect(() => {
+    async function loadMeals() {
+      try {
+        setError("");
+
+        // Request meals from GET /api/meals
+        const backendMeals = await getMeals();
+
+        setMeals(backendMeals);
+      } catch {
+        setError(
+          "Could not load meals. Make sure the Spring Boot backend is running.",
+        );
+      } finally {
+        setIsLoading(false);
+      }
     }
-  });
+
+    void loadMeals();
+  }, []);
 
   // Calculate the total calories
   const totalCalories = meals.reduce((total, meal) => total + meal.calories, 0);
@@ -27,7 +47,7 @@ function Dashboard() {
   // Calculate the total protein
   const totalProtein = meals.reduce((total, meal) => total + meal.protein, 0);
 
-  // Older saved meals might not contain fat
+  // Calculate the total fat
   const totalFat = meals.reduce((total, meal) => total + (meal.fat ?? 0), 0);
 
   // Calculate progress percentages
@@ -53,12 +73,21 @@ function Dashboard() {
     day: "numeric",
   });
 
-  // Delete a selected meal
-  function deleteMeal(mealId: number) {
-    const updatedMeals = meals.filter((meal) => meal.id !== mealId);
+  // Delete a selected meal from the backend
+  async function handleDeleteMeal(mealId: number) {
+    try {
+      setError("");
 
-    setMeals(updatedMeals);
-    localStorage.setItem("meals", JSON.stringify(updatedMeals));
+      // Request DELETE /api/meals/{id}
+      await deleteMealFromApi(mealId);
+
+      // Remove the deleted meal from the page
+      setMeals((currentMeals) =>
+        currentMeals.filter((meal) => meal.id !== mealId),
+      );
+    } catch {
+      setError("Could not delete the meal. Make sure the backend is running.");
+    }
   }
 
   // Pass the calorie percentage to the CSS progress circle
@@ -81,6 +110,13 @@ function Dashboard() {
           <span>Add Meal</span>
         </Link>
       </header>
+
+      {/* Display a backend error */}
+      {error && (
+        <div className="alert alert-danger" role="alert">
+          {error}
+        </div>
+      )}
 
       {/* Daily nutrition summary */}
       <section className="dashboard-overview">
@@ -191,8 +227,20 @@ function Dashboard() {
           </span>
         </div>
 
+        {/* Display while waiting for the backend */}
+        {isLoading && (
+          <div className="empty-meals">
+            <div className="empty-meals-icon">
+              <i className="bi bi-arrow-repeat" aria-hidden="true" />
+            </div>
+
+            <h3>Loading meals...</h3>
+            <p>Please wait while your meals are loaded.</p>
+          </div>
+        )}
+
         {/* Show an empty message when there are no meals */}
-        {meals.length === 0 ? (
+        {!isLoading && meals.length === 0 ? (
           <div className="empty-meals">
             <div className="empty-meals-icon">
               <i className="bi bi-egg-fried" aria-hidden="true" />
@@ -204,47 +252,49 @@ function Dashboard() {
             <Link to="/add-meal">Add Your First Meal</Link>
           </div>
         ) : (
-          <div className="dashboard-meal-list">
-            {meals.map((meal, index) => (
-              <article className="dashboard-meal-card" key={meal.id}>
-                <div className="meal-card-icon">
-                  <i className="bi bi-egg-fried" aria-hidden="true" />
-                </div>
-
-                <div className="meal-card-information">
-                  <h3>{meal.name}</h3>
-                  <p>Meal {index + 1}</p>
-                </div>
-
-                <div className="meal-nutrition">
-                  <div>
-                    <strong>{meal.calories}</strong>
-                    <span>Calories</span>
+          !isLoading && (
+            <div className="dashboard-meal-list">
+              {meals.map((meal, index) => (
+                <article className="dashboard-meal-card" key={meal.id}>
+                  <div className="meal-card-icon">
+                    <i className="bi bi-egg-fried" aria-hidden="true" />
                   </div>
 
-                  <div>
-                    <strong>{meal.protein}g</strong>
-                    <span>Protein</span>
+                  <div className="meal-card-information">
+                    <h3>{meal.name}</h3>
+                    <p>Meal {index + 1}</p>
                   </div>
 
-                  <div>
-                    <strong>{meal.fat ?? 0}g</strong>
-                    <span>Fat</span>
-                  </div>
-                </div>
+                  <div className="meal-nutrition">
+                    <div>
+                      <strong>{meal.calories}</strong>
+                      <span>Calories</span>
+                    </div>
 
-                <button
-                  className="delete-meal-button"
-                  type="button"
-                  onClick={() => deleteMeal(meal.id)}
-                  aria-label={`Delete ${meal.name}`}
-                  title={`Delete ${meal.name}`}
-                >
-                  <i className="bi bi-trash3" aria-hidden="true" />
-                </button>
-              </article>
-            ))}
-          </div>
+                    <div>
+                      <strong>{meal.protein}g</strong>
+                      <span>Protein</span>
+                    </div>
+
+                    <div>
+                      <strong>{meal.fat ?? 0}g</strong>
+                      <span>Fat</span>
+                    </div>
+                  </div>
+
+                  <button
+                    className="delete-meal-button"
+                    type="button"
+                    onClick={() => void handleDeleteMeal(meal.id)}
+                    aria-label={`Delete ${meal.name}`}
+                    title={`Delete ${meal.name}`}
+                  >
+                    <i className="bi bi-trash3" aria-hidden="true" />
+                  </button>
+                </article>
+              ))}
+            </div>
+          )
         )}
       </section>
     </main>
