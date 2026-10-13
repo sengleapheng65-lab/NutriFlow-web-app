@@ -1,55 +1,163 @@
-/* Main application navigation bar */
-.navbar {
-  min-height: 64px;
-  background: linear-gradient(
-    135deg,
-    var(--green-deep) 0%,
-    #1e6949 50%,
-    #8fc5a8 100%
-  );
-  border-bottom: 1px solid var(--border);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+/* ================================
+   LIGHT THEME
+================================ */
+
+:root {
+  color-scheme: light;
+
+  --green: #198754;
+  --green-dark: #0f5132;
+  --green-deep: #083d27;
+  --green-light: #dff3e8;
+  --green-pale: #f5fcf8;
+
+  --page-background: #f6f9f7;
+  --page-glow: #e4f4eb;
+  --surface: #ffffff;
+
+  --text: #183b2b;
+  --muted: #668073;
+  --border: #c9ded3;
+
+  --white: #ffffff;
+  --black: #111111;
+
+  --page-shadow: rgba(15, 81, 50, 0.07);
 }
 
-/* Application name */
-.navbar-brand {
+/* ================================
+   DARK THEME
+================================ */
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --green: #4fca88;
+  --green-dark: #8de0b1;
+  --green-deep: #092d20;
+  --green-light: #193d2b;
+  --green-pale: #12261c;
+
+  --page-background: #0d1712;
+  --page-glow: #183c2a;
+  --surface: #16231b;
+
+  --text: #e7f4eb;
+  --muted: #9db1a5;
+  --border: #2d4437;
+
+  --white: #ffffff;
+  --black: #080c09;
+
+  --page-shadow: rgba(0, 0, 0, 0.3);
+}
+
+/* ================================
+   GLOBAL SETTINGS
+================================ */
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+  margin: 0;
+}
+
+body {
+  min-width: 320px;
+  background: var(--page-background);
+  color: var(--text);
+  font-family:
+    Inter,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+  line-height: 1.5;
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+img {
+  max-width: 100%;
+}
+
+/* Floating theme button */
+
+.theme-toggle {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 2000;
+
+  width: 48px;
+  height: 48px;
+
+  display: grid;
+  place-items: center;
+
+  border: 1px solid var(--border);
+  border-radius: 50%;
+
+  background: var(--surface);
+  color: var(--green);
+
+  font-size: 1.15rem;
+  cursor: pointer;
+
+  box-shadow: 0 8px 25px var(--page-shadow);
+
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.theme-toggle:hover {
+  background: var(--green);
   color: var(--white);
-  font-size: 1.35rem;
-  font-weight: 750;
-}
-.navbar-logo {
-  width: 64px;
-  height: 64px;
-  display: block;
-  border-radius: 12px;
-  object-fit: cover;
+  transform: translateY(-2px);
 }
 
-/* Keep the application name white when hovered */
-.navbar-brand:hover,
-.navbar-brand:focus {
-  color: var(--white);
+/* Keyboard accessibility */
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid rgba(25, 135, 84, 0.3);
+  outline-offset: 2px;
 }
 
-/* Navbar buttons */
-.navbar .btn {
-  border-radius: 9px;
-  font-weight: 600;
-}
-
-/* Mobile navigation */
-@media (max-width: 600px) {
-  .navbar {
-    min-height: 58px;
-    padding: 10px 14px !important;
+@media (max-width: 650px) {
+  .theme-toggle {
+    right: 15px;
+    bottom: 15px;
+    width: 44px;
+    height: 44px;
   }
+}
 
-  .navbar-brand {
-    font-size: 1.1rem;
-  }
-
-  .navbar .btn {
-    padding: 6px 10px;
-    font-size: 0.875rem;
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }

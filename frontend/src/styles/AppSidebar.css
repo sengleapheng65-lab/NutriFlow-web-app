@@ -1,0 +1,489 @@
+/* ================================
+   SHARED APPLICATION LAYOUT
+   ================================ */
+
+.app-layout {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 230px minmax(0, 1fr);
+  background:
+    radial-gradient(circle at top right, var(--page-glow), transparent 32%),
+    var(--page-background);
+}
+
+/* ================================
+   APPLICATION SIDEBAR
+   ================================ */
+
+.app-sidebar {
+  position: sticky;
+  top: 0;
+  width: 230px;
+  min-height: 100vh;
+  height: 100vh;
+  padding: 25px 17px 20px;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  border-right: 1px solid var(--border);
+  background: var(--surface);
+}
+
+/* Application logo */
+.app-sidebar-brand {
+  min-height: 70px;
+  margin-bottom: 20px;
+  padding: 0 9px 25px;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+  text-decoration: none;
+}
+
+.app-sidebar-brand img {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+.app-sidebar-brand div {
+  display: flex;
+  flex-direction: column;
+}
+
+.app-sidebar-brand strong {
+  color: var(--green-dark);
+  font-size: 1rem;
+}
+
+.app-sidebar-brand small {
+  color: var(--muted);
+  font-size: 0.75rem;
+}
+
+/* Menu heading */
+.app-sidebar-label,
+.app-drawer-label {
+  margin: 0;
+  padding: 0 13px 10px;
+  color: var(--muted);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* ================================
+   DESKTOP SIDEBAR LINKS
+   ================================ */
+
+.app-sidebar-links {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.app-sidebar-links a,
+.app-sidebar-links button,
+.app-drawer-links a,
+.app-drawer-links button {
+  min-height: 46px;
+  padding: 0 13px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 0;
+  border-radius: 11px;
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.app-sidebar-links a:hover,
+.app-sidebar-links button:hover,
+.app-sidebar-links .active,
+.app-drawer-links a:hover,
+.app-drawer-links button:hover,
+.app-drawer-links .active {
+  background: var(--green-light);
+  color: var(--green-dark);
+}
+
+.app-sidebar-links a:hover,
+.app-sidebar-links button:hover,
+.app-drawer-links a:hover,
+.app-drawer-links button:hover {
+  transform: translateX(2px);
+}
+
+.app-sidebar-links .active,
+.app-drawer-links .active {
+  box-shadow: inset 3px 0 var(--green);
+  font-weight: 700;
+}
+
+.app-sidebar-links i,
+.app-drawer-links i {
+  width: 20px;
+  color: var(--green);
+  font-size: 1.05rem;
+}
+
+/* ================================
+   SIGN OUT BUTTON
+   ================================ */
+
+.app-sidebar-signout,
+.app-drawer-signout {
+  min-height: 46px;
+  margin-top: auto;
+  padding: 0 13px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid rgba(220, 53, 69, 0.35);
+  border-radius: 11px;
+  background: rgba(220, 53, 69, 0.08);
+  color: #dc3545;
+  font-weight: 650;
+  text-decoration: none;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.app-sidebar-signout i,
+.app-drawer-signout i {
+  width: 20px;
+  color: inherit;
+  font-size: 1.05rem;
+}
+
+.app-sidebar-signout:hover,
+.app-drawer-signout:hover {
+  border-color: #dc3545;
+  background: #dc3545;
+  color: var(--white);
+  transform: translateY(-1px);
+}
+
+/* Hide phone menu elements on desktop */
+.app-menu-button,
+.app-menu-overlay,
+.app-mobile-drawer {
+  display: none;
+}
+
+/* ================================
+   DARK MODE
+   ================================ */
+
+:root[data-theme="dark"] .app-sidebar-signout,
+:root[data-theme="dark"] .app-drawer-signout {
+  border-color: rgba(255, 107, 120, 0.45);
+  background: rgba(255, 107, 120, 0.1);
+  color: #ff6b78;
+}
+
+:root[data-theme="dark"] .app-sidebar-signout:hover,
+:root[data-theme="dark"] .app-drawer-signout:hover {
+  border-color: #dc3545;
+  background: #dc3545;
+  color: var(--white);
+}
+
+/* ================================
+   TABLET
+   ================================ */
+
+@media (max-width: 900px) {
+  .app-layout {
+    grid-template-columns: 82px minmax(0, 1fr);
+  }
+
+  .app-sidebar {
+    width: 82px;
+    padding: 22px 12px;
+  }
+
+  .app-sidebar-brand {
+    min-height: auto;
+    margin: 0;
+    padding: 0 7px 28px;
+    border: 0;
+  }
+
+  .app-sidebar-brand div,
+  .app-sidebar-label {
+    display: none;
+  }
+
+  .app-sidebar-links a,
+  .app-sidebar-links button,
+  .app-sidebar-signout {
+    justify-content: center;
+    font-size: 0;
+  }
+
+  .app-sidebar-links i,
+  .app-sidebar-signout i {
+    width: auto;
+    font-size: 1.2rem;
+  }
+
+  .app-sidebar-links a:hover,
+  .app-sidebar-links button:hover {
+    transform: translateY(-1px);
+  }
+}
+
+/* ================================
+   PHONE
+   ================================ */
+
+@media (max-width: 650px) {
+  .app-layout {
+    display: block;
+  }
+
+  /* Phone header */
+  .app-sidebar {
+    position: relative;
+    width: 100%;
+    min-height: auto;
+    height: auto;
+    padding: 12px 16px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    overflow: visible;
+    border-right: 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .app-sidebar-brand {
+    min-height: auto;
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  .app-sidebar-brand div {
+    display: flex;
+  }
+
+  /* Phone drawer replaces desktop links */
+  .app-sidebar-links,
+  .app-sidebar-label,
+  .app-sidebar-signout {
+    display: none;
+  }
+
+  /* Hamburger button */
+  .app-menu-button {
+    width: 44px;
+    height: 44px;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--surface);
+    color: var(--green-dark);
+    font-size: 1.5rem;
+    cursor: pointer;
+    box-shadow: 0 5px 15px var(--page-shadow);
+    transition:
+      border-color 0.2s ease,
+      background-color 0.2s ease,
+      color 0.2s ease,
+      box-shadow 0.2s ease,
+      transform 0.2s ease;
+  }
+
+  /* Hamburger hover */
+  .app-menu-button:hover {
+    border-color: var(--green);
+    background: var(--green-light);
+    color: var(--green-dark);
+    box-shadow: 0 8px 20px rgba(25, 135, 84, 0.2);
+    transform: translateY(-2px);
+  }
+
+  /* Hamburger keyboard focus */
+  .app-menu-button:focus-visible {
+    border-color: var(--green);
+    outline: 3px solid rgba(25, 135, 84, 0.2);
+    outline-offset: 2px;
+  }
+
+  /* Hamburger click or phone tap */
+  .app-menu-button:active {
+    box-shadow: none;
+    transform: translateY(0) scale(0.96);
+  }
+
+  /* Dark background behind the drawer */
+  .app-menu-overlay {
+    position: fixed;
+    z-index: 1900;
+    inset: 0;
+    display: block;
+    padding: 0;
+    border: 0;
+    background: rgba(5, 18, 11, 0.55);
+    backdrop-filter: blur(5px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+
+  .app-menu-overlay-open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* Mobile drawer */
+  .app-mobile-drawer {
+    position: fixed;
+    z-index: 2000;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: min(330px, 86vw);
+    padding: 18px 16px;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    border-right: 1px solid var(--border);
+    background: var(--surface);
+    box-shadow: 14px 0 40px rgba(0, 0, 0, 0.3);
+    transform: translateX(-105%);
+    visibility: hidden;
+    transition:
+      transform 0.3s ease,
+      visibility 0.3s ease;
+  }
+
+  .app-mobile-drawer-open {
+    transform: translateX(0);
+    visibility: visible;
+  }
+
+  /* Drawer header */
+  .app-drawer-header {
+    padding-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .app-drawer-header > a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--text);
+    text-decoration: none;
+  }
+
+  .app-drawer-header img {
+    width: 46px;
+    height: 46px;
+    border-radius: 10px;
+    object-fit: cover;
+  }
+
+  .app-drawer-header a div {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .app-drawer-header strong {
+    color: var(--green-dark);
+  }
+
+  .app-drawer-header small {
+    color: var(--muted);
+    font-size: 0.75rem;
+  }
+
+  /* Close button */
+  .app-drawer-header button {
+    width: 40px;
+    height: 40px;
+    display: grid;
+    place-items: center;
+    border: 0;
+    border-radius: 9px;
+    background: transparent;
+    color: var(--text);
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition:
+      background-color 0.2s ease,
+      color 0.2s ease,
+      transform 0.2s ease;
+  }
+
+  .app-drawer-header button:hover {
+    background: var(--green-light);
+    color: var(--green-dark);
+    transform: rotate(5deg);
+  }
+
+  .app-drawer-header button:active {
+    transform: scale(0.94);
+  }
+
+  /* Drawer menu */
+  .app-drawer-label {
+    margin-top: 22px;
+  }
+
+  .app-drawer-links {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+
+  .app-drawer-signout {
+    margin-top: auto;
+  }
+
+  /* Dark-mode hamburger hover */
+  :root[data-theme="dark"] .app-menu-button:hover {
+    border-color: var(--green);
+    background: var(--green-light);
+    color: var(--green-dark);
+    box-shadow: 0 8px 20px rgba(79, 202, 136, 0.15);
+  }
+}
+
+/* ================================
+   REDUCED MOTION
+   ================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .app-sidebar *,
+  .app-sidebar *::before,
+  .app-sidebar *::after,
+  .app-mobile-drawer,
+  .app-menu-overlay {
+    animation: none !important;
+    transition: none !important;
+  }
+}

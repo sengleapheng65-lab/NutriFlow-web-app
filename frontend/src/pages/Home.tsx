@@ -1,5 +1,5 @@
 // useState remembers whether the mobile menu is open
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 
 import "../styles/Home.css";
@@ -8,39 +8,41 @@ import "../styles/Home.css";
 const features = [
   {
     icon: "bi-journal-plus",
+    color: "icon-red",
     title: "Easy Meal Logging",
     description:
       "Quickly record your meals, calories, and important nutrients.",
   },
   {
-    icon: "bi-pie-chart",
+    icon: "bi-bar-chart-line",
+    color: "icon-blue",
     title: "Nutrition Dashboard",
     description:
-      "See your daily calorie and nutrient progress in one simple dashboard.",
+      "See your daily calorie and nutrient progress in one dashboard.",
   },
   {
     icon: "bi-bullseye",
-    title: "Daily Goals",
-    description:
-      "Create nutrition goals and follow your progress throughout the day.",
+    color: "icon-purple",
+    title: "Personal Goals",
+    description: "Create nutrition goals and follow your daily progress.",
   },
   {
-    icon: "bi-camera",
-    title: "Barcode Scan",
-    description:
-      "Scan a food barcode and receive suggestions for the foods it contains.",
+    icon: "bi-upc-scan",
+    color: "icon-green",
+    title: "Barcode Scanner",
+    description: "Scan packaged foods to quickly find nutrition information.",
   },
   {
     icon: "bi-clock-history",
+    color: "icon-cyan",
     title: "Meal History",
-    description:
-      "Review previous meals and understand your eating habits over time.",
+    description: "Review previous meals and understand your eating habits.",
   },
   {
     icon: "bi-phone",
-    title: "Responsive Design",
-    description:
-      "Use NutriFlow comfortably from a phone, tablet, or desktop computer.",
+    color: "icon-orange",
+    title: "Works Everywhere",
+    description: "Use NutriFlow from your phone, tablet, or computer.",
   },
 ];
 
@@ -316,10 +318,12 @@ function Home() {
           ========================= */}
       <section className="features-section" id="features">
         <div className="section-heading">
-          <span>Our features</span>
+          <span>Our Features</span>
+
           <h2>Everything you need to build healthier habits</h2>
+
           <p>
-            NutriFlow keeps nutrition tracking simple, understandable, and
+            NutriFlow makes nutrition tracking simple, understandable, and
             useful.
           </p>
         </div>
@@ -327,7 +331,7 @@ function Home() {
         <div className="feature-grid">
           {features.map((feature) => (
             <article className="feature-card" key={feature.title}>
-              <div className="feature-icon">
+              <div className={`feature-icon ${feature.color}`}>
                 <i className={`bi ${feature.icon}`} aria-hidden="true" />
               </div>
 

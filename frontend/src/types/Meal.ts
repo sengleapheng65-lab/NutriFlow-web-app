@@ -1,6 +1,8 @@
-export interface Meal {
+// Describes the information stored for every meal
+export type Meal = {
   id: number;
   name: string;
   calories: number;
   protein: number;
-}
+  fat: number;
+};

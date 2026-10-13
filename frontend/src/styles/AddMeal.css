@@ -1,76 +1,500 @@
-/* Add Meal page */
-.add-meal {
-  width: min(600px, 100%);
-  margin: 40px auto;
-  padding: 24px;
+/* ================================
+   ADD MEAL MAIN CONTENT
+   ================================ */
+
+.add-meal-main {
+  width: 100%;
+  max-width: 1450px;
+  margin: 0 auto;
+  padding: 35px 40px;
+  color: var(--text);
 }
 
-/* Page heading */
-.add-meal h1 {
-  margin-bottom: 24px;
+/* ================================
+   PAGE HEADING
+   ================================ */
+
+.add-meal-header {
+  min-height: 82px;
+  margin-bottom: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.add-meal-label {
+  margin: 0;
+  color: var(--green);
+  font-size: 0.78rem;
+  font-weight: 750;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.add-meal-header h1 {
+  margin: 5px 0;
+  color: var(--green-dark);
+  font-size: clamp(1.8rem, 3vw, 2.3rem);
+  font-weight: 750;
+  letter-spacing: -0.03em;
+}
+
+.add-meal-header > div > p:last-child {
+  margin: 0;
+  color: var(--muted);
+}
+
+/* Dashboard button */
+.back-dashboard-button {
+  min-height: 46px;
+  padding: 0 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  background: var(--surface);
+  color: var(--text);
+  font-weight: 600;
+  text-decoration: none;
+  box-shadow: 0 5px 18px var(--page-shadow);
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.back-dashboard-button:hover {
+  border-color: var(--green);
+  background: var(--green-light);
+  color: var(--green-dark);
+  transform: translateY(-1px);
+}
+
+/* ================================
+   CONTENT LAYOUT
+   ================================ */
+
+.add-meal-content {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  align-items: start;
+  gap: 20px;
+}
+
+/* ================================
+   FORM CARD
+   ================================ */
+
+.add-meal-form-card {
+  padding: 28px;
+  border: 1px solid var(--border);
+  border-radius: 21px;
+  background: var(--surface);
+  box-shadow: 0 12px 32px var(--page-shadow);
+}
+
+.form-card-heading {
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.form-card-heading h2 {
+  margin: 0;
+  color: var(--green-dark);
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.form-card-heading p {
+  margin: 5px 0 0;
+  color: var(--muted);
+}
+
+.add-meal-form-card form {
+  padding-top: 23px;
+}
+
+/* ================================
+   FORM FIELDS
+   ================================ */
+
+.meal-form-field {
+  margin-bottom: 21px;
+}
+
+.meal-form-field label {
+  margin-bottom: 8px;
+  display: block;
+  color: var(--text);
+  font-weight: 650;
+}
+
+.meal-form-field small {
+  margin-top: 7px;
+  display: block;
+  color: var(--muted);
+}
+
+.meal-input {
+  position: relative;
+}
+
+.meal-input i {
+  position: absolute;
+  top: 50%;
+  left: 15px;
+  color: var(--muted);
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.meal-input input {
+  width: 100%;
+  min-height: 50px;
+  padding: 0 15px 0 44px;
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  outline: none;
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.meal-input input::placeholder {
+  color: var(--muted);
+  opacity: 0.75;
+}
+
+.meal-input input:focus {
+  border-color: var(--green);
+  box-shadow: 0 0 0 4px rgba(25, 135, 84, 0.15);
+}
+
+/* Remove number-input arrows */
+.meal-input input[type="number"] {
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+
+.meal-input input[type="number"]::-webkit-inner-spin-button,
+.meal-input input[type="number"]::-webkit-outer-spin-button {
+  margin: 0;
+  appearance: none;
+}
+
+/* Calories, protein and fat */
+.nutrition-fields {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 17px;
+}
+
+/* ================================
+   FORM BUTTONS
+   ================================ */
+
+.meal-form-actions {
+  padding-top: 21px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 11px;
+  border-top: 1px solid var(--border);
+}
+
+.cancel-meal-button,
+.save-meal-button {
+  min-height: 46px;
+  padding: 0 19px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 11px;
+  font: inherit;
+  font-weight: 650;
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+/* Cancel button */
+.cancel-meal-button {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+}
+
+.cancel-meal-button:hover {
+  border-color: var(--green);
+  background: var(--green-light);
   color: var(--green-dark);
 }
 
-/* Form card */
-.meal-form {
-  padding: 28px;
-  border: 1px solid var(--border);
-  border-radius: 18px;
-  background: var(--white);
-  box-shadow: 0 12px 35px rgba(5, 42, 28, 0.12);
-}
-
-/* Label and input group */
-.form-field {
-  margin-bottom: 18px;
-}
-
-.form-field label {
-  display: block;
-  margin-bottom: 6px;
-  color: var(--text);
-  font-weight: 600;
-}
-
-/* Form input */
-.meal-input {
-  width: 100%;
-  min-height: 48px;
-  padding: 10px 12px;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-}
-
-.meal-input:focus {
-  border-color: var(--green);
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(25, 135, 84, 0.15);
-}
-
 /* Save button */
-.save-button {
-  width: 100%;
-  min-height: 48px;
-  border: 0;
-  border-radius: 10px;
+.save-meal-button {
+  border: 1px solid var(--green);
   background: var(--green);
   color: var(--white);
-  font-weight: 650;
-  cursor: pointer;
+  box-shadow: 0 9px 22px rgba(25, 135, 84, 0.2);
 }
 
-.save-button:hover {
+.save-meal-button:hover {
+  border-color: var(--green-dark);
   background: var(--green-dark);
+  color: var(--white);
+  transform: translateY(-1px);
 }
 
-/* Mobile Add Meal layout */
-@media (max-width: 600px) {
-  .add-meal {
-    margin: 20px auto;
-    padding: 16px;
+/* ================================
+   RIGHT-SIDE INFORMATION
+   ================================ */
+
+/* Scoped to avoid interfering with Home.css */
+.add-meal-main .meal-information {
+  display: grid;
+  gap: 17px;
+}
+
+.meal-tip-card,
+.meal-preview-card {
+  padding: 21px;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: var(--surface);
+  box-shadow: 0 8px 24px var(--page-shadow);
+}
+
+/* Quick-tip icon */
+.meal-tip-icon {
+  width: 44px;
+  height: 44px;
+  margin-bottom: 15px;
+  display: grid;
+  place-items: center;
+  border-radius: 13px;
+  background: var(--green-light);
+  color: var(--green);
+  font-size: 1.15rem;
+}
+
+.meal-tip-card h2,
+.meal-preview-card h2 {
+  margin: 0;
+  color: var(--green-dark);
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.meal-tip-card p {
+  margin: 8px 0 0;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+/* ================================
+   LIVE MEAL PREVIEW
+   ================================ */
+
+.preview-meal-name {
+  margin-top: 16px;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+
+.preview-meal-name div {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 11px;
+  background: var(--green-light);
+  color: var(--green);
+}
+
+.preview-meal-name span {
+  overflow: hidden;
+  color: var(--text);
+  font-weight: 650;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.preview-information {
+  margin-top: 15px;
+  padding-top: 15px;
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  border-top: 1px solid var(--border);
+}
+
+.preview-information span {
+  color: var(--muted);
+}
+
+.preview-information strong {
+  color: var(--text);
+}
+
+/* ================================
+   PRIVACY CARD
+   ================================ */
+
+.meal-private-card {
+  padding: 20px;
+  border: 1px solid transparent;
+  border-radius: 18px;
+  background: linear-gradient(145deg, var(--green-deep), var(--green));
+  color: var(--white);
+  box-shadow: 0 10px 25px var(--page-shadow);
+}
+
+.meal-private-card p {
+  margin: 0 0 8px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: var(--white);
+  font-weight: 650;
+}
+
+.meal-private-card span {
+  color: rgba(255, 255, 255, 0.78);
+  line-height: 1.5;
+}
+
+/* ================================
+   DARK MODE
+   ================================ */
+
+:root[data-theme="dark"] .meal-input input:focus {
+  box-shadow: 0 0 0 4px rgba(79, 202, 136, 0.15);
+}
+
+:root[data-theme="dark"] .meal-private-card {
+  border-color: var(--border);
+  background: linear-gradient(145deg, #0a3e29, #12633f);
+}
+
+:root[data-theme="dark"] .save-meal-button {
+  color: #ffffff;
+}
+
+/* ================================
+   TABLET
+   ================================ */
+
+@media (max-width: 900px) {
+  .add-meal-main {
+    padding: 30px 24px;
   }
 
-  .meal-form {
-    padding: 22px 18px;
+  .add-meal-content {
+    grid-template-columns: 1fr;
+  }
+
+  .add-meal-main .meal-information {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .meal-private-card {
+    grid-column: 1 / -1;
+  }
+}
+
+/* ================================
+   PHONE
+   ================================ */
+
+@media (max-width: 650px) {
+  .add-meal-main {
+    width: 100%;
+    padding: 23px 15px 30px;
+  }
+
+  .add-meal-header {
+    min-height: auto;
+    align-items: flex-start;
+  }
+
+  .back-dashboard-button {
+    width: 46px;
+    padding: 0;
+  }
+
+  .back-dashboard-button span {
+    display: none;
+  }
+
+  .add-meal-form-card {
+    padding: 22px 17px;
+  }
+
+  .nutrition-fields {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .meal-form-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .add-meal-main .meal-information {
+    grid-template-columns: 1fr;
+  }
+
+  .meal-private-card {
+    grid-column: auto;
+  }
+}
+
+/* ================================
+   VERY SMALL PHONES
+   ================================ */
+
+@media (max-width: 400px) {
+  .add-meal-main {
+    padding: 20px 11px 28px;
+  }
+
+  .add-meal-header h1 {
+    font-size: 1.65rem;
+  }
+
+  .add-meal-form-card {
+    padding: 20px 15px;
+  }
+
+  .meal-form-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .cancel-meal-button,
+  .save-meal-button {
+    width: 100%;
+  }
+}
+
+/* Remove animation when reduced motion is requested */
+@media (prefers-reduced-motion: reduce) {
+  .add-meal-main *,
+  .add-meal-main *::before,
+  .add-meal-main *::after {
+    animation: none !important;
+    transition: none !important;
   }
 }

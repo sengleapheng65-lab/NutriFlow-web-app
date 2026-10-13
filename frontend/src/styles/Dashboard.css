@@ -1,0 +1,585 @@
+/* ================================
+   DASHBOARD MAIN CONTENT
+   ================================ */
+
+.dashboard-main {
+  width: 100%;
+  max-width: 1450px;
+  margin: 0 auto;
+  padding: 35px 40px;
+  color: var(--text);
+}
+
+/* ================================
+   PAGE HEADING
+   ================================ */
+
+.dashboard-header {
+  min-height: 82px;
+  margin-bottom: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.dashboard-date {
+  margin: 0;
+  color: var(--green);
+  font-size: 0.78rem;
+  font-weight: 750;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.dashboard-header h1 {
+  margin: 5px 0;
+  color: var(--green-dark);
+  font-size: clamp(1.8rem, 3vw, 2.3rem);
+  font-weight: 750;
+  letter-spacing: -0.03em;
+}
+
+.dashboard-header > div > p:last-child {
+  margin: 0;
+  color: var(--muted);
+}
+
+/* Add Meal button */
+.dashboard-add-button {
+  min-height: 46px;
+  padding: 0 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  border-radius: 11px;
+  background: var(--green);
+  color: var(--white);
+  font-weight: 650;
+  text-decoration: none;
+  box-shadow: 0 9px 22px rgba(25, 135, 84, 0.2);
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.dashboard-add-button:hover {
+  background: var(--green-dark);
+  color: var(--white);
+  transform: translateY(-2px);
+}
+
+/* ================================
+   NUTRITION SUMMARY
+   ================================ */
+
+.dashboard-overview {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(280px, 0.6fr);
+  gap: 20px;
+}
+
+/* ================================
+   CALORIE CARD
+   ================================ */
+
+.calorie-card {
+  min-height: 255px;
+  padding: 30px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 165px;
+  align-items: center;
+  gap: 25px;
+  border: 1px solid var(--border);
+  border-radius: 21px;
+  background: var(--surface);
+  box-shadow: 0 12px 32px var(--page-shadow);
+}
+
+.calorie-details > p:first-child {
+  margin: 0;
+  color: var(--muted);
+}
+
+.calorie-details h2 {
+  margin: 7px 0 20px;
+  color: var(--green-dark);
+  font-size: 1.45rem;
+  font-weight: 700;
+}
+
+.calorie-total {
+  display: flex;
+  align-items: baseline;
+  gap: 9px;
+}
+
+.calorie-total strong {
+  color: var(--text);
+  font-size: clamp(2.3rem, 5vw, 3rem);
+  letter-spacing: -0.04em;
+}
+
+.calorie-total span {
+  color: var(--muted);
+}
+
+.remaining-calories {
+  margin: 10px 0 0 !important;
+  color: var(--green) !important;
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+/* Calorie progress ring */
+.calorie-ring {
+  width: 155px;
+  height: 155px;
+  padding: 12px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: conic-gradient(
+    var(--green) 0deg var(--calorie-progress),
+    var(--green-light) var(--calorie-progress) 360deg
+  );
+}
+
+.calorie-ring-center {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  border-radius: 50%;
+  background: var(--surface);
+  text-align: center;
+}
+
+.calorie-ring-center strong {
+  color: var(--green-dark);
+  font-size: 1.65rem;
+}
+
+.calorie-ring-center span {
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+/* ================================
+   NUTRITION STAT CARDS
+   ================================ */
+
+.dashboard-stats {
+  display: grid;
+  gap: 12px;
+}
+
+.dashboard-stat-card {
+  min-height: 77px;
+  padding: 13px 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--surface);
+  box-shadow: 0 8px 24px var(--page-shadow);
+}
+
+.stat-icon {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  font-size: 1.1rem;
+}
+
+.protein-icon {
+  background: #fff0da;
+  color: #e88918;
+}
+
+.fat-icon {
+  background: #e6efff;
+  color: #3978dc;
+}
+
+.meal-count-icon {
+  background: #eee6ff;
+  color: #8357ca;
+}
+
+.stat-content {
+  width: 100%;
+}
+
+.stat-content > span,
+.stat-content small {
+  display: block;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.stat-content strong {
+  margin: 2px 0;
+  display: block;
+  color: var(--text);
+  font-size: 1rem;
+}
+
+.stat-progress {
+  height: 5px;
+  margin-top: 6px;
+  overflow: hidden;
+  border-radius: 10px;
+  background: var(--green-light);
+}
+
+.stat-progress div {
+  height: 100%;
+  border-radius: inherit;
+}
+
+.protein-progress div {
+  background: linear-gradient(90deg, #e88918, #ffc45f);
+}
+
+.fat-progress div {
+  background: linear-gradient(90deg, #3978dc, #79a9f3);
+}
+
+/* ================================
+   MEAL LIST
+   ================================ */
+
+.dashboard-meals-section {
+  margin-top: 30px;
+}
+
+.meals-heading {
+  margin-bottom: 16px;
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+.meals-heading h2 {
+  margin: 0 0 4px;
+  color: var(--green-dark);
+  font-size: 1.35rem;
+  font-weight: 700;
+}
+
+.meals-heading p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.meals-heading > span {
+  padding: 6px 12px;
+  border-radius: 20px;
+  background: var(--green-light);
+  color: var(--green-dark);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.dashboard-meal-list {
+  display: grid;
+  gap: 11px;
+}
+
+.dashboard-meal-card {
+  min-height: 90px;
+  padding: 15px 17px;
+  display: grid;
+  grid-template-columns: 50px minmax(0, 1fr) auto 42px;
+  align-items: center;
+  gap: 16px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--surface);
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+}
+
+.dashboard-meal-card:hover {
+  border-color: var(--green);
+  box-shadow: 0 10px 26px var(--page-shadow);
+  transform: translateY(-2px);
+}
+
+.meal-card-icon {
+  width: 50px;
+  height: 50px;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  background: var(--green-light);
+  color: var(--green);
+  font-size: 1.25rem;
+}
+
+.meal-card-information h3 {
+  margin: 0;
+  color: var(--text);
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.meal-card-information p {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.meal-nutrition {
+  display: flex;
+  gap: 28px;
+}
+
+.meal-nutrition div {
+  min-width: 65px;
+}
+
+.meal-nutrition strong,
+.meal-nutrition span {
+  display: block;
+  text-align: right;
+}
+
+.meal-nutrition strong {
+  color: var(--text);
+}
+
+.meal-nutrition span {
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+/* Delete button */
+.delete-meal-button {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.delete-meal-button:hover {
+  background: #ffebeb;
+  color: #d93f3f;
+}
+
+/* ================================
+   EMPTY MEAL STATE
+   ================================ */
+
+.empty-meals {
+  padding: 55px 20px;
+  border: 1px dashed var(--border);
+  border-radius: 18px;
+  background: var(--surface);
+  text-align: center;
+}
+
+.empty-meals-icon {
+  width: 60px;
+  height: 60px;
+  margin: 0 auto 16px;
+  display: grid;
+  place-items: center;
+  border-radius: 18px;
+  background: var(--green-light);
+  color: var(--green);
+  font-size: 1.5rem;
+}
+
+.empty-meals h3 {
+  margin: 0 0 7px;
+  color: var(--green-dark);
+}
+
+.empty-meals p {
+  margin: 0 0 20px;
+  color: var(--muted);
+}
+
+.empty-meals a {
+  display: inline-block;
+  padding: 10px 18px;
+  border-radius: 10px;
+  background: var(--green);
+  color: var(--white);
+  text-decoration: none;
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.empty-meals a:hover {
+  background: var(--green-dark);
+  color: var(--white);
+  transform: translateY(-1px);
+}
+
+/* ================================
+   DARK MODE
+   ================================ */
+
+:root[data-theme="dark"] .protein-icon {
+  background: rgba(232, 137, 24, 0.17);
+  color: #ffb957;
+}
+
+:root[data-theme="dark"] .fat-icon {
+  background: rgba(57, 120, 220, 0.18);
+  color: #79a9f3;
+}
+
+:root[data-theme="dark"] .meal-count-icon {
+  background: rgba(131, 87, 202, 0.18);
+  color: #b898ed;
+}
+
+:root[data-theme="dark"] .delete-meal-button:hover {
+  background: rgba(217, 63, 63, 0.15);
+  color: #ff7373;
+}
+
+/* ================================
+   TABLET
+   ================================ */
+
+@media (max-width: 900px) {
+  .dashboard-main {
+    padding: 30px 24px;
+  }
+
+  .dashboard-overview {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard-stats {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* ================================
+   PHONE
+   ================================ */
+
+@media (max-width: 650px) {
+  .dashboard-main {
+    width: 100%;
+    padding: 23px 15px 30px;
+  }
+
+  .dashboard-header {
+    min-height: auto;
+    align-items: flex-start;
+  }
+
+  .dashboard-add-button {
+    width: 46px;
+    padding: 0;
+  }
+
+  .dashboard-add-button span {
+    display: none;
+  }
+
+  .calorie-card {
+    padding: 24px 20px;
+    grid-template-columns: 1fr;
+  }
+
+  .calorie-ring {
+    width: 140px;
+    height: 140px;
+    justify-self: center;
+  }
+
+  .dashboard-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard-meal-card {
+    padding: 15px;
+    grid-template-columns: 48px minmax(0, 1fr) 40px;
+    gap: 12px;
+  }
+
+  .meal-nutrition {
+    grid-column: 2 / 4;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+  }
+
+  .meal-nutrition strong,
+  .meal-nutrition span {
+    text-align: left;
+  }
+
+  .delete-meal-button {
+    grid-column: 3;
+    grid-row: 1;
+  }
+}
+
+/* ================================
+   VERY SMALL PHONES
+   ================================ */
+
+@media (max-width: 400px) {
+  .dashboard-main {
+    padding: 20px 11px 28px;
+  }
+
+  .dashboard-header h1 {
+    font-size: 1.65rem;
+  }
+
+  .calorie-card {
+    padding: 21px 17px;
+  }
+
+  .dashboard-meal-card {
+    grid-template-columns: 44px minmax(0, 1fr) 38px;
+    gap: 10px;
+  }
+
+  .meal-card-icon {
+    width: 44px;
+    height: 44px;
+  }
+
+  .meal-nutrition {
+    gap: 8px;
+  }
+}
+
+/* Remove animation when reduced motion is requested */
+@media (prefers-reduced-motion: reduce) {
+  .dashboard-main *,
+  .dashboard-main *::before,
+  .dashboard-main *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
