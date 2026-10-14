@@ -1,0 +1,20 @@
+# Local MySQL database for development
+# Start: docker compose up -d
+# Stop:  docker compose down
+services:
+  mysql:
+    image: mysql:8.4
+    container_name: nutriflow-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: nutriflow
+      MYSQL_USER: nutriflow
+      MYSQL_PASSWORD: nutriflow
+    ports:
+      # 3307 so it doesn't conflict with a MySQL already installed on 3306
+      - "3307:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+volumes:
+  mysql-data:
