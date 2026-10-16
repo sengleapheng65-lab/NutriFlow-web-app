@@ -12,6 +12,7 @@ function AddMeal() {
   const [name, setName] = useState("");
   const [calories, setCalories] = useState("");
   const [protein, setProtein] = useState("");
+  const [carbs, setCarbs] = useState("");
   const [fat, setFat] = useState("");
 
   // Track the backend request
@@ -31,6 +32,7 @@ function AddMeal() {
         name: name.trim(),
         calories: Number(calories),
         protein: Number(protein),
+        carbs: Number(carbs),
         fat: Number(fat),
       });
 
@@ -131,6 +133,29 @@ function AddMeal() {
                     step="0.1"
                     value={protein}
                     onChange={(event) => setProtein(event.target.value)}
+                    placeholder="0"
+                    disabled={isSaving}
+                    required
+                  />
+                </div>
+
+                <small>Amount in grams</small>
+              </div>
+
+              {/* Carbohydrates */}
+              <div className="meal-form-field">
+                <label htmlFor="carbs">Carbohydrates</label>
+
+                <div className="meal-input">
+                  <i className="bi bi-circle-half" aria-hidden="true" />
+
+                  <input
+                    id="carbs"
+                    type="number"
+                    min="0"
+                    step="0.1"
+                    value={carbs}
+                    onChange={(event) => setCarbs(event.target.value)}
                     placeholder="0"
                     disabled={isSaving}
                     required
@@ -242,6 +267,11 @@ function AddMeal() {
             <div className="preview-information">
               <span>Protein</span>
               <strong>{protein || "—"}g</strong>
+            </div>
+
+            <div className="preview-information">
+              <span>Carbohydrates</span>
+              <strong>{carbs || "—"}g</strong>
             </div>
 
             <div className="preview-information">

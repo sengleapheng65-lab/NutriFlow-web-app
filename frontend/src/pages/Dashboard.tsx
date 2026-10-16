@@ -9,6 +9,7 @@ import "../styles/Dashboard.css";
 // Temporary daily nutrition goals
 const calorieGoal = 2000;
 const proteinGoal = 120;
+const carbGoal = 250;
 const fatGoal = 65;
 
 function Dashboard() {
@@ -47,6 +48,12 @@ function Dashboard() {
   // Calculate the total protein
   const totalProtein = meals.reduce((total, meal) => total + meal.protein, 0);
 
+  // Calculate the total carb
+  const totalCarbs = meals.reduce(
+    (total, meal) => total + (meal.carbs ?? 0),
+    0,
+  );
+
   // Calculate the total fat
   const totalFat = meals.reduce((total, meal) => total + (meal.fat ?? 0), 0);
 
@@ -60,6 +67,8 @@ function Dashboard() {
     Math.round((totalProtein / proteinGoal) * 100),
     100,
   );
+
+  const carbProgress = Math.min(Math.round((totalCarbs / carbGoal) * 100), 100);
 
   const fatProgress = Math.min(Math.round((totalFat / fatGoal) * 100), 100);
 
@@ -157,7 +166,7 @@ function Dashboard() {
           </div>
         </article>
 
-        {/* Protein, fat and meal totals */}
+        {/* Protein, fat, carbs, and meal totals */}
         <div className="dashboard-stats">
           {/* Protein */}
           <article className="dashboard-stat-card">
@@ -174,6 +183,25 @@ function Dashboard() {
 
               <div className="stat-progress protein-progress">
                 <div style={{ width: `${proteinProgress}%` }} />
+              </div>
+            </div>
+          </article>
+
+          {/* Carbohydrates */}
+          <article className="dashboard-stat-card">
+            <div className="stat-icon carb-icon">
+              <i className="bi bi-circle-half" aria-hidden="true" />
+            </div>
+
+            <div className="stat-content">
+              <span>Carbohydrates</span>
+
+              <strong>
+                {totalCarbs} / {carbGoal}g
+              </strong>
+
+              <div className="stat-progress carb-progress">
+                <div style={{ width: `${carbProgress}%` }} />
               </div>
             </div>
           </article>
@@ -274,6 +302,11 @@ function Dashboard() {
                     <div>
                       <strong>{meal.protein}g</strong>
                       <span>Protein</span>
+                    </div>
+
+                    <div>
+                      <strong>{meal.carbs ?? 0}g</strong>
+                      <span>Carbs</span>
                     </div>
 
                     <div>

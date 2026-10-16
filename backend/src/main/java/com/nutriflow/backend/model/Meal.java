@@ -7,6 +7,7 @@ public class Meal {
     private int calories;
     private double protein;
     private double fat;
+    private double carbs;
 
     // Empty constructor required for converting JSON into a Meal
     public Meal() {
@@ -18,12 +19,14 @@ public class Meal {
         String name,
         int calories,
         double protein,
+        double carbs,
         double fat
     ) {
         this.id = id;
         this.name = name;
         this.calories = calories;
         this.protein = protein;
+        this.carbs = carbs;
         this.fat = fat;
     }
 
@@ -57,6 +60,14 @@ public class Meal {
 
     public void setProtein(double protein) {
         this.protein = protein;
+    }
+
+    public double getCarbs() {
+        return carbs;
+    }
+
+    public void setCarbs(double carbs) {
+        this.carbs = carbs;
     }
 
     public double getFat() {

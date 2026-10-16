@@ -208,6 +208,11 @@
   color: #3978dc;
 }
 
+.carb-icon {
+  background-color: #fff2d8;
+  color: #dc8500;
+}
+
 .meal-count-icon {
   background: #eee6ff;
   color: #8357ca;
@@ -246,6 +251,10 @@
 
 .protein-progress div {
   background: linear-gradient(90deg, #e88918, #ffc45f);
+}
+
+.carb-progress div {
+  background: linear-gradient(90deg, #f6b73c, #ef8f00);
 }
 
 .fat-progress div {
