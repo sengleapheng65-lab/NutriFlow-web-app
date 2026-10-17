@@ -1,20 +1,29 @@
 import { useEffect, useState } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
+
 import "../styles/AppSidebar.css";
 
 function AppSidebar() {
   const location = useLocation();
+
+  // Remember whether the phone menu is open
   const [menuOpen, setMenuOpen] = useState(false);
 
-  // Close the phone menu when the page changes
+  // Close the phone menu
+  function closeMenu() {
+    setMenuOpen(false);
+  }
+
+  // Close the phone menu whenever the page changes
   useEffect(() => {
     setMenuOpen(false);
   }, [location.pathname]);
 
   return (
     <>
-      {/* Shared desktop and phone header */}
+      {/* Shared desktop sidebar and phone header */}
       <aside className="app-sidebar">
+        {/* Application logo */}
         <Link className="app-sidebar-brand" to="/dashboard">
           <img src="/NutriFlow.png" alt="NutriFlow" />
 
@@ -31,6 +40,7 @@ function AppSidebar() {
           onClick={() => setMenuOpen(true)}
           aria-label="Open navigation menu"
           aria-expanded={menuOpen}
+          aria-controls="app-mobile-menu"
         >
           <i className="bi bi-list" aria-hidden="true" />
         </button>
@@ -39,6 +49,7 @@ function AppSidebar() {
 
         {/* Desktop navigation */}
         <nav className="app-sidebar-links">
+          {/* Dashboard */}
           <NavLink
             to="/dashboard"
             className={({ isActive }) => (isActive ? "active" : "")}
@@ -47,6 +58,7 @@ function AppSidebar() {
             <span>Dashboard</span>
           </NavLink>
 
+          {/* Add Meal */}
           <NavLink
             to="/add-meal"
             className={({ isActive }) => (isActive ? "active" : "")}
@@ -55,24 +67,30 @@ function AppSidebar() {
             <span>Add Meal</span>
           </NavLink>
 
+          {/* Goals is not connected yet */}
           <button type="button">
             <i className="bi bi-bullseye" aria-hidden="true" />
             <span>Goals</span>
           </button>
 
-          <button type="button">
+          {/* Meal History */}
+          <NavLink
+            to="/history"
+            className={({ isActive }) => (isActive ? "active" : "")}
+          >
             <i className="bi bi-clock-history" aria-hidden="true" />
             <span>History</span>
-          </button>
+          </NavLink>
         </nav>
 
+        {/* Sign out */}
         <Link className="app-sidebar-signout" to="/login">
           <i className="bi bi-box-arrow-left" aria-hidden="true" />
           <span>Sign Out</span>
         </Link>
       </aside>
 
-      {/* Phone menu background */}
+      {/* Dark background behind the phone drawer */}
       <button
         className={
           menuOpen
@@ -80,8 +98,9 @@ function AppSidebar() {
             : "app-menu-overlay"
         }
         type="button"
-        onClick={() => setMenuOpen(false)}
+        onClick={closeMenu}
         aria-label="Close navigation menu"
+        tabIndex={menuOpen ? 0 : -1}
       />
 
       {/* Phone navigation drawer */}
@@ -91,10 +110,12 @@ function AppSidebar() {
             ? "app-mobile-drawer app-mobile-drawer-open"
             : "app-mobile-drawer"
         }
+        id="app-mobile-menu"
         aria-hidden={!menuOpen}
       >
+        {/* Drawer heading */}
         <header className="app-drawer-header">
-          <Link to="/dashboard">
+          <Link to="/dashboard" onClick={closeMenu}>
             <img src="/NutriFlow.png" alt="NutriFlow" />
 
             <div>
@@ -103,9 +124,10 @@ function AppSidebar() {
             </div>
           </Link>
 
+          {/* Close drawer */}
           <button
             type="button"
-            onClick={() => setMenuOpen(false)}
+            onClick={closeMenu}
             aria-label="Close navigation menu"
           >
             <i className="bi bi-x-lg" aria-hidden="true" />
@@ -114,37 +136,49 @@ function AppSidebar() {
 
         <p className="app-drawer-label">Menu</p>
 
+        {/* Phone navigation links */}
         <nav className="app-drawer-links">
+          {/* Dashboard */}
           <NavLink
             to="/dashboard"
             className={({ isActive }) => (isActive ? "active" : "")}
+            onClick={closeMenu}
           >
             <i className="bi bi-grid" aria-hidden="true" />
-            Dashboard
+            <span>Dashboard</span>
           </NavLink>
 
+          {/* Add Meal */}
           <NavLink
             to="/add-meal"
             className={({ isActive }) => (isActive ? "active" : "")}
+            onClick={closeMenu}
           >
             <i className="bi bi-plus-circle" aria-hidden="true" />
-            Add Meal
+            <span>Add Meal</span>
           </NavLink>
 
+          {/* Goals is not connected yet */}
           <button type="button">
             <i className="bi bi-bullseye" aria-hidden="true" />
-            Goals
+            <span>Goals</span>
           </button>
 
-          <button type="button">
+          {/* Meal History */}
+          <NavLink
+            to="/history"
+            className={({ isActive }) => (isActive ? "active" : "")}
+            onClick={closeMenu}
+          >
             <i className="bi bi-clock-history" aria-hidden="true" />
-            History
-          </button>
+            <span>History</span>
+          </NavLink>
         </nav>
 
-        <Link className="app-drawer-signout" to="/login">
+        {/* Phone sign out */}
+        <Link className="app-drawer-signout" to="/login" onClick={closeMenu}>
           <i className="bi bi-box-arrow-left" aria-hidden="true" />
-          Sign Out
+          <span>Sign Out</span>
         </Link>
       </aside>
     </>

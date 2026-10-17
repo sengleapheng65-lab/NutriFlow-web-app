@@ -5,6 +5,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import AddMeal from "./pages/AddMeal";
+import History from "./pages/History";
 
 import AppLayout from "./components/AppLayout";
 import ThemeToggle from "./components/ThemeToggle";
@@ -27,6 +28,7 @@ function AppContent() {
         <Route element={<AppLayout />}>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/add-meal" element={<AddMeal />} />
+          <Route path="/history" element={<History />} />
         </Route>
 
         {/* Unknown URLs return to Home */}
