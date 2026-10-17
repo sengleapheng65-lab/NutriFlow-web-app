@@ -470,6 +470,11 @@
   color: #ff7373;
 }
 
+:root[data-theme="dark"] .carb-icon {
+  background: #4a3615;
+  color: #f4b94c;
+}
+
 /* ================================
    TABLET
    ================================ */
