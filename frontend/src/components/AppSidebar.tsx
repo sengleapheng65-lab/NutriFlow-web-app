@@ -67,11 +67,14 @@ function AppSidebar() {
             <span>Add Meal</span>
           </NavLink>
 
-          {/* Goals is not connected yet */}
-          <button type="button">
+          {/* Goals */}
+          <NavLink
+            to="/goals"
+            className={({ isActive }) => (isActive ? "active" : "")}
+          >
             <i className="bi bi-bullseye" aria-hidden="true" />
             <span>Goals</span>
-          </button>
+          </NavLink>
 
           {/* Meal History */}
           <NavLink

@@ -1,4 +1,6 @@
-/* Settings page */
+/* ================================
+   SETTINGS MAIN CONTENT
+   ================================ */
 
 .settings-main {
   width: 100%;
@@ -10,11 +12,17 @@
   color: var(--text);
 }
 
+/* ================================
+   PAGE HEADING
+   ================================ */
+
 .settings-header {
   min-height: 82px;
   margin-bottom: 26px;
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  gap: 20px;
 }
 
 .settings-label {
@@ -39,11 +47,310 @@
   color: var(--muted);
 }
 
+.settings-header-icon {
+  width: 62px;
+  height: 62px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 17px;
+  background: var(--green-light);
+  color: var(--green);
+  font-size: 1.65rem;
+}
+
+/* ================================
+   STATUS MESSAGES
+   ================================ */
+
+.settings-message {
+  margin-bottom: 20px;
+  padding: 13px 16px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  border-radius: 11px;
+  font-weight: 600;
+}
+
+.settings-success {
+  border: 1px solid var(--border);
+  background: var(--green-light);
+  color: var(--green-dark);
+}
+
+.settings-error {
+  border: 1px solid #efb7b7;
+  background: #fff0f0;
+  color: #b52e2e;
+}
+
+/* ================================
+   CONTENT LAYOUT
+   ================================ */
+
+.settings-content {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  align-items: start;
+  gap: 20px;
+}
+
+.settings-sections {
+  display: grid;
+  gap: 20px;
+}
+
+/* ================================
+   SETTINGS CARDS
+   ================================ */
+
+.settings-card {
+  padding: 28px;
+  border: 1px solid var(--border);
+  border-radius: 21px;
+  background: var(--surface);
+  box-shadow: 0 12px 32px var(--page-shadow);
+}
+
+.settings-card-heading {
+  padding-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  border-bottom: 1px solid var(--border);
+}
+
+.settings-card-icon {
+  width: 46px;
+  height: 46px;
+  flex: 0 0 46px;
+  display: grid;
+  place-items: center;
+  border-radius: 13px;
+  font-size: 1.2rem;
+}
+
+.preference-icon {
+  background: var(--green-light);
+  color: var(--green);
+}
+
+.data-icon {
+  background: #ffe8e8;
+  color: #cc3b3b;
+}
+
+.settings-card-heading h2,
+.settings-information h2 {
+  margin: 0;
+  color: var(--green-dark);
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.settings-card-heading p {
+  margin: 5px 0 0;
+  color: var(--muted);
+}
+
+/* ================================
+   PREFERENCE ROW
+   ================================ */
+
+.settings-row,
+.settings-danger-row {
+  padding: 20px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.settings-row-label,
+.settings-danger-row strong {
+  color: var(--text);
+  font-weight: 650;
+}
+
+.settings-row p,
+.settings-danger-row p {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+
+/* ================================
+   TOGGLE SWITCH
+   ================================ */
+
+.settings-switch {
+  position: relative;
+  width: 52px;
+  height: 29px;
+  flex-shrink: 0;
+}
+
+.settings-switch input {
+  width: 0;
+  height: 0;
+  opacity: 0;
+}
+
+.settings-switch-slider {
+  position: absolute;
+  inset: 0;
+  border-radius: 30px;
+  background: var(--border);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.settings-switch-slider::before {
+  content: "";
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 21px;
+  height: 21px;
+  border-radius: 50%;
+  background: white;
+  box-shadow: 0 2px 7px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease;
+}
+
+.settings-switch input:checked + .settings-switch-slider {
+  background: var(--green);
+}
+
+.settings-switch input:checked + .settings-switch-slider::before {
+  transform: translateX(23px);
+}
+
+/* ================================
+   BUTTONS
+   ================================ */
+
+.settings-save-area {
+  padding-top: 20px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.settings-save-button,
+.settings-clear-button,
+.settings-signout-button {
+  min-height: 44px;
+  padding: 0 17px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 10px;
+  font: inherit;
+  font-weight: 650;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.settings-save-button {
+  border: 1px solid var(--green);
+  background: var(--green);
+  color: white;
+}
+
+.settings-save-button:hover {
+  background: var(--green-dark);
+  color: white;
+  transform: translateY(-1px);
+}
+
+.settings-clear-button,
+.settings-signout-button {
+  border: 1px solid #e3a4a4;
+  background: transparent;
+  color: #c73737;
+}
+
+.settings-clear-button:hover,
+.settings-signout-button:hover {
+  background: #c73737;
+  color: white;
+  transform: translateY(-1px);
+}
+
+.settings-clear-button:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ================================
+   INFORMATION CARD
+   ================================ */
+
+.settings-information {
+  padding: 22px;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: var(--surface);
+  box-shadow: 0 8px 24px var(--page-shadow);
+}
+
+.settings-information-icon {
+  width: 44px;
+  height: 44px;
+  margin-bottom: 15px;
+  display: grid;
+  place-items: center;
+  border-radius: 13px;
+  background: var(--green-light);
+  color: var(--green);
+  font-size: 1.2rem;
+}
+
+.settings-information p {
+  margin: 10px 0 0;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+/* ================================
+   DARK MODE
+   ================================ */
+
+:root[data-theme="dark"] .data-icon {
+  background: #4b2929;
+}
+
+:root[data-theme="dark"] .settings-error {
+  border-color: #713b3b;
+  background: #3e2525;
+  color: #ff9b9b;
+}
+
+/* ================================
+   TABLET
+   ================================ */
+
 @media (max-width: 900px) {
   .settings-main {
     padding: 30px 24px;
   }
+
+  .settings-content {
+    grid-template-columns: 1fr;
+  }
 }
+
+/* ================================
+   PHONE
+   ================================ */
 
 @media (max-width: 650px) {
   .settings-main {
@@ -53,7 +360,34 @@
   .settings-header {
     min-height: auto;
   }
+
+  .settings-header-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 14px;
+    font-size: 1.35rem;
+  }
+
+  .settings-card {
+    padding: 22px 17px;
+  }
+
+  .settings-row,
+  .settings-danger-row {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .settings-clear-button,
+  .settings-signout-button,
+  .settings-save-button {
+    width: 100%;
+  }
 }
+
+/* ================================
+   VERY SMALL PHONES
+   ================================ */
 
 @media (max-width: 400px) {
   .settings-main {

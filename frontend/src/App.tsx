@@ -5,6 +5,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import AddMeal from "./pages/AddMeal";
+import Goals from "./pages/Goals";
 import History from "./pages/History";
 import Settings from "./pages/Settings";
 
@@ -29,6 +30,7 @@ function AppContent() {
         <Route element={<AppLayout />}>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/add-meal" element={<AddMeal />} />
+          <Route path="/goals" element={<Goals />} />
           <Route path="/history" element={<History />} />
           <Route path="/settings" element={<Settings />} />
         </Route>

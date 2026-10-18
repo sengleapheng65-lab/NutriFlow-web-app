@@ -1,0 +1,404 @@
+/* ================================
+   GOALS MAIN CONTENT
+   ================================ */
+
+.goals-main {
+  width: 100%;
+  max-width: 1450px;
+  min-width: 0;
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: 35px 40px;
+  color: var(--text);
+}
+
+/* ================================
+   PAGE HEADING
+   ================================ */
+
+.goals-header {
+  min-height: 82px;
+  margin-bottom: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.goals-label {
+  margin: 0;
+  color: var(--green);
+  font-size: 0.78rem;
+  font-weight: 750;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.goals-header h1 {
+  margin: 5px 0;
+  color: var(--green-dark);
+  font-size: clamp(1.8rem, 3vw, 2.3rem);
+  font-weight: 750;
+  letter-spacing: -0.03em;
+}
+
+.goals-header > div > p:last-child {
+  margin: 0;
+  color: var(--muted);
+}
+
+.goals-header-icon {
+  width: 62px;
+  height: 62px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 17px;
+  background: var(--green-light);
+  color: var(--green);
+  font-size: 1.7rem;
+}
+
+/* ================================
+   CONTENT LAYOUT
+   ================================ */
+
+.goals-content {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  align-items: start;
+  gap: 20px;
+}
+
+/* ================================
+   GOALS FORM CARD
+   ================================ */
+
+.goals-form-card {
+  padding: 28px;
+  border: 1px solid var(--border);
+  border-radius: 21px;
+  background: var(--surface);
+  box-shadow: 0 12px 32px var(--page-shadow);
+}
+
+.goals-card-heading {
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.goals-card-heading h2 {
+  margin: 0;
+  color: var(--green-dark);
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.goals-card-heading p {
+  margin: 5px 0 0;
+  color: var(--muted);
+}
+
+/* Saved message */
+
+.goals-message {
+  margin-top: 20px;
+  padding: 13px 15px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  background: var(--green-light);
+  color: var(--green-dark);
+  font-weight: 600;
+}
+
+/* ================================
+   GOAL FIELDS
+   ================================ */
+
+.goals-fields {
+  padding: 24px 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 21px;
+}
+
+.goal-field label {
+  margin-bottom: 8px;
+  display: block;
+  color: var(--text);
+  font-weight: 650;
+}
+
+.goal-field small {
+  margin-top: 7px;
+  display: block;
+  color: var(--muted);
+}
+
+.goal-input {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.goal-input > i {
+  position: absolute;
+  left: 15px;
+  z-index: 1;
+  color: var(--green);
+  pointer-events: none;
+}
+
+.goal-input input {
+  width: 100%;
+  min-height: 50px;
+  padding: 0 55px 0 44px;
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  outline: none;
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.goal-input input:focus {
+  border-color: var(--green);
+  box-shadow: 0 0 0 4px rgba(25, 135, 84, 0.15);
+}
+
+.goal-input > span {
+  position: absolute;
+  right: 15px;
+  color: var(--muted);
+  font-size: 0.85rem;
+  pointer-events: none;
+}
+
+/* Remove number-input arrows */
+
+.goal-input input[type="number"] {
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+
+.goal-input input[type="number"]::-webkit-inner-spin-button,
+.goal-input input[type="number"]::-webkit-outer-spin-button {
+  margin: 0;
+  appearance: none;
+}
+
+/* ================================
+   FORM BUTTONS
+   ================================ */
+
+.goals-actions {
+  padding-top: 21px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 11px;
+  border-top: 1px solid var(--border);
+}
+
+.goals-reset-button,
+.goals-save-button {
+  min-height: 46px;
+  padding: 0 19px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 11px;
+  font: inherit;
+  font-weight: 650;
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.goals-reset-button {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+}
+
+.goals-reset-button:hover {
+  border-color: var(--green);
+  background: var(--green-light);
+  color: var(--green-dark);
+}
+
+.goals-save-button {
+  border: 1px solid var(--green);
+  background: var(--green);
+  color: white;
+  box-shadow: 0 9px 22px rgba(25, 135, 84, 0.2);
+}
+
+.goals-save-button:hover {
+  border-color: var(--green-dark);
+  background: var(--green-dark);
+  color: white;
+  transform: translateY(-1px);
+}
+
+/* ================================
+   RIGHT-SIDE INFORMATION
+   ================================ */
+
+.goals-information {
+  display: grid;
+  gap: 17px;
+}
+
+.goals-tip-card {
+  padding: 22px;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: var(--surface);
+  box-shadow: 0 8px 24px var(--page-shadow);
+}
+
+.goals-tip-icon {
+  width: 44px;
+  height: 44px;
+  margin-bottom: 15px;
+  display: grid;
+  place-items: center;
+  border-radius: 13px;
+  background: var(--green-light);
+  color: var(--green);
+  font-size: 1.15rem;
+}
+
+.goals-tip-card h2 {
+  margin: 0;
+  color: var(--green-dark);
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.goals-tip-card p {
+  margin: 9px 0 0;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.goals-warning-card {
+  padding: 20px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  border: 1px solid transparent;
+  border-radius: 18px;
+  background: linear-gradient(145deg, var(--green-deep), var(--green));
+  color: white;
+  box-shadow: 0 10px 25px var(--page-shadow);
+}
+
+.goals-warning-card > i {
+  margin-top: 2px;
+  font-size: 1.25rem;
+}
+
+.goals-warning-card strong {
+  color: white;
+}
+
+.goals-warning-card p {
+  margin: 6px 0 0;
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.5;
+}
+
+/* ================================
+   DARK MODE
+   ================================ */
+
+:root[data-theme="dark"] .goal-input input:focus {
+  box-shadow: 0 0 0 4px rgba(79, 202, 136, 0.15);
+}
+
+:root[data-theme="dark"] .goals-warning-card {
+  border-color: var(--border);
+  background: linear-gradient(145deg, #0a3e29, #12633f);
+}
+
+/* ================================
+   TABLET
+   ================================ */
+
+@media (max-width: 900px) {
+  .goals-main {
+    padding: 30px 24px;
+  }
+
+  .goals-content {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ================================
+   PHONE
+   ================================ */
+
+@media (max-width: 650px) {
+  .goals-main {
+    padding: 23px 15px 30px;
+  }
+
+  .goals-header {
+    min-height: auto;
+  }
+
+  .goals-header-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 14px;
+    font-size: 1.35rem;
+  }
+
+  .goals-form-card {
+    padding: 22px 17px;
+  }
+
+  .goals-fields {
+    grid-template-columns: 1fr;
+  }
+
+  .goals-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* ================================
+   VERY SMALL PHONES
+   ================================ */
+
+@media (max-width: 400px) {
+  .goals-main {
+    padding: 20px 11px 28px;
+  }
+
+  .goals-header h1 {
+    font-size: 1.65rem;
+  }
+
+  .goals-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .goals-reset-button,
+  .goals-save-button {
+    width: 100%;
+  }
+}

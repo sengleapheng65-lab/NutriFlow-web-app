@@ -7,11 +7,44 @@ import { deleteMeal as deleteMealFromApi, getMeals } from "../services/mealApi";
 
 import "../styles/Dashboard.css";
 
-// Temporary daily nutrition goals
-const calorieGoal = 2000;
-const proteinGoal = 120;
-const carbGoal = 250;
-const fatGoal = 65;
+// Daily Nutrition Goal Setting setup
+// Describes the user's daily nutrition goals
+type NutritionGoals = {
+  calories: number;
+  protein: number;
+  carbs: number;
+  fat: number;
+};
+
+// Goals used when the user has not saved custom settings
+const defaultGoals: NutritionGoals = {
+  calories: 2000,
+  protein: 120,
+  carbs: 250,
+  fat: 65,
+};
+
+// Load the nutrition goals saved by the Settings page
+function loadNutritionGoals(): NutritionGoals {
+  try {
+    const savedGoals = localStorage.getItem("nutritionGoals");
+
+    if (!savedGoals) {
+      return defaultGoals;
+    }
+
+    const parsedGoals = JSON.parse(savedGoals);
+
+    return {
+      calories: Number(parsedGoals.calories) || defaultGoals.calories,
+      protein: Number(parsedGoals.protein) || defaultGoals.protein,
+      carbs: Number(parsedGoals.carbs) || defaultGoals.carbs,
+      fat: Number(parsedGoals.fat) || defaultGoals.fat,
+    };
+  } catch {
+    return defaultGoals;
+  }
+}
 
 // Create a date key using the user's local timezone
 function getLocalDateKey(date: Date) {
@@ -34,6 +67,9 @@ function Dashboard() {
 
   // Track the current local date
   const [todayKey, setTodayKey] = useState(() => getLocalDateKey(new Date()));
+
+  // Load the nutrition goals from Settings
+  const [goals] = useState<NutritionGoals>(() => loadNutritionGoals());
 
   // Load meals when the Dashboard opens
   useEffect(() => {
@@ -90,13 +126,13 @@ function Dashboard() {
 
   // Calculate today's calories
   const totalCalories = todayMeals.reduce(
-    (total, meal) => total + meal.calories,
+    (total, meal) => total + (meal.calories ?? 0),
     0,
   );
 
   // Calculate today's protein
   const totalProtein = todayMeals.reduce(
-    (total, meal) => total + meal.protein,
+    (total, meal) => total + (meal.protein ?? 0),
     0,
   );
 
@@ -107,25 +143,31 @@ function Dashboard() {
   );
 
   // Calculate today's fat
-  const totalFat = todayMeals.reduce((total, meal) => total + meal.fat, 0);
+  const totalFat = todayMeals.reduce(
+    (total, meal) => total + (meal.fat ?? 0),
+    0,
+  );
 
   // Calculate progress percentages
   const calorieProgress = Math.min(
-    Math.round((totalCalories / calorieGoal) * 100),
+    Math.round((totalCalories / goals.calories) * 100),
     100,
   );
 
   const proteinProgress = Math.min(
-    Math.round((totalProtein / proteinGoal) * 100),
+    Math.round((totalProtein / goals.protein) * 100),
     100,
   );
 
-  const carbProgress = Math.min(Math.round((totalCarbs / carbGoal) * 100), 100);
+  const carbProgress = Math.min(
+    Math.round((totalCarbs / goals.carbs) * 100),
+    100,
+  );
 
-  const fatProgress = Math.min(Math.round((totalFat / fatGoal) * 100), 100);
+  const fatProgress = Math.min(Math.round((totalFat / goals.fat) * 100), 100);
 
   // Prevent remaining calories from becoming negative
-  const remainingCalories = Math.max(calorieGoal - totalCalories, 0);
+  const remainingCalories = Math.max(goals.calories - totalCalories, 0);
 
   // Display today's date
   const currentDate = new Date().toLocaleDateString("en-US", {
@@ -192,7 +234,7 @@ function Dashboard() {
             <p>Daily calories</p>
 
             <h2>
-              {totalCalories > calorieGoal
+              {totalCalories > goals.calories
                 ? "You passed your daily goal"
                 : "You’re making good progress"}
             </h2>
@@ -200,12 +242,12 @@ function Dashboard() {
             <div className="calorie-total">
               <strong>{totalCalories.toLocaleString()}</strong>
 
-              <span>of {calorieGoal.toLocaleString()} kcal</span>
+              <span>of {goals.calories.toLocaleString()} kcal</span>
             </div>
 
             <p className="remaining-calories">
-              {totalCalories > calorieGoal
-                ? `${totalCalories - calorieGoal} calories over your goal`
+              {totalCalories > goals.calories
+                ? `${totalCalories - goals.calories} calories over your goal`
                 : `${remainingCalories} calories remaining today`}
             </p>
           </div>
@@ -235,7 +277,7 @@ function Dashboard() {
               <span>Protein</span>
 
               <strong>
-                {totalProtein} / {proteinGoal}g
+                {totalProtein} / {goals.protein}g
               </strong>
 
               <div className="stat-progress protein-progress">
@@ -258,7 +300,7 @@ function Dashboard() {
               <span>Carbohydrates</span>
 
               <strong>
-                {totalCarbs} / {carbGoal}g
+                {totalCarbs} / {goals.carbs}g
               </strong>
 
               <div className="stat-progress carb-progress">
@@ -281,7 +323,7 @@ function Dashboard() {
               <span>Fat</span>
 
               <strong>
-                {totalFat} / {fatGoal}g
+                {totalFat} / {goals.fat}g
               </strong>
 
               <div className="stat-progress fat-progress">
@@ -367,14 +409,14 @@ function Dashboard() {
                 <div className="meal-nutrition">
                   {/* Calories */}
                   <div>
-                    <strong>{meal.calories}</strong>
+                    <strong>{meal.calories ?? 0}</strong>
 
                     <span>Calories</span>
                   </div>
 
                   {/* Protein */}
                   <div>
-                    <strong>{meal.protein}g</strong>
+                    <strong>{meal.protein ?? 0}g</strong>
 
                     <span>Protein</span>
                   </div>
@@ -388,7 +430,7 @@ function Dashboard() {
 
                   {/* Fat */}
                   <div>
-                    <strong>{meal.fat}g</strong>
+                    <strong>{meal.fat ?? 0}g</strong>
 
                     <span>Fat</span>
                   </div>
