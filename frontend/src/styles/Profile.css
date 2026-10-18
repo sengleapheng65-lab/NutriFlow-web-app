@@ -1,0 +1,457 @@
+/* ================================
+   PROFILE MAIN CONTENT
+   ================================ */
+
+.profile-main {
+  width: 100%;
+  max-width: 1450px;
+  min-width: 0;
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: 35px 40px;
+  color: var(--text);
+}
+
+/* ================================
+   PAGE HEADING
+   ================================ */
+
+.profile-header {
+  min-height: 82px;
+  margin-bottom: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.profile-label {
+  margin: 0;
+  color: var(--green);
+  font-size: 0.78rem;
+  font-weight: 750;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.profile-header h1 {
+  margin: 5px 0;
+  color: var(--green-dark);
+  font-size: clamp(1.8rem, 3vw, 2.3rem);
+  font-weight: 750;
+  letter-spacing: -0.03em;
+}
+
+.profile-header > div > p:last-child {
+  margin: 0;
+  color: var(--muted);
+}
+
+.profile-header-icon {
+  width: 62px;
+  height: 62px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 17px;
+  background: var(--green-light);
+  color: var(--green);
+  font-size: 1.65rem;
+}
+
+/* ================================
+   STATUS MESSAGES
+   ================================ */
+
+.profile-message {
+  margin-bottom: 20px;
+  padding: 13px 16px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  border-radius: 11px;
+  font-weight: 600;
+}
+
+.profile-success {
+  border: 1px solid var(--border);
+  background: var(--green-light);
+  color: var(--green-dark);
+}
+
+.profile-error {
+  border: 1px solid #efb7b7;
+  background: #fff0f0;
+  color: #b52e2e;
+}
+
+/* ================================
+   HEALTH STATISTICS
+   ================================ */
+
+.profile-stat-grid {
+  margin-bottom: 20px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.profile-stat {
+  min-height: 125px;
+  padding: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  box-shadow: 0 8px 24px var(--page-shadow);
+}
+
+.profile-stat div {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.profile-stat span {
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.profile-stat strong {
+  margin: 4px 0;
+  font-size: 1.8rem;
+}
+
+.profile-stat small {
+  font-size: 0.78rem;
+}
+
+.profile-stat > i {
+  font-size: 1.8rem;
+}
+
+.bmi-stat {
+  background: #eef4ff;
+  color: #315fd5;
+}
+
+.bmr-stat {
+  background: #fbf0ff;
+  color: #8a39c7;
+}
+
+.tdee-stat {
+  background: #eaf9f0;
+  color: #178447;
+}
+
+/* ================================
+   PROFILE CARD
+   ================================ */
+
+.profile-card {
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 21px;
+  background: var(--surface);
+  box-shadow: 0 12px 32px var(--page-shadow);
+}
+
+/* ================================
+   PROFILE PHOTO
+   ================================ */
+
+.profile-photo-section {
+  padding: 32px;
+  display: grid;
+  place-items: center;
+  border-bottom: 1px solid var(--border);
+  text-align: center;
+}
+
+.profile-photo {
+  width: 120px;
+  height: 120px;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  border: 4px solid var(--surface);
+  border-radius: 50%;
+  background: var(--green-light);
+  color: var(--green);
+  font-size: 3rem;
+  box-shadow: 0 9px 24px var(--page-shadow);
+}
+
+.profile-photo img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.profile-photo-actions {
+  margin-top: 16px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.profile-upload-button,
+.profile-remove-photo {
+  min-height: 43px;
+  padding: 0 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.profile-upload-button input {
+  display: none;
+}
+
+.profile-remove-photo {
+  border-color: #e3a4a4;
+  color: #c73737;
+}
+
+.profile-photo-section > small {
+  margin-top: 10px;
+  color: var(--muted);
+}
+
+/* ================================
+   PROFILE FORM
+   ================================ */
+
+.profile-form-section {
+  padding: 28px;
+}
+
+.profile-section-heading {
+  padding-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  border-bottom: 1px solid var(--border);
+}
+
+.profile-section-heading i {
+  color: var(--green);
+  font-size: 1.15rem;
+}
+
+.profile-section-heading h2 {
+  margin: 0;
+  color: var(--green-dark);
+  font-size: 1.15rem;
+}
+
+.profile-form-grid {
+  padding-top: 22px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.profile-field {
+  min-width: 0;
+}
+
+.profile-full-field {
+  grid-column: 1 / -1;
+}
+
+.profile-field label {
+  margin-bottom: 8px;
+  display: block;
+  color: var(--text);
+  font-weight: 650;
+}
+
+.profile-field input,
+.profile-field select,
+.profile-field textarea {
+  width: 100%;
+  min-height: 50px;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  outline: none;
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+}
+
+.profile-field textarea {
+  min-height: 110px;
+  resize: vertical;
+}
+
+.profile-field input:focus,
+.profile-field select:focus,
+.profile-field textarea:focus {
+  border-color: var(--green);
+  box-shadow: 0 0 0 4px rgba(25, 135, 84, 0.15);
+}
+
+.profile-field small {
+  margin-top: 7px;
+  display: block;
+  color: var(--muted);
+}
+
+/* ================================
+   FORM ACTIONS
+   ================================ */
+
+.profile-actions {
+  padding: 20px 28px 28px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 11px;
+}
+
+.profile-reset-button,
+.profile-save-button {
+  min-height: 46px;
+  padding: 0 19px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 11px;
+  font: inherit;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.profile-reset-button {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+}
+
+.profile-save-button {
+  border: 1px solid var(--green);
+  background: var(--green);
+  color: white;
+}
+
+.profile-save-button:hover {
+  background: var(--green-dark);
+}
+
+.profile-disclaimer {
+  margin: 16px 0 0;
+  color: var(--muted);
+  font-size: 0.8rem;
+  text-align: center;
+}
+
+/* ================================
+   DARK MODE
+   ================================ */
+
+:root[data-theme="dark"] .bmi-stat {
+  background: #1c2d4a;
+  color: #7fa8ff;
+}
+
+:root[data-theme="dark"] .bmr-stat {
+  background: #392447;
+  color: #cf8df2;
+}
+
+:root[data-theme="dark"] .tdee-stat {
+  background: #193b29;
+  color: #65d894;
+}
+
+:root[data-theme="dark"] .profile-error {
+  border-color: #713b3b;
+  background: #3e2525;
+  color: #ff9b9b;
+}
+
+/* ================================
+   TABLET
+   ================================ */
+
+@media (max-width: 900px) {
+  .profile-main {
+    padding: 30px 24px;
+  }
+
+  .profile-stat-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ================================
+   PHONE
+   ================================ */
+
+@media (max-width: 650px) {
+  .profile-main {
+    padding: 23px 15px 30px;
+  }
+
+  .profile-header {
+    min-height: auto;
+  }
+
+  .profile-header-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 14px;
+    font-size: 1.35rem;
+  }
+
+  .profile-form-section {
+    padding: 22px 17px;
+  }
+
+  .profile-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .profile-full-field {
+    grid-column: auto;
+  }
+
+  .profile-actions {
+    padding: 18px 17px 22px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* ================================
+   VERY SMALL PHONES
+   ================================ */
+
+@media (max-width: 400px) {
+  .profile-main {
+    padding: 20px 11px 28px;
+  }
+
+  .profile-header h1 {
+    font-size: 1.65rem;
+  }
+
+  .profile-actions {
+    grid-template-columns: 1fr;
+  }
+}

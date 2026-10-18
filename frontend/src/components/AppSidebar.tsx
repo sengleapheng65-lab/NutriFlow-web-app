@@ -3,11 +3,52 @@ import { Link, NavLink, useLocation } from "react-router-dom";
 
 import "../styles/AppSidebar.css";
 
+// Information displayed in the sidebar profile card
+type SidebarProfile = {
+  fullName: string;
+  weight: string;
+  photo: string;
+};
+
+// Load the saved profile from localStorage
+function loadSidebarProfile(): SidebarProfile {
+  try {
+    const savedProfile = localStorage.getItem("userProfile");
+
+    if (!savedProfile) {
+      return {
+        fullName: "",
+        weight: "",
+        photo: "",
+      };
+    }
+
+    const parsedProfile = JSON.parse(savedProfile);
+
+    return {
+      fullName: parsedProfile.fullName || "",
+      weight: parsedProfile.weight || "",
+      photo: parsedProfile.photo || "",
+    };
+  } catch {
+    return {
+      fullName: "",
+      weight: "",
+      photo: "",
+    };
+  }
+}
+
 function AppSidebar() {
   const location = useLocation();
 
   // Remember whether the phone menu is open
   const [menuOpen, setMenuOpen] = useState(false);
+
+  // Store the profile information shown in the sidebar
+  const [profile, setProfile] = useState<SidebarProfile>(() =>
+    loadSidebarProfile(),
+  );
 
   // Close the phone menu
   function closeMenu() {
@@ -18,6 +59,21 @@ function AppSidebar() {
   useEffect(() => {
     setMenuOpen(false);
   }, [location.pathname]);
+
+  // Reload the sidebar after the Profile page saves new information
+  useEffect(() => {
+    function updateProfile() {
+      setProfile(loadSidebarProfile());
+    }
+
+    window.addEventListener("profileUpdated", updateProfile);
+    window.addEventListener("storage", updateProfile);
+
+    return () => {
+      window.removeEventListener("profileUpdated", updateProfile);
+      window.removeEventListener("storage", updateProfile);
+    };
+  }, []);
 
   return (
     <>
@@ -44,6 +100,28 @@ function AppSidebar() {
         >
           <i className="bi bi-list" aria-hidden="true" />
         </button>
+
+        {/* User profile summary */}
+        <Link className="app-sidebar-profile" to="/profile">
+          <div className="app-sidebar-avatar">
+            {profile.photo ? (
+              <img
+                src={profile.photo}
+                alt={`${profile.fullName || "User"} profile`}
+              />
+            ) : (
+              <i className="bi bi-person" aria-hidden="true" />
+            )}
+          </div>
+
+          <div className="app-sidebar-profile-info">
+            <strong>{profile.fullName || "Complete your profile"}</strong>
+
+            <small>
+              {profile.weight ? `${profile.weight} kg` : "Add your information"}
+            </small>
+          </div>
+        </Link>
 
         <p className="app-sidebar-label">Menu</p>
 
@@ -85,10 +163,19 @@ function AppSidebar() {
             <span>History</span>
           </NavLink>
 
+          {/* Profile */}
+          <NavLink
+            to="/profile"
+            className={({ isActive }) => (isActive ? "active" : "")}
+          >
+            <i className="bi bi-person-circle" aria-hidden="true" />
+            <span>Profile</span>
+          </NavLink>
+
+          {/* Settings */}
           <NavLink
             to="/settings"
             className={({ isActive }) => (isActive ? "active" : "")}
-            onClick={closeMenu}
           >
             <i className="bi bi-gear-wide" aria-hidden="true" />
             <span>Settings</span>
@@ -146,6 +233,32 @@ function AppSidebar() {
           </button>
         </header>
 
+        {/* Mobile profile summary */}
+        <Link
+          className="app-sidebar-profile app-drawer-profile"
+          to="/profile"
+          onClick={closeMenu}
+        >
+          <div className="app-sidebar-avatar">
+            {profile.photo ? (
+              <img
+                src={profile.photo}
+                alt={`${profile.fullName || "User"} profile`}
+              />
+            ) : (
+              <i className="bi bi-person" aria-hidden="true" />
+            )}
+          </div>
+
+          <div className="app-sidebar-profile-info">
+            <strong>{profile.fullName || "Complete your profile"}</strong>
+
+            <small>
+              {profile.weight ? `${profile.weight} kg` : "Add your information"}
+            </small>
+          </div>
+        </Link>
+
         <p className="app-drawer-label">Menu</p>
 
         {/* Phone navigation links */}
@@ -170,11 +283,15 @@ function AppSidebar() {
             <span>Add Meal</span>
           </NavLink>
 
-          {/* Goals is not connected yet */}
-          <button type="button">
+          {/* Goals */}
+          <NavLink
+            to="/goals"
+            className={({ isActive }) => (isActive ? "active" : "")}
+            onClick={closeMenu}
+          >
             <i className="bi bi-bullseye" aria-hidden="true" />
             <span>Goals</span>
-          </button>
+          </NavLink>
 
           {/* Meal History */}
           <NavLink
@@ -184,6 +301,26 @@ function AppSidebar() {
           >
             <i className="bi bi-clock-history" aria-hidden="true" />
             <span>History</span>
+          </NavLink>
+
+          {/* Profile */}
+          <NavLink
+            to="/profile"
+            className={({ isActive }) => (isActive ? "active" : "")}
+            onClick={closeMenu}
+          >
+            <i className="bi bi-person-circle" aria-hidden="true" />
+            <span>Profile</span>
+          </NavLink>
+
+          {/* Settings */}
+          <NavLink
+            to="/settings"
+            className={({ isActive }) => (isActive ? "active" : "")}
+            onClick={closeMenu}
+          >
+            <i className="bi bi-gear-wide" aria-hidden="true" />
+            <span>Settings</span>
           </NavLink>
         </nav>
 

@@ -6,6 +6,7 @@ import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import AddMeal from "./pages/AddMeal";
 import Goals from "./pages/Goals";
+import Profile from "./pages/Profile";
 import History from "./pages/History";
 import Settings from "./pages/Settings";
 
@@ -31,6 +32,7 @@ function AppContent() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/add-meal" element={<AddMeal />} />
           <Route path="/goals" element={<Goals />} />
+          <Route path="/profile" element={<Profile />} />
           <Route path="/history" element={<History />} />
           <Route path="/settings" element={<Settings />} />
         </Route>
