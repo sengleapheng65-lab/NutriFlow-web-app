@@ -81,6 +81,15 @@ function AppSidebar() {
             <i className="bi bi-clock-history" aria-hidden="true" />
             <span>History</span>
           </NavLink>
+
+          <NavLink
+            to="/settings"
+            className={({ isActive }) => (isActive ? "active" : "")}
+            onClick={closeMenu}
+          >
+            <i className="bi bi-gear-wide" aria-hidden="true" />
+            <span>Settings</span>
+          </NavLink>
         </nav>
 
         {/* Sign out */}
