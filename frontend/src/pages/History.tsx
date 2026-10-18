@@ -7,6 +7,35 @@ import "../styles/History.css";
 
 type SortOption = "newest" | "oldest" | "highest-calories" | "lowest-calories";
 
+// Convert a meal timestamp into a number for sorting
+function getMealTime(meal: Meal) {
+  const time = new Date(meal.createdAt).getTime();
+
+  // Put meals with invalid dates at the end
+  return Number.isNaN(time) ? 0 : time;
+}
+
+// Format the saved timestamp for display
+function formatMealDate(createdAt?: string | null) {
+  if (!createdAt) {
+    return "Date unavailable";
+  }
+
+  const date = new Date(createdAt);
+
+  if (Number.isNaN(date.getTime())) {
+    return "Date unavailable";
+  }
+
+  return date.toLocaleString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+  });
+}
+
 function History() {
   // Meals returned by Spring Boot
   const [meals, setMeals] = useState<Meal[]>([]);
@@ -37,16 +66,16 @@ function History() {
     void loadMeals();
   }, []);
 
-  // Search and sort the meals
+  // Search and sort meals
   const displayedMeals = useMemo(() => {
     const filteredMeals = meals.filter((meal) =>
-      meal.name.toLowerCase().includes(search.toLowerCase()),
+      meal.name.toLowerCase().includes(search.trim().toLowerCase()),
     );
 
     return [...filteredMeals].sort((firstMeal, secondMeal) => {
       switch (sortOption) {
         case "oldest":
-          return firstMeal.id - secondMeal.id;
+          return getMealTime(firstMeal) - getMealTime(secondMeal);
 
         case "highest-calories":
           return secondMeal.calories - firstMeal.calories;
@@ -56,7 +85,7 @@ function History() {
 
         case "newest":
         default:
-          return secondMeal.id - firstMeal.id;
+          return getMealTime(secondMeal) - getMealTime(firstMeal);
       }
     });
   }, [meals, search, sortOption]);
@@ -94,7 +123,9 @@ function History() {
       <header className="history-header">
         <div>
           <p className="history-label">Nutrition records</p>
+
           <h1>Meal History</h1>
+
           <p>Review and manage your previously logged meals.</p>
         </div>
 
@@ -103,6 +134,7 @@ function History() {
 
           <div>
             <strong>{meals.length}</strong>
+
             <span>{meals.length === 1 ? "meal" : "meals"} logged</span>
           </div>
         </div>
@@ -117,6 +149,7 @@ function History() {
 
       {/* Nutrition totals */}
       <section className="history-summary">
+        {/* Calories */}
         <article>
           <div className="history-summary-icon calories">
             <i className="bi bi-fire" aria-hidden="true" />
@@ -128,6 +161,7 @@ function History() {
           </div>
         </article>
 
+        {/* Protein */}
         <article>
           <div className="history-summary-icon protein">
             <i className="bi bi-lightning-charge-fill" aria-hidden="true" />
@@ -139,6 +173,7 @@ function History() {
           </div>
         </article>
 
+        {/* Carbohydrates */}
         <article>
           <div className="history-summary-icon carbs">
             <i className="bi bi-circle-half" aria-hidden="true" />
@@ -150,6 +185,7 @@ function History() {
           </div>
         </article>
 
+        {/* Fat */}
         <article>
           <div className="history-summary-icon fat">
             <i className="bi bi-droplet-fill" aria-hidden="true" />
@@ -167,6 +203,7 @@ function History() {
         <div className="history-card-heading">
           <div>
             <h2>Logged Meals</h2>
+
             <p>Search or sort your nutrition records.</p>
           </div>
 
@@ -193,8 +230,11 @@ function History() {
               aria-label="Sort meals"
             >
               <option value="newest">Newest first</option>
+
               <option value="oldest">Oldest first</option>
+
               <option value="highest-calories">Highest calories</option>
+
               <option value="lowest-calories">Lowest calories</option>
             </select>
           </div>
@@ -204,6 +244,7 @@ function History() {
         {isLoading && (
           <div className="history-empty">
             <i className="bi bi-arrow-repeat" aria-hidden="true" />
+
             <h3>Loading history...</h3>
           </div>
         )}
@@ -212,7 +253,9 @@ function History() {
         {!isLoading && displayedMeals.length === 0 && (
           <div className="history-empty">
             <i className="bi bi-journal-x" aria-hidden="true" />
+
             <h3>{search ? "No matching meals" : "No meal history yet"}</h3>
+
             <p>
               {search
                 ? "Try searching for a different meal."
@@ -232,7 +275,13 @@ function History() {
 
                 <div className="history-meal-name">
                   <h3>{meal.name}</h3>
-                  <span>Meal #{meal.id}</span>
+
+                  {/* Display this meal's saved date */}
+                  <span className="history-meal-date">
+                    <i className="bi bi-calendar3" aria-hidden="true" />
+
+                    {formatMealDate(meal.createdAt)}
+                  </span>
                 </div>
 
                 <div className="history-nutrients">

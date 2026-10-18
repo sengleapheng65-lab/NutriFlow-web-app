@@ -6,4 +6,5 @@ export type Meal = {
   protein: number;
   carbs: number;
   fat: number;
+  createdAt: string;
 };

@@ -1,4 +1,5 @@
 package com.nutriflow.backend.model;
+import java.time.Instant;
 
 public class Meal {
 
@@ -8,6 +9,7 @@ public class Meal {
     private double protein;
     private double fat;
     private double carbs;
+    private Instant createdAt;
 
     // Empty constructor required for converting JSON into a Meal
     public Meal() {
@@ -76,5 +78,13 @@ public class Meal {
 
     public void setFat(double fat) {
         this.fat = fat;
+    }
+
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Instant createdAt) {
+        this.createdAt = createdAt;
     }
 }

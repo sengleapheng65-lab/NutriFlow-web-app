@@ -251,6 +251,23 @@
   font-size: 0.78rem;
 }
 
+/* Date and time shown below the meal name */
+.history-meal-date {
+  margin-top: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--muted);
+  font-size: 0.78rem;
+  line-height: 1.4;
+}
+
+.history-meal-date i {
+  flex-shrink: 0;
+  color: var(--green);
+  font-size: 0.8rem;
+}
+
 .history-nutrients {
   display: flex;
   align-items: center;
@@ -427,6 +444,10 @@
   .history-delete {
     grid-column: 3;
     grid-row: 1;
+  }
+
+  .history-meal-date {
+    flex-wrap: wrap;
   }
 }
 

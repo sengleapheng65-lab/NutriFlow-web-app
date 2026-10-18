@@ -1,4 +1,5 @@
-import { useEffect, useState, type CSSProperties } from "react";
+import { useEffect, useMemo, useState, type CSSProperties } from "react";
+
 import { Link } from "react-router-dom";
 
 import type { Meal } from "../types/Meal";
@@ -12,13 +13,27 @@ const proteinGoal = 120;
 const carbGoal = 250;
 const fatGoal = 65;
 
+// Create a date key using the user's local timezone
+function getLocalDateKey(date: Date) {
+  const year = date.getFullYear();
+
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+
+  const day = String(date.getDate()).padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
+}
+
 function Dashboard() {
-  // Meals returned by the Spring Boot backend
+  // All meals returned by Spring Boot
   const [meals, setMeals] = useState<Meal[]>([]);
 
   // Track loading and error states
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
+
+  // Track the current local date
+  const [todayKey, setTodayKey] = useState(() => getLocalDateKey(new Date()));
 
   // Load meals when the Dashboard opens
   useEffect(() => {
@@ -26,11 +41,13 @@ function Dashboard() {
       try {
         setError("");
 
-        // Request meals from GET /api/meals
+        // GET /api/meals
         const backendMeals = await getMeals();
 
         setMeals(backendMeals);
-      } catch {
+      } catch (requestError) {
+        console.error(requestError);
+
         setError(
           "Could not load meals. Make sure the Spring Boot backend is running.",
         );
@@ -42,20 +59,55 @@ function Dashboard() {
     void loadMeals();
   }, []);
 
-  // Calculate the total calories
-  const totalCalories = meals.reduce((total, meal) => total + meal.calories, 0);
+  // Check every minute to determine whether a new day started
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      setTodayKey(getLocalDateKey(new Date()));
+    }, 60_000);
 
-  // Calculate the total protein
-  const totalProtein = meals.reduce((total, meal) => total + meal.protein, 0);
+    // Stop the timer when the Dashboard closes
+    return () => {
+      window.clearInterval(timer);
+    };
+  }, []);
 
-  // Calculate the total carb
-  const totalCarbs = meals.reduce(
+  // Only include meals created today
+  const todayMeals = useMemo(() => {
+    return meals.filter((meal) => {
+      if (!meal.createdAt) {
+        return false;
+      }
+
+      const mealDate = new Date(meal.createdAt);
+
+      if (Number.isNaN(mealDate.getTime())) {
+        return false;
+      }
+
+      return getLocalDateKey(mealDate) === todayKey;
+    });
+  }, [meals, todayKey]);
+
+  // Calculate today's calories
+  const totalCalories = todayMeals.reduce(
+    (total, meal) => total + meal.calories,
+    0,
+  );
+
+  // Calculate today's protein
+  const totalProtein = todayMeals.reduce(
+    (total, meal) => total + meal.protein,
+    0,
+  );
+
+  // Calculate today's carbohydrates
+  const totalCarbs = todayMeals.reduce(
     (total, meal) => total + (meal.carbs ?? 0),
     0,
   );
 
-  // Calculate the total fat
-  const totalFat = meals.reduce((total, meal) => total + (meal.fat ?? 0), 0);
+  // Calculate today's fat
+  const totalFat = todayMeals.reduce((total, meal) => total + meal.fat, 0);
 
   // Calculate progress percentages
   const calorieProgress = Math.min(
@@ -72,7 +124,7 @@ function Dashboard() {
 
   const fatProgress = Math.min(Math.round((totalFat / fatGoal) * 100), 100);
 
-  // Prevent the remaining calories from becoming negative
+  // Prevent remaining calories from becoming negative
   const remainingCalories = Math.max(calorieGoal - totalCalories, 0);
 
   // Display today's date
@@ -82,24 +134,26 @@ function Dashboard() {
     day: "numeric",
   });
 
-  // Delete a selected meal from the backend
+  // Delete a selected meal
   async function handleDeleteMeal(mealId: number) {
     try {
       setError("");
 
-      // Request DELETE /api/meals/{id}
+      // DELETE /api/meals/{id}
       await deleteMealFromApi(mealId);
 
-      // Remove the deleted meal from the page
+      // Remove it from the frontend after deletion
       setMeals((currentMeals) =>
         currentMeals.filter((meal) => meal.id !== mealId),
       );
-    } catch {
+    } catch (requestError) {
+      console.error(requestError);
+
       setError("Could not delete the meal. Make sure the backend is running.");
     }
   }
 
-  // Pass the calorie percentage to the CSS progress circle
+  // Send the calorie percentage to the CSS circle
   const calorieRingStyle = {
     "--calorie-progress": `${calorieProgress * 3.6}deg`,
   } as CSSProperties;
@@ -110,12 +164,15 @@ function Dashboard() {
       <header className="dashboard-header">
         <div>
           <p className="dashboard-date">{currentDate}</p>
+
           <h1>Nutrition Dashboard</h1>
+
           <p>A simple view of your nutrition progress today.</p>
         </div>
 
         <Link className="dashboard-add-button" to="/add-meal">
           <i className="bi bi-plus-lg" aria-hidden="true" />
+
           <span>Add Meal</span>
         </Link>
       </header>
@@ -166,7 +223,7 @@ function Dashboard() {
           </div>
         </article>
 
-        {/* Protein, fat, carbs, and meal totals */}
+        {/* Daily nutrition statistics */}
         <div className="dashboard-stats">
           {/* Protein */}
           <article className="dashboard-stat-card">
@@ -182,7 +239,11 @@ function Dashboard() {
               </strong>
 
               <div className="stat-progress protein-progress">
-                <div style={{ width: `${proteinProgress}%` }} />
+                <div
+                  style={{
+                    width: `${proteinProgress}%`,
+                  }}
+                />
               </div>
             </div>
           </article>
@@ -201,7 +262,11 @@ function Dashboard() {
               </strong>
 
               <div className="stat-progress carb-progress">
-                <div style={{ width: `${carbProgress}%` }} />
+                <div
+                  style={{
+                    width: `${carbProgress}%`,
+                  }}
+                />
               </div>
             </div>
           </article>
@@ -220,7 +285,11 @@ function Dashboard() {
               </strong>
 
               <div className="stat-progress fat-progress">
-                <div style={{ width: `${fatProgress}%` }} />
+                <div
+                  style={{
+                    width: `${fatProgress}%`,
+                  }}
+                />
               </div>
             </div>
           </article>
@@ -232,102 +301,112 @@ function Dashboard() {
             </div>
 
             <div className="stat-content">
-              <span>Meals logged</span>
+              <span>Meals logged today</span>
 
               <strong>
-                {meals.length} {meals.length === 1 ? "meal" : "meals"}
+                {todayMeals.length} {todayMeals.length === 1 ? "meal" : "meals"}
               </strong>
             </div>
           </article>
         </div>
       </section>
 
-      {/* Meal history */}
+      {/* Today's meal list */}
       <section className="dashboard-meals-section">
         <div className="meals-heading">
           <div>
             <h2>Today’s Meals</h2>
-            <p>Your meals and nutrition information.</p>
+
+            <p>Meals logged for {currentDate}.</p>
           </div>
 
           <span>
-            {meals.length} {meals.length === 1 ? "meal" : "meals"}
+            {todayMeals.length} {todayMeals.length === 1 ? "meal" : "meals"}
           </span>
         </div>
 
-        {/* Display while waiting for the backend */}
-        {isLoading && (
+        {/* Loading state */}
+        {isLoading ? (
           <div className="empty-meals">
             <div className="empty-meals-icon">
               <i className="bi bi-arrow-repeat" aria-hidden="true" />
             </div>
 
             <h3>Loading meals...</h3>
+
             <p>Please wait while your meals are loaded.</p>
           </div>
-        )}
-
-        {/* Show an empty message when there are no meals */}
-        {!isLoading && meals.length === 0 ? (
+        ) : todayMeals.length === 0 ? (
+          /* Empty state */
           <div className="empty-meals">
             <div className="empty-meals-icon">
               <i className="bi bi-egg-fried" aria-hidden="true" />
             </div>
 
-            <h3>No meals logged yet</h3>
-            <p>Add your first meal to begin tracking.</p>
+            <h3>No meals logged today</h3>
+
+            <p>Add your first meal for today to begin tracking.</p>
 
             <Link to="/add-meal">Add Your First Meal</Link>
           </div>
         ) : (
-          !isLoading && (
-            <div className="dashboard-meal-list">
-              {meals.map((meal, index) => (
-                <article className="dashboard-meal-card" key={meal.id}>
-                  <div className="meal-card-icon">
-                    <i className="bi bi-egg-fried" aria-hidden="true" />
+          /* Today's meal cards */
+          <div className="dashboard-meal-list">
+            {todayMeals.map((meal, index) => (
+              <article className="dashboard-meal-card" key={meal.id}>
+                <div className="meal-card-icon">
+                  <i className="bi bi-egg-fried" aria-hidden="true" />
+                </div>
+
+                <div className="meal-card-information">
+                  <h3>{meal.name}</h3>
+
+                  <p>Meal {index + 1}</p>
+                </div>
+
+                <div className="meal-nutrition">
+                  {/* Calories */}
+                  <div>
+                    <strong>{meal.calories}</strong>
+
+                    <span>Calories</span>
                   </div>
 
-                  <div className="meal-card-information">
-                    <h3>{meal.name}</h3>
-                    <p>Meal {index + 1}</p>
+                  {/* Protein */}
+                  <div>
+                    <strong>{meal.protein}g</strong>
+
+                    <span>Protein</span>
                   </div>
 
-                  <div className="meal-nutrition">
-                    <div>
-                      <strong>{meal.calories}</strong>
-                      <span>Calories</span>
-                    </div>
+                  {/* Carbohydrates */}
+                  <div>
+                    <strong>{meal.carbs ?? 0}g</strong>
 
-                    <div>
-                      <strong>{meal.protein}g</strong>
-                      <span>Protein</span>
-                    </div>
-
-                    <div>
-                      <strong>{meal.carbs ?? 0}g</strong>
-                      <span>Carbs</span>
-                    </div>
-
-                    <div>
-                      <strong>{meal.fat ?? 0}g</strong>
-                      <span>Fat</span>
-                    </div>
+                    <span>Carbs</span>
                   </div>
 
-                  <button
-                    className="delete-meal-button"
-                    type="button"
-                    onClick={() => void handleDeleteMeal(meal.id)}
-                    aria-label={`Delete ${meal.name}`}
-                    title={`Delete ${meal.name}`}
-                  >
-                    <i className="bi bi-trash3" aria-hidden="true" />
-                  </button>
-                </article>
-              ))}
-            </div>
-          )
+                  {/* Fat */}
+                  <div>
+                    <strong>{meal.fat}g</strong>
+
+                    <span>Fat</span>
+                  </div>
+                </div>
+
+                {/* Delete meal */}
+                <button
+                  className="delete-meal-button"
+                  type="button"
+                  onClick={() => void handleDeleteMeal(meal.id)}
+                  aria-label={`Delete ${meal.name}`}
+                  title={`Delete ${meal.name}`}
+                >
+                  <i className="bi bi-trash3" aria-hidden="true" />
+                </button>
+              </article>
+            ))}
+          </div>
         )}
       </section>
     </main>

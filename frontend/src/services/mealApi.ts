@@ -3,6 +3,10 @@ import type { Meal } from "../types/Meal";
 // Address of the Spring Boot Meal API
 const MEAL_API_URL = "http://localhost:8080/api/meals";
 
+// Information entered by the user when creating a meal.
+// Spring Boot creates the ID and creation date.
+type NewMeal = Omit<Meal, "id" | "createdAt">;
+
 // Get every meal from the backend
 export async function getMeals(): Promise<Meal[]> {
   const response = await fetch(MEAL_API_URL);
@@ -15,7 +19,7 @@ export async function getMeals(): Promise<Meal[]> {
 }
 
 // Send a new meal to the backend
-export async function createMeal(meal: Omit<Meal, "id">): Promise<Meal> {
+export async function createMeal(meal: NewMeal): Promise<Meal> {
   const response = await fetch(MEAL_API_URL, {
     method: "POST",
     headers: {
