@@ -1,10 +1,10 @@
 import type { Meal } from "../types/Meal";
 
-// Address of the Spring Boot Meal API
-const MEAL_API_URL = "http://localhost:8080/api/meals";
+// Use localhost on the Mac and the Mac's network address on the iPad
+const BACKEND_HOST = window.location.hostname;
+const MEAL_API_URL = `http://${BACKEND_HOST}:8080/api/meals`;
 
-// Information entered by the user when creating a meal.
-// Spring Boot creates the ID and creation date.
+// Information entered when creating a meal
 type NewMeal = Omit<Meal, "id" | "createdAt">;
 
 // Get every meal from the backend
@@ -29,7 +29,7 @@ export async function createMeal(meal: NewMeal): Promise<Meal> {
   });
 
   if (!response.ok) {
-    throw new Error("Could not save meal.");
+    throw new Error(`Could not save meal. Status: ${response.status}`);
   }
 
   return response.json();

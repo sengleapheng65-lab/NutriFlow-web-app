@@ -20,7 +20,7 @@ import com.nutriflow.backend.model.Meal;
 
 @RestController
 @RequestMapping("/api/meals")
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = "*")
 public class MealController {
 
     // Temporary storage until a database is connected
