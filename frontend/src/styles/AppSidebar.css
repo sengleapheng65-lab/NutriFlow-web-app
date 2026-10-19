@@ -11,6 +11,28 @@
     var(--page-background);
 }
 
+/* Area that displays the selected page */
+.app-layout-content {
+  width: 100%;
+  min-width: 0;
+}
+
+/* Keep every application page aligned */
+.dashboard-main,
+.add-meal-main,
+.history-main,
+.goals-main,
+.profile-main,
+.settings-main {
+  width: 100%;
+  max-width: 1450px;
+  min-width: 0;
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: 35px 40px;
+  color: var(--text);
+}
+
 /* ================================
    APPLICATION SIDEBAR
    ================================ */
@@ -18,7 +40,7 @@
 .app-sidebar {
   position: sticky;
   top: 0;
-  width: 230px;
+  width: 240px;
   min-height: 100vh;
   height: 100vh;
   padding: 25px 17px 20px;
@@ -29,11 +51,14 @@
   background: var(--surface);
 }
 
-/* Application logo */
+/* ================================
+   APPLICATION LOGO
+   ================================ */
+
 .app-sidebar-brand {
   min-height: 70px;
-  margin-bottom: 20px;
-  padding: 0 9px 25px;
+  margin-bottom: 14px;
+  padding: 0 9px 20px;
   display: flex;
   align-items: center;
   gap: 11px;
@@ -51,21 +76,104 @@
 }
 
 .app-sidebar-brand div {
+  min-width: 0;
   display: flex;
   flex-direction: column;
 }
 
 .app-sidebar-brand strong {
+  overflow: hidden;
   color: var(--green-dark);
   font-size: 1rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .app-sidebar-brand small {
+  overflow: hidden;
   color: var(--muted);
   font-size: 0.75rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-/* Menu heading */
+/* ================================
+   SIDEBAR PROFILE
+   ================================ */
+
+.app-sidebar-profile {
+  margin: 0 0 20px;
+  padding: 11px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--page-background);
+  color: var(--text);
+  text-decoration: none;
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.app-sidebar-profile:hover {
+  border-color: var(--green);
+  background: var(--green-light);
+  color: var(--text);
+  transform: translateY(-1px);
+}
+
+/* Profile picture */
+.app-sidebar-avatar {
+  width: 46px;
+  height: 46px;
+  flex: 0 0 46px;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  border-radius: 13px;
+  background: var(--green-light);
+  color: var(--green);
+  font-size: 1.25rem;
+}
+
+.app-sidebar-avatar img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+/* Profile name and weight */
+.app-sidebar-profile-info {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-sidebar-profile-info strong {
+  overflow: hidden;
+  color: var(--text);
+  font-size: 0.9rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.app-sidebar-profile-info small {
+  margin-top: 2px;
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 0.78rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ================================
+   MENU HEADING
+   ================================ */
+
 .app-sidebar-label,
 .app-drawer-label {
   margin: 0;
@@ -110,6 +218,7 @@
     transform 0.2s ease;
 }
 
+/* Hover and selected page */
 .app-sidebar-links a:hover,
 .app-sidebar-links button:hover,
 .app-sidebar-links .active,
@@ -133,9 +242,11 @@
   font-weight: 700;
 }
 
+/* Navigation icons */
 .app-sidebar-links i,
 .app-drawer-links i {
   width: 20px;
+  flex-shrink: 0;
   color: var(--green);
   font-size: 1.05rem;
 }
@@ -180,7 +291,7 @@
   transform: translateY(-1px);
 }
 
-/* Hide phone menu elements on desktop */
+/* Hide phone navigation on desktop */
 .app-menu-button,
 .app-menu-overlay,
 .app-mobile-drawer {
@@ -190,6 +301,14 @@
 /* ================================
    DARK MODE
    ================================ */
+
+:root[data-theme="dark"] .app-sidebar-profile {
+  background: var(--page-background);
+}
+
+:root[data-theme="dark"] .app-sidebar-profile:hover {
+  background: var(--green-light);
+}
 
 :root[data-theme="dark"] .app-sidebar-signout,
 :root[data-theme="dark"] .app-drawer-signout {
@@ -206,80 +325,6 @@
 }
 
 /* ================================
-   SIDEBAR PROFILE
-   ================================ */
-
-.app-sidebar-profile {
-  margin: 20px 0;
-  padding: 11px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  border: 1px solid transparent;
-  border-radius: 14px;
-  color: var(--text);
-  text-decoration: none;
-  transition:
-    border-color 0.2s ease,
-    background-color 0.2s ease,
-    transform 0.2s ease;
-}
-
-.app-sidebar-profile:hover {
-  border-color: var(--border);
-  background: var(--green-light);
-  color: var(--text);
-  transform: translateY(-1px);
-}
-
-/* Profile picture */
-.app-sidebar-avatar {
-  width: 46px;
-  height: 46px;
-  flex: 0 0 46px;
-  overflow: hidden;
-  display: grid;
-  place-items: center;
-  border-radius: 13px;
-  background: var(--green-light);
-  color: var(--green);
-  font-size: 1.25rem;
-}
-
-.app-sidebar-avatar img {
-  width: 100%;
-  height: 100%;
-  display: block;
-  object-fit: cover;
-}
-
-/* Profile name and weight */
-.app-sidebar-profile-info {
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-}
-
-.app-sidebar-profile-info strong {
-  overflow: hidden;
-  color: var(--text);
-  font-size: 0.9rem;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.app-sidebar-profile-info small {
-  margin-top: 2px;
-  color: var(--muted);
-  font-size: 0.78rem;
-}
-
-/* Profile card inside the phone drawer */
-.app-drawer-profile {
-  margin: 17px 0;
-}
-
-/* ================================
    TABLET
    ================================ */
 
@@ -288,6 +333,17 @@
     grid-template-columns: 82px minmax(0, 1fr);
   }
 
+  /* Keep all application pages aligned */
+  .dashboard-main,
+  .add-meal-main,
+  .history-main,
+  .goals-main,
+  .profile-main,
+  .settings-main {
+    padding: 30px 24px;
+  }
+
+  /* Collapsed sidebar */
   .app-sidebar {
     width: 82px;
     padding: 22px 12px;
@@ -295,13 +351,27 @@
 
   .app-sidebar-brand {
     min-height: auto;
-    margin: 0;
-    padding: 0 7px 28px;
-    border: 0;
+    margin: 0 0 16px;
+    padding: 0 7px 18px;
+    justify-content: center;
+    border-bottom: 1px solid var(--border);
   }
 
   .app-sidebar-brand div,
   .app-sidebar-label {
+    display: none;
+  }
+
+  /* Show only the profile photo */
+  .app-sidebar-profile {
+    margin-bottom: 18px;
+    padding: 6px;
+    justify-content: center;
+    border-color: transparent;
+    background: transparent;
+  }
+
+  .app-sidebar-profile-info {
     display: none;
   }
 
@@ -333,6 +403,22 @@
     display: block;
   }
 
+  .app-layout-content {
+    width: 100%;
+    min-width: 0;
+  }
+
+  /* Keep every phone page aligned */
+  .dashboard-main,
+  .add-meal-main,
+  .history-main,
+  .goals-main,
+  .profile-main,
+  .settings-main {
+    width: 100%;
+    padding: 23px 15px 30px;
+  }
+
   /* Phone header */
   .app-sidebar {
     position: relative;
@@ -352,6 +438,7 @@
     min-height: auto;
     margin: 0;
     padding: 0;
+    justify-content: flex-start;
     border: 0;
   }
 
@@ -359,11 +446,19 @@
     display: flex;
   }
 
-  /* Phone drawer replaces desktop links */
+  /* Hide desktop navigation from phone header */
   .app-sidebar-links,
   .app-sidebar-label,
-  .app-sidebar-signout {
+  .app-sidebar-signout,
+  /* Hide the profile card from the phone header */
+  .app-sidebar .app-sidebar-profile {
     display: none;
+  }
+
+  /* Keep the profile card visible inside the mobile drawer */
+  .app-mobile-drawer .app-sidebar-profile {
+    margin: 17px 0;
+    display: flex;
   }
 
   /* Hamburger button */
@@ -388,7 +483,6 @@
       transform 0.2s ease;
   }
 
-  /* Hamburger hover */
   .app-menu-button:hover {
     border-color: var(--green);
     background: var(--green-light);
@@ -397,14 +491,12 @@
     transform: translateY(-2px);
   }
 
-  /* Hamburger keyboard focus */
   .app-menu-button:focus-visible {
     border-color: var(--green);
     outline: 3px solid rgba(25, 135, 84, 0.2);
     outline-offset: 2px;
   }
 
-  /* Hamburger click or phone tap */
   .app-menu-button:active {
     box-shadow: none;
     transform: translateY(0) scale(0.96);
@@ -457,7 +549,7 @@
     visibility: visible;
   }
 
-  /* Drawer header */
+  /* Drawer heading */
   .app-drawer-header {
     padding-bottom: 20px;
     display: flex;
@@ -495,7 +587,7 @@
     font-size: 0.75rem;
   }
 
-  /* Close button */
+  /* Drawer close button */
   .app-drawer-header button {
     width: 40px;
     height: 40px;
@@ -523,9 +615,15 @@
     transform: scale(0.94);
   }
 
+  /* Profile card inside the phone drawer */
+  .app-mobile-drawer .app-drawer-profile {
+    margin: 17px 0;
+    display: flex;
+  }
+
   /* Drawer menu */
   .app-drawer-label {
-    margin-top: 22px;
+    margin-top: 4px;
   }
 
   .app-drawer-links {
@@ -544,6 +642,38 @@
     background: var(--green-light);
     color: var(--green-dark);
     box-shadow: 0 8px 20px rgba(79, 202, 136, 0.15);
+  }
+}
+
+/* ================================
+   VERY SMALL PHONES
+   ================================ */
+
+@media (max-width: 400px) {
+  .dashboard-main,
+  .add-meal-main,
+  .history-main,
+  .goals-main,
+  .profile-main,
+  .settings-main {
+    padding: 20px 11px 28px;
+  }
+
+  .app-sidebar {
+    padding: 10px 12px;
+  }
+
+  .app-sidebar-brand img {
+    width: 40px;
+    height: 40px;
+  }
+
+  .app-sidebar-brand strong {
+    font-size: 0.9rem;
+  }
+
+  .app-sidebar-brand small {
+    font-size: 0.68rem;
   }
 }
 
