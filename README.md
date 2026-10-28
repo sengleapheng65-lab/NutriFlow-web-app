@@ -708,4 +708,3 @@ This project is currently intended for **educational and portfolio purposes**.
 Built with React, TypeScript, Java, Spring Boot, MySQL, and Docker.
 
 \</div>
-
