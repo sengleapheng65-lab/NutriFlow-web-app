@@ -1,93 +1,60 @@
 # 🥗 NutriFlow
 
-### Simple Nutrition Tracking for Healthier Habits
+### Nutrition Tracking Made Simple
 
-**NutriFlow** is a full-stack nutrition tracking web application designed to help users understand what they eat, monitor daily nutrition, set personal goals, and build healthier habits through a clean and responsive interface.
+**NutriFlow** is a full-stack nutrition tracking web application designed to help users log meals, monitor daily nutrition, set personal goals, and better understand their eating habits through a clean and responsive interface.
 
-The project combines a modern **React + TypeScript frontend** with a **Java Spring Boot backend**, REST API communication, and a MySQL-ready architecture for persistent nutrition and user data.
+The application combines a **React + TypeScript frontend** with a **Java Spring Boot backend**, REST API communication, and a MySQL-ready architecture for future persistent data storage and authentication.
+
+> 🚧 **Status:** Beta — Active Development
 
 ---
 
-## 💻 Technologies & Tools
-
-\<p align="center">
-&#x20; \<img src="[https://skillicons.dev/icons?i=react,typescript,vite,bootstrap,html,css,java,spring,maven,mysql,docker,git,github,vscode,idea](https://skillicons.dev/icons?i=react,typescript,vite,bootstrap,html,css,java,spring,maven,mysql,docker,git,github,vscode,idea)" />
-\</p>
+## 🛠️ Technologies & Tools
 
 ### Frontend
 
-\<p>
-&#x20; \<img src="[https://skillicons.dev/icons?i=react,typescript,vite,bootstrap,html,css](https://skillicons.dev/icons?i=react,typescript,vite,bootstrap,html,css)" />
-\</p>
+<p>
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg" width="45" height="45" alt="React" />
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/typescript/typescript-original.svg" width="45" height="45" alt="TypeScript" />
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/vitejs/vitejs-original.svg" width="45" height="45" alt="Vite" />
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/bootstrap/bootstrap-original.svg" width="45" height="45" alt="Bootstrap" />
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/html5/html5-original.svg" width="45" height="45" alt="HTML5" />
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/css3/css3-original.svg" width="45" height="45" alt="CSS3" />
+</p>
 
-- React
-- TypeScript
-- Vite
-- React Router
-- Bootstrap
-- Bootstrap Icons
-- HTML5
-- CSS3
+**React • TypeScript • Vite • React Router • Bootstrap • HTML5 • CSS3**
 
 ### Backend
 
-\<p>
-&#x20; \<img src="[https://skillicons.dev/icons?i=java,spring,maven](https://skillicons.dev/icons?i=java,spring,maven)" />
-\</p>
+<p>
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/java/java-original.svg" width="45" height="45" alt="Java" />
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/spring/spring-original.svg" width="45" height="45" alt="Spring Boot" />
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/maven/maven-original.svg" width="45" height="45" alt="Maven" />
+</p>
 
-- Java 21
-- Spring Boot
-- Spring Web MVC
-- Spring Data JPA
-- Maven
-- REST API
+**Java 21 • Spring Boot • Spring Web MVC • Spring Data JPA • Maven • REST API**
 
 ### Database & Development Tools
 
-\<p>
-&#x20; \<img src="[https://skillicons.dev/icons?i=mysql,docker,git,github,vscode,idea](https://skillicons.dev/icons?i=mysql,docker,git,github,vscode,idea)" />
-\</p>
+<p>
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/mysql/mysql-original.svg" width="45" height="45" alt="MySQL" />
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/docker/docker-original.svg" width="45" height="45" alt="Docker" />
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/git/git-original.svg" width="45" height="45" alt="Git" />
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/github/github-original.svg" width="45" height="45" alt="GitHub" />
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/vscode/vscode-original.svg" width="45" height="45" alt="VS Code" />
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/intellij/intellij-original.svg" width="45" height="45" alt="IntelliJ IDEA" />
+</p>
 
-- MySQL 8
-- Docker
-- Git
-- GitHub
-- Visual Studio Code
-- IntelliJ IDEA
-
----
-
-## 📌 Project Status
-
-> **Beta — Active Development**
-
-NutriFlow is currently a class and portfolio project under active development.
-
-The core nutrition tracking features are functional, while additional features such as persistent database storage, backend authentication, barcode scanning, and advanced nutrition analytics are planned for future development.
+**MySQL • Docker • Git • GitHub • Visual Studio Code • IntelliJ IDEA**
 
 ---
 
 ## ✨ Features
 
-### 🏠 Responsive Landing Page
-
-NutriFlow includes a modern landing page that introduces the application and its nutrition-tracking goals.
-
-The interface includes:
-
-- Responsive desktop and mobile navigation
-- Hero section
-- Feature overview
-- About section
-- Login and registration links
-- Mobile navigation menu
-- Light and dark themes
-
----
-
 ### 📊 Nutrition Dashboard
 
-The dashboard provides users with a quick overview of their daily nutrition.
+The dashboard gives users a quick overview of their daily nutrition.
 
 Users can view:
 
@@ -96,18 +63,16 @@ Users can view:
 - Protein intake
 - Carbohydrate intake
 - Fat intake
-- Daily nutrition progress
+- Progress toward nutrition goals
 - Recently logged meals
 
-Nutrition totals are automatically calculated from meals returned by the Spring Boot backend.
+Nutrition totals are calculated from meals returned by the Spring Boot backend.
 
 ---
 
 ### 🍽️ Meal Logging
 
-Users can manually add meals and record important nutrition information.
-
-Each meal includes:
+Users can manually add meals and enter nutritional information including:
 
 - Meal name
 - Calories
@@ -115,48 +80,55 @@ Each meal includes:
 - Carbohydrates
 - Fat
 
-After a meal is submitted, it is sent to the backend through the NutriFlow REST API and becomes available on the dashboard and meal history pages.
+Meals are submitted from the React frontend to the Spring Boot REST API.
+
+Each stored meal receives:
+
+- A unique ID
+- A creation timestamp
+
+Users can also remove meals from their nutrition history.
 
 ---
 
-### 🎯 Personal Nutrition Goals
+### 🎯 Nutrition Goals
 
-Users can create personalized daily nutrition goals for:
+Users can create personalized daily nutrition targets.
 
-- Calories
-- Protein
-- Carbohydrates
-- Fat
+| Nutrient | Default Goal |
+| --- | ---: |
+| Calories | 2,000 kcal |
+| Protein | 120 g |
+| Carbohydrates | 250 g |
+| Fat | 65 g |
 
-Saved goals are automatically used by the dashboard when calculating daily nutrition progress.
-
-Users can also reset their goals to NutriFlow's default values.
+The dashboard automatically compares logged nutrition with the user's daily goals.
 
 ---
 
 ### 📖 Meal History
 
-NutriFlow includes a dedicated history page where users can review previously logged meals.
+NutriFlow includes a dedicated history page where users can review logged meals.
 
 Users can:
 
-- View all logged meals
+- View logged meals
 - Search meals by name
-- Sort meals by newest
-- Sort meals by oldest
-- Sort meals by highest calories
-- Sort meals by lowest calories
+- Sort by newest
+- Sort by oldest
+- Sort by highest calories
+- Sort by lowest calories
 - View total calories
 - View total protein
 - View total carbohydrates
 - View total fat
-- Delete individual meals
+- Delete meals
 
 ---
 
 ### 👤 Health Profile
 
-Users can create a personal health profile containing information such as:
+Users can maintain personal profile information such as:
 
 - Full name
 - Email
@@ -168,34 +140,23 @@ Users can create a personal health profile containing information such as:
 - Activity level
 - Profile picture
 
-NutriFlow uses profile information to calculate useful health estimates.
+NutriFlow also calculates useful health estimates.
 
 #### BMI
 
-NutriFlow calculates **Body Mass Index (BMI)** using the user's height and weight.
+**Body Mass Index** is calculated using the user's height and weight.
 
 #### BMR
 
-NutriFlow estimates **Basal Metabolic Rate (BMR)** using the Mifflin-St Jeor equation.
+**Basal Metabolic Rate** estimates how much energy the body uses while at rest.
+
+NutriFlow uses the **Mifflin-St Jeor equation** for this estimate.
 
 #### TDEE
 
-NutriFlow estimates **Total Daily Energy Expenditure (TDEE)** using BMR and activity level.
+**Total Daily Energy Expenditure** estimates daily calorie needs using the user's BMR and activity level.
 
-> These calculations are intended for educational and informational purposes only and should not replace professional medical or nutritional advice.
-
----
-
-### ⚙️ Settings
-
-The settings page allows users to manage application preferences and stored data.
-
-Current options include:
-
-- Enable or disable nutrition tips
-- Save application preferences
-- Clear meal history
-- Manage NutriFlow application data
+> Health calculations are provided for educational and informational purposes only and should not replace professional medical advice.
 
 ---
 
@@ -208,73 +169,90 @@ Users can switch between:
 - ☀️ Light mode
 - 🌙 Dark mode
 
-The selected theme is stored locally so the application remembers the user's preference.
+The selected theme is stored locally so the application can remember the user's preference.
 
-If no theme has been selected, NutriFlow can use the user's operating system color preference.
+---
+
+### ⚙️ Settings
+
+The settings page allows users to manage application preferences and stored data.
+
+Current options include:
+
+- Enable or disable nutrition tips
+- Save application preferences
+- Manage nutrition goals
+- Clear meal history
+- Manage application data
 
 ---
 
 ## 🏗️ Application Architecture
 
-NutriFlow follows a full-stack architecture that separates the user interface, backend services, API communication, and data storage.
+NutriFlow separates the frontend, backend, and data layer into independent parts.
 
 ```text
-                         NUTRIFLOW
-                             │
-              ┌──────────────┴──────────────┐
-              │                             │
-              ▼                             ▼
-      React + TypeScript              Spring Boot
-           Frontend                    Backend
-              │                             │
-              │         REST API            │
-              └────────────────────────────►│
-                                            │
-                                            ▼
-                                      Data Layer
-                                            │
-                                            ▼
-                                          MySQL
+                    ┌────────────────────┐
+                    │      NutriFlow     │
+                    └─────────┬──────────┘
+                              │
+               ┌──────────────┴──────────────┐
+               │                             │
+               ▼                             ▼
+     ┌───────────────────┐        ┌───────────────────┐
+     │ React + TypeScript│        │    Spring Boot    │
+     │     Frontend      │        │      Backend      │
+     └─────────┬─────────┘        └─────────┬─────────┘
+               │                             │
+               │          REST API           │
+               └────────────────────────────►│
+                                             │
+                                             ▼
+                                   ┌───────────────────┐
+                                   │    Data Layer     │
+                                   └─────────┬─────────┘
+                                             │
+                                             ▼
+                                   ┌───────────────────┐
+                                   │       MySQL       │
+                                   └───────────────────┘
 ```
 
-### Frontend
+### Frontend Responsibilities
 
-The React frontend is responsible for:
+The React frontend handles:
 
 - User interface
 - Navigation
 - Forms
 - Nutrition calculations
-- Health profile information
 - Nutrition goals
+- Health profile information
 - Theme preferences
-- Communicating with the backend API
+- API requests
 
-### Backend
+### Backend Responsibilities
 
-The Spring Boot backend is responsible for:
+The Spring Boot backend handles:
 
 - REST API endpoints
 - Meal creation
 - Meal retrieval
 - Meal deletion
+- Unique meal IDs
 - Server-side timestamps
-- Business logic
-- Preparing the application for database persistence
+- Application logic
+- Future database persistence
 
 ### Database
 
-MySQL is configured as the development database.
+MySQL and Spring Data JPA are included in the backend configuration.
 
-The project also includes Docker Compose configuration for running MySQL locally.
-
-> **Current development note:** meal records are currently stored in backend memory while MySQL persistence is still being integrated. Restarting the backend will clear the current meal records.
+> **Current status:** meal records are temporarily stored in backend memory while persistent MySQL storage is being developed. Restarting the backend currently clears stored meal records.
 
 ---
 
 ## 🔌 REST API
-
-The current backend exposes REST endpoints for managing meals.
 
 ### Get All Meals
 
@@ -304,7 +282,7 @@ Example request:
 }
 ```
 
-The backend automatically generates:
+The backend automatically assigns:
 
 - A unique meal ID
 - A creation timestamp
@@ -380,29 +358,29 @@ NutriFlow-web-app/
 
 ---
 
-# 🚀 Getting Started
+## 🚀 Getting Started
 
-## Prerequisites
+### Prerequisites
 
-Before running NutriFlow, make sure you have:
+Make sure the following tools are installed:
 
 - Java JDK 21
 - Node.js
 - npm
 - Git
-- Docker Desktop or another Docker environment
+- Docker Desktop
 
 The backend includes the Maven Wrapper, so Maven does not need to be installed separately.
 
 ---
 
-## 1. Clone the Repository
+### 1. Clone the Repository
 
 ```bash
 git clone https://github.com/sengleapheng65-lab/NutriFlow-web-app.git
 ```
 
-Enter the project directory:
+Move into the project directory:
 
 ```bash
 cd NutriFlow-web-app
@@ -410,17 +388,15 @@ cd NutriFlow-web-app
 
 ---
 
-## 2. Start MySQL
+### 2. Start MySQL
 
-The project includes Docker Compose configuration for local MySQL development.
-
-Run:
+Start the local development database:
 
 ```bash
 docker compose up -d
 ```
 
-The current development configuration uses:
+Current configuration:
 
 ```text
 Database: nutriflow
@@ -436,33 +412,33 @@ docker compose down
 
 ---
 
-## 3. Start the Spring Boot Backend
+### 3. Start the Spring Boot Backend
 
-Open another terminal and enter:
+Open a terminal:
 
 ```bash
 cd backend
 ```
 
-### macOS / Linux
+#### macOS / Linux
 
 ```bash
 ./mvnw spring-boot:run
 ```
 
-### Windows
+#### Windows
 
 ```bash
 mvnw.cmd spring-boot:run
 ```
 
-The backend runs at:
+The backend runs on:
 
 ```text
 http://localhost:8080
 ```
 
-The meal API is available at:
+Meal API:
 
 ```text
 http://localhost:8080/api/meals
@@ -470,7 +446,7 @@ http://localhost:8080/api/meals
 
 ---
 
-## 4. Start the React Frontend
+### 4. Start the React Frontend
 
 Open another terminal:
 
@@ -490,7 +466,7 @@ Start the development server:
 npm run dev
 ```
 
-The frontend will normally be available at:
+The frontend normally runs on:
 
 ```text
 http://localhost:5173
@@ -498,198 +474,169 @@ http://localhost:5173
 
 ---
 
-# 🔄 How NutriFlow Works
-
-## Logging a Meal
+## 🔄 Application Flow
 
 ```text
-User
- │
- ▼
-Add Meal Page
- │
- │ Nutrition Information
- ▼
-React Frontend
- │
- │ POST /api/meals
- ▼
-Spring Boot REST API
- │
- ▼
-Meal Created
- │
- │ ID + Timestamp
- ▼
-Dashboard / History
+                   User
+                    │
+                    ▼
+          React + TypeScript
+                    │
+              Add / View Meal
+                    │
+                    ▼
+               REST API
+                    │
+                    ▼
+              Spring Boot
+                    │
+        ┌───────────┴───────────┐
+        │                       │
+        ▼                       ▼
+   Meal Storage          Nutrition Data
+        │                       │
+        └───────────┬───────────┘
+                    ▼
+           Dashboard / History
 ```
 
 ---
 
-## Dashboard Nutrition Calculation
-
-```text
-Spring Boot
-    │
-    │ GET /api/meals
-    ▼
-React Dashboard
-    │
-    ├── Calories
-    ├── Protein
-    ├── Carbohydrates
-    └── Fat
-         │
-         ▼
- Compare With Daily Goals
-         │
-         ▼
- Nutrition Progress
-```
-
----
-
-## 🎯 Default Daily Goals
-
-When users have not created custom nutrition goals, NutriFlow uses the following default values:
-
-| Nutrient      | Default Goal |
-| ------------- | -----------: |
-| Calories      |   2,000 kcal |
-| Protein       |        120 g |
-| Carbohydrates |        250 g |
-| Fat           |         65 g |
-
-Users can customize these values from the **Goals** page.
-
----
-
-## 🧠 Concepts Demonstrated
-
-NutriFlow demonstrates several important frontend, backend, and full-stack development concepts:
+## 🧠 Skills Demonstrated
 
 ### Frontend Development
 
 - React component architecture
-- TypeScript interfaces and types
-- React hooks
-- React state management
+- TypeScript
+- React Hooks
+- State management
 - Client-side routing
 - Responsive web design
 - Form validation
-- Local storage
+- Local Storage
 - Theme management
-- Async API communication
+- Asynchronous API requests
 
 ### Backend Development
 
-- Java object-oriented programming
+- Java
+- Object-oriented programming
 - Spring Boot
+- Spring Web MVC
 - REST controllers
 - RESTful API design
-- HTTP GET, POST, and DELETE requests
 - JSON serialization
+- HTTP GET, POST, and DELETE requests
 - Cross-Origin Resource Sharing
-- Maven dependency management
-- Spring Data JPA configuration
+- Maven
 
-### Database & Development
+### Database & Tools
 
-- MySQL configuration
+- Spring Data JPA
+- MySQL
 - Docker Compose
-- Frontend/backend separation
-- API integration
-- Git version control
-- GitHub collaboration
+- Git
+- GitHub
+- Frontend/backend integration
 
 ---
 
-# 🗺️ Development Roadmap
+## 🗺️ Roadmap
 
-NutriFlow is still growing.
-
-Planned improvements include:
+### Backend & Database
 
 - [ ] Connect meal storage to MySQL
 - [ ] Create persistent JPA meal entities
-- [ ] Create repository and service layers
-- [ ] Connect registration to the backend
-- [ ] Connect login to backend authentication
+- [ ] Add repository and service layers
+- [ ] Associate meals with individual users
+- [ ] Add update/edit meal API support
+
+### Authentication
+
+- [ ] Connect registration to Spring Boot
+- [ ] Connect login to Spring Boot
 - [ ] Add secure user accounts
 - [ ] Add password hashing
-- [ ] Associate meals with individual users
+- [ ] Add protected routes
+- [ ] Add session or token-based authentication
+
+### Nutrition Features
+
+- [ ] Add meal categories
 - [ ] Add barcode scanning
 - [ ] Integrate a nutrition database API
 - [ ] Automatically retrieve food nutrition information
-- [x] Add meal editing
-- [x] Add meal categories
-- [x] Add nutrition charts
-- [ ] Add weekly progress reports
-- [ ] Add monthly progress reports
+- [ ] Add advanced nutrition charts
+- [ ] Add weekly nutrition reports
+- [ ] Add monthly nutrition reports
 - [ ] Add weight tracking
 - [ ] Add personalized nutrition recommendations
-- [ ] Add frontend testing
-- [ ] Add backend testing
+
+### Testing & Deployment
+
+- [ ] Add frontend tests
+- [ ] Add backend tests
 - [ ] Deploy the frontend
 - [ ] Deploy the backend
+- [ ] Deploy the production database
 
 ---
 
-## ⚠️ Current Development Limitations
+## ⚠️ Current Limitations
 
-NutriFlow is currently a **beta educational project**.
+NutriFlow is currently a **beta educational and portfolio project**.
 
-At this stage:
+The current version has several limitations:
 
-- Login does not yet authenticate through the Spring Boot backend.
+- Login is not yet connected to backend authentication.
 - Registration does not yet create backend user accounts.
 - Social login buttons are currently interface elements only.
-- Meal records are stored temporarily in backend memory.
-- Restarting the backend clears meal records.
-- MySQL and JPA are configured but meal persistence is still being integrated.
-- Barcode scanning is planned but not yet implemented.
-
-These features are part of NutriFlow's ongoing development roadmap.
+- Meal records are temporarily stored in backend memory.
+- Restarting the backend clears existing meal records.
+- MySQL and JPA are configured, but persistent meal storage is still being developed.
+- Barcode scanning is not yet implemented.
 
 ---
 
-## 🔐 Privacy & Health Disclaimer
+## 🔐 Health & Privacy Disclaimer
 
-NutriFlow is an educational software project and is **not a medical application**.
+NutriFlow is an educational software project and **not a medical application**.
 
-Nutrition totals, BMI, BMR, TDEE, and other calculated values are provided for informational and educational purposes only.
+Nutrition values and calculations such as BMI, BMR, and TDEE are intended for educational and informational purposes only.
 
-They should not be considered medical advice, diagnosis, or treatment.
-
-Do not store sensitive medical information in the application while it is under development.
+They should not be considered professional medical advice, diagnosis, or treatment.
 
 ---
 
 ## 👨‍💻 Developer
 
-**Leapheng Seng**
+### Leapheng Seng
 
-Computer Science Student
+Computer Science Student  
 Full-Stack Software Development
 
-GitHub: [@sengleapheng65-lab](https://github.com/sengleapheng65-lab)
+<p>
+  <a href="https://github.com/sengleapheng65-lab">
+    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/github/github-original.svg" width="35" height="35" alt="GitHub" />
+  </a>
+</p>
+
+**GitHub:** [@sengleapheng65-lab](https://github.com/sengleapheng65-lab)
 
 ---
 
 ## 🤝 Contributing
 
-NutriFlow is currently under active development.
-
 Suggestions, improvements, and bug reports are welcome.
 
 To contribute:
 
-1. Fork or clone the repository.
+1. Fork the repository.
 2. Create a new branch.
 3. Make your changes.
 4. Test the frontend and backend.
 5. Commit your changes with a descriptive message.
-6. Submit a pull request.
+6. Open a pull request.
 
 ---
 
@@ -699,12 +646,12 @@ This project is currently intended for **educational and portfolio purposes**.
 
 ---
 
-\<div align="center">
+<div align="center">
 
-### 🥗 NutriFlow
+# 🥗 NutriFlow
 
-**Know what you eat. Feel better every day.**
+### Know what you eat. Feel better every day.
 
-Built with React, TypeScript, Java, Spring Boot, MySQL, and Docker.
+Built with **React • TypeScript • Java • Spring Boot • MySQL • Docker**
 
-\</div>
+</div>
