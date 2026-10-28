@@ -10,15 +10,15 @@ The project combines a modern **React + TypeScript frontend** with a **Java Spri
 
 ## 💻 Technologies & Tools
 
-<p align="center">
-  <img src="https://skillicons.dev/icons?i=react,typescript,vite,bootstrap,html,css,java,spring,maven,mysql,docker,git,github,vscode,idea" />
-</p>
+\<p align="center">
+&#x20; \<img src="[https://skillicons.dev/icons?i=react,typescript,vite,bootstrap,html,css,java,spring,maven,mysql,docker,git,github,vscode,idea](https://skillicons.dev/icons?i=react,typescript,vite,bootstrap,html,css,java,spring,maven,mysql,docker,git,github,vscode,idea)" />
+\</p>
 
 ### Frontend
 
-<p>
-  <img src="https://skillicons.dev/icons?i=react,typescript,vite,bootstrap,html,css" />
-</p>
+\<p>
+&#x20; \<img src="[https://skillicons.dev/icons?i=react,typescript,vite,bootstrap,html,css](https://skillicons.dev/icons?i=react,typescript,vite,bootstrap,html,css)" />
+\</p>
 
 - React
 - TypeScript
@@ -31,9 +31,9 @@ The project combines a modern **React + TypeScript frontend** with a **Java Spri
 
 ### Backend
 
-<p>
-  <img src="https://skillicons.dev/icons?i=java,spring,maven" />
-</p>
+\<p>
+&#x20; \<img src="[https://skillicons.dev/icons?i=java,spring,maven](https://skillicons.dev/icons?i=java,spring,maven)" />
+\</p>
 
 - Java 21
 - Spring Boot
@@ -44,9 +44,9 @@ The project combines a modern **React + TypeScript frontend** with a **Java Spri
 
 ### Database & Development Tools
 
-<p>
-  <img src="https://skillicons.dev/icons?i=mysql,docker,git,github,vscode,idea" />
-</p>
+\<p>
+&#x20; \<img src="[https://skillicons.dev/icons?i=mysql,docker,git,github,vscode,idea](https://skillicons.dev/icons?i=mysql,docker,git,github,vscode,idea)" />
+\</p>
 
 - MySQL 8
 - Docker
@@ -553,12 +553,12 @@ React Dashboard
 
 When users have not created custom nutrition goals, NutriFlow uses the following default values:
 
-| Nutrient | Default Goal |
-|---|---:|
-| Calories | 2,000 kcal |
-| Protein | 120 g |
-| Carbohydrates | 250 g |
-| Fat | 65 g |
+| Nutrient      | Default Goal |
+| ------------- | -----------: |
+| Calories      |   2,000 kcal |
+| Protein       |        120 g |
+| Carbohydrates |        250 g |
+| Fat           |         65 g |
 
 Users can customize these values from the **Goals** page.
 
@@ -621,9 +621,9 @@ Planned improvements include:
 - [ ] Add barcode scanning
 - [ ] Integrate a nutrition database API
 - [ ] Automatically retrieve food nutrition information
-- [ ] Add meal editing
-- [ ] Add meal categories
-- [ ] Add nutrition charts
+- [x] Add meal editing
+- [x] Add meal categories
+- [x] Add nutrition charts
 - [ ] Add weekly progress reports
 - [ ] Add monthly progress reports
 - [ ] Add weight tracking
@@ -669,7 +669,7 @@ Do not store sensitive medical information in the application while it is under 
 
 **Leapheng Seng**
 
-Computer Science Student  
+Computer Science Student
 Full-Stack Software Development
 
 GitHub: [@sengleapheng65-lab](https://github.com/sengleapheng65-lab)
@@ -699,7 +699,7 @@ This project is currently intended for **educational and portfolio purposes**.
 
 ---
 
-<div align="center">
+\<div align="center">
 
 ### 🥗 NutriFlow
 
@@ -707,4 +707,5 @@ This project is currently intended for **educational and portfolio purposes**.
 
 Built with React, TypeScript, Java, Spring Boot, MySQL, and Docker.
 
-</div>
+\</div>
+
