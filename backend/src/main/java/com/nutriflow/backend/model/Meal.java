@@ -1,8 +1,18 @@
 package com.nutriflow.backend.model;
 import java.time.Instant;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
+// @Entity makes this class a table in MySQL (table name: meal)
+@Entity
 public class Meal {
 
+    // MySQL creates the ID automatically (1, 2, 3, ...)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private int calories;
@@ -87,4 +97,4 @@ public class Meal {
     public void setCreatedAt(Instant createdAt) {
         this.createdAt = createdAt;
     }
-}
+}
