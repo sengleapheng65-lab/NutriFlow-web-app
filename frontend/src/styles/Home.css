@@ -88,9 +88,9 @@ html {
 
 /* Sign In button */
 .home-links .sign-in-button {
-  padding: 9px 17px;
+  padding: 10px 19px;
   border: none;
-  border-radius: 9px;
+  border-radius: 999px;
   background: transparent;
   color: var(--white);
 }
@@ -103,9 +103,9 @@ html {
 
 /* Get Started button */
 .home-links .get-started-button {
-  padding: 9px 17px;
+  padding: 10px 21px;
   border: 2px solid var(--white);
-  border-radius: 9px;
+  border-radius: 999px;
   background: var(--white);
   color: var(--green-dark);
 }
@@ -376,6 +376,7 @@ html {
   height: 100%;
   display: block;
   border-radius: inherit;
+  transition: width 0.55s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .protein-progress {
@@ -444,6 +445,363 @@ html {
 .meal-calories {
   color: var(--green-dark);
   font-size: 0.85rem;
+}
+
+/* =========================
+   REDESIGNED HERO
+   ========================= */
+
+.hero-section {
+  padding: 66px 22px 92px;
+  border-bottom: 0;
+  background:
+    radial-gradient(circle at 57% 38%, rgba(94, 214, 166, 0.34), transparent 32%),
+    radial-gradient(circle at 81% 8%, rgba(231, 251, 240, 0.95), transparent 25%),
+    var(--green-pale);
+}
+
+.hero-container {
+  width: min(1225px, 100%);
+  min-height: 580px;
+  padding: 0;
+  grid-template-columns: 0.98fr 1.02fr;
+  gap: 76px;
+  overflow: visible;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.hero-label {
+  margin-bottom: 31px;
+  padding: 9px 17px;
+  border-color: #b8ebce;
+  background: #e0fae9;
+  color: var(--green-dark);
+  font-size: 0.73rem;
+}
+
+.hero-content h1 {
+  max-width: 580px;
+  font-size: clamp(3.25rem, 4.75vw, 4.75rem);
+  font-weight: 800;
+  line-height: 1.02;
+  letter-spacing: -0.058em;
+}
+
+.hero-description {
+  max-width: 575px;
+  margin: 28px 0 38px;
+  font-size: 1.06rem;
+  line-height: 1.72;
+}
+
+.hero-buttons {
+  gap: 16px;
+}
+
+.primary-button,
+.secondary-button {
+  min-height: 57px;
+  padding: 0 31px;
+  border-radius: 999px;
+}
+
+.primary-button {
+  box-shadow: 0 12px 22px rgba(25, 135, 84, 0.24);
+}
+
+.secondary-button {
+  border-color: #d7e1df;
+  color: #3b4c52;
+}
+
+.hero-benefits {
+  gap: 26px;
+  margin-top: 51px;
+}
+
+.hero-benefits span {
+  font-size: 0.84rem;
+}
+
+.nutrition-preview {
+  padding: 33px;
+  border: 0;
+  border-radius: 24px;
+  background: rgba(249, 255, 252, 0.89);
+  box-shadow: 0 24px 42px rgba(5, 81, 54, 0.25);
+  transform: none;
+}
+
+.preview-heading {
+  padding-bottom: 24px;
+  border-bottom: 1px solid #e4efeb;
+}
+
+.preview-heading small {
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.preview-heading h2 {
+  font-size: 1.19rem;
+}
+
+.dashboard-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.dashboard-actions button {
+  padding: 7px 8px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: #8a9ca7;
+  font-size: 0.7rem;
+  font-weight: 650;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.dashboard-actions button:hover {
+  background: var(--green-light);
+  color: var(--green-dark);
+}
+
+.progress-status {
+  margin-left: 8px;
+  padding: 4px 9px;
+  border-radius: 20px;
+  background: #dcfce7;
+  color: #087a50;
+  font-size: 0.66rem;
+  font-weight: 700;
+  vertical-align: 2px;
+}
+
+.calorie-summary {
+  margin: 31px 0 22px;
+  grid-template-columns: 160px 1fr;
+  gap: 31px;
+}
+
+.calorie-circle {
+  width: 145px;
+  height: 145px;
+  padding: 12px;
+  background: conic-gradient(
+    #2ec08c 0% var(--calorie-progress, 29%),
+    #eff7f4 var(--calorie-progress, 29%) 100%
+  );
+}
+
+.calorie-circle strong {
+  color: #14251e;
+  font-size: 1.45rem;
+}
+
+.calorie-circle span {
+  color: #829ba0;
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.nutrient-list {
+  gap: 15px;
+}
+
+.nutrient-heading {
+  font-size: 0.73rem;
+  font-weight: 650;
+}
+
+.nutrient-heading span {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.nutrient-heading span::before {
+  width: 10px;
+  height: 10px;
+  content: "";
+  border-radius: 50%;
+  background: var(--green);
+}
+
+.nutrient:nth-child(2) .nutrient-heading span::before {
+  background: #f5a215;
+}
+
+.nutrient:nth-child(3) .nutrient-heading span::before {
+  background: #6770ee;
+}
+
+.nutrient-track {
+  height: 10px;
+  background: #ecf4f1;
+}
+
+.protein-progress { width: 28%; }
+.carb-progress { width: 33%; }
+.fat-progress { width: 9%; }
+
+.remaining-calories {
+  margin: -7px 0 25px 30px;
+  padding: 5px 11px;
+  display: inline-block;
+  border: 1px solid #c2f0d3;
+  border-radius: 20px;
+  background: #f0fff5;
+  color: #087a50;
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+.quick-meals-heading {
+  padding: 19px 0 12px;
+  display: flex;
+  justify-content: space-between;
+  border-top: 1px solid #e4efeb;
+  color: #62727c;
+  font-size: 0.67rem;
+}
+
+.quick-meals-heading strong {
+  font-weight: 750;
+  letter-spacing: 0.055em;
+  text-transform: uppercase;
+}
+
+.quick-meals-heading strong i {
+  margin-right: 4px;
+  color: #f0a51b;
+}
+
+.quick-meals-heading span {
+  color: #9badb5;
+}
+
+.quick-meal-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.quick-meal-buttons button {
+  padding: 7px 10px;
+  border: 1px solid #dfece7;
+  border-radius: 10px;
+  background: #f5faf8;
+  color: #43525a;
+  font-size: 0.68rem;
+  font-weight: 650;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.quick-meal-buttons img {
+  width: 17px;
+  height: 17px;
+  margin-right: 3px;
+  vertical-align: -4px;
+  object-fit: contain;
+}
+
+.quick-meal-buttons button:hover {
+  border-color: var(--green);
+  background: var(--green-light);
+}
+
+.quick-meal-buttons button:active {
+  transform: scale(0.96);
+}
+
+.quick-meal-buttons b {
+  margin-left: 3px;
+  color: var(--green);
+}
+
+.featured-meal {
+  margin-top: 18px;
+  margin-bottom: 0;
+  padding: 11px 15px;
+  grid-template-columns: auto 1fr auto auto;
+  background: rgba(255, 255, 255, 0.84);
+}
+
+.demo-meal-feed {
+  max-height: 166px;
+  overflow-y: auto;
+}
+
+.demo-meal-feed .featured-meal:not(:first-child) {
+  margin-top: 9px;
+}
+
+.demo-meal-feed .featured-meal:first-child {
+  animation: meal-arrival 0.38s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.dashboard-message {
+  margin: 11px 0 -5px;
+  color: var(--green);
+  font-size: 0.72rem;
+  font-weight: 700;
+  animation: message-pop 0.25s ease-out;
+}
+
+.dashboard-message i {
+  margin-right: 5px;
+}
+
+@keyframes meal-arrival {
+  from { opacity: 0; transform: translateY(-10px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes message-pop {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.meal-emoji {
+  font-size: 1.25rem;
+}
+
+.meal-food-image {
+  width: 34px;
+  height: 34px;
+  display: block;
+  object-fit: contain;
+}
+
+.meal-delete-button {
+  padding: 5px;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: #b3c0c7;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.meal-delete-button:hover {
+  background: #fff0ed;
+  color: #d4513d;
 }
 
 /* =========================
@@ -729,34 +1087,119 @@ html {
    ========================= */
 
 .home-footer {
-  padding: 26px 8%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 25px;
+  padding: 48px 22px 36px;
   border-top: 1px solid rgba(255, 255, 255, 0.12);
   background: var(--green-deep);
-  color: rgba(255, 255, 255, 0.75);
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.footer-content {
+  width: min(1215px, 100%);
+  margin: 0 auto;
+}
+
+.footer-grid {
+  padding-bottom: 48px;
+  display: grid;
+  grid-template-columns: 1.25fr 1fr 1fr 0.95fr;
+  gap: 72px;
+}
+
+.footer-intro p {
+  max-width: 270px;
+  margin: 19px 0 0;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.84rem;
+  line-height: 1.55;
 }
 
 .footer-brand {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 9px;
   color: var(--white);
-  font-weight: 700;
+  font-size: 1.25rem;
+  font-weight: 750;
+  text-decoration: none;
 }
 
 .footer-brand img {
-  width: 42px;
-  height: 42px;
-  border-radius: 9px;
+  width: 32px;
+  height: 32px;
+  padding: 2px;
+  border: 1px solid rgba(141, 224, 177, 0.62);
+  border-radius: 8px;
+  background: var(--green-deep);
   object-fit: cover;
+  box-shadow: 0 0 0 3px rgba(79, 202, 136, 0.12);
 }
 
-.home-footer p {
+.footer-column,
+.footer-connect {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.footer-column h2,
+.footer-connect h2 {
+  margin: 1px 0 17px;
+  color: #ffffff;
+  font-size: 0.77rem;
+  font-weight: 750;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.footer-column a {
+  margin-bottom: 9px;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.82rem;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.footer-column a:hover {
+  color: #ffffff;
+}
+
+.footer-socials {
+  display: flex;
+  gap: 11px;
+}
+
+.footer-socials a {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.72);
+  text-decoration: none;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.footer-socials a:hover {
+  background: var(--green);
+  color: #ffffff;
+  transform: translateY(-2px);
+}
+
+.footer-bottom {
+  padding-top: 31px;
+  display: flex;
+  justify-content: space-between;
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.home-footer .footer-bottom p {
   margin: 0;
-  color: rgba(255, 255, 255, 0.75);
+  color: rgba(255, 255, 255, 0.48);
+  font-size: 0.78rem;
 }
 
 /* =========================
@@ -838,7 +1281,104 @@ html {
 }
 
 :root[data-theme="dark"] .home-footer {
-  background: #07100b;
+  background: var(--green-deep);
+}
+
+/* Dark theme refinements for the redesigned hero widget. */
+:root[data-theme="dark"] .hero-section {
+  background:
+    radial-gradient(circle at 57% 38%, rgba(43, 158, 113, 0.23), transparent 32%),
+    radial-gradient(circle at 81% 8%, rgba(22, 77, 53, 0.3), transparent 25%),
+    var(--page-background);
+}
+
+:root[data-theme="dark"] .hero-label {
+  border-color: rgba(79, 202, 136, 0.3);
+  background: rgba(25, 61, 43, 0.9);
+  color: var(--green-dark);
+}
+
+:root[data-theme="dark"] .secondary-button {
+  border-color: var(--border);
+  background: var(--surface);
+  color: var(--text);
+}
+
+:root[data-theme="dark"] .nutrition-preview {
+  border: 0;
+  background: linear-gradient(145deg, rgba(23, 48, 36, 0.98), rgba(12, 30, 22, 0.98));
+  box-shadow:
+    0 24px 42px rgba(0, 0, 0, 0.42),
+    0 0 56px rgba(79, 202, 136, 0.16);
+}
+
+:root[data-theme="dark"] .preview-heading,
+:root[data-theme="dark"] .quick-meals-heading {
+  border-color: var(--border);
+}
+
+:root[data-theme="dark"] .progress-status {
+  background: rgba(25, 111, 73, 0.42);
+  color: #8de0b1;
+}
+
+:root[data-theme="dark"] .calorie-circle {
+  background: conic-gradient(
+    #4fca88 0% var(--calorie-progress, 29%),
+    #294437 var(--calorie-progress, 29%) 100%
+  );
+}
+
+:root[data-theme="dark"] .calorie-circle strong {
+  color: var(--text);
+}
+
+:root[data-theme="dark"] .calorie-circle span,
+:root[data-theme="dark"] .quick-meals-heading span {
+  color: var(--muted);
+}
+
+:root[data-theme="dark"] .nutrient-track {
+  background: #294437;
+}
+
+:root[data-theme="dark"] .remaining-calories {
+  border-color: rgba(79, 202, 136, 0.35);
+  background: rgba(25, 61, 43, 0.72);
+  color: #8de0b1;
+}
+
+:root[data-theme="dark"] .quick-meals-heading {
+  color: var(--muted);
+}
+
+:root[data-theme="dark"] .quick-meal-buttons button {
+  border-color: var(--border);
+  background: #193426;
+  color: var(--text);
+}
+
+:root[data-theme="dark"] .quick-meal-buttons button:hover {
+  border-color: var(--green);
+  background: #1d3b2b;
+}
+
+:root[data-theme="dark"] .featured-meal {
+  background: rgba(22, 40, 29, 0.94);
+}
+
+:root[data-theme="dark"] .meal-delete-button:hover {
+  background: rgba(154, 57, 41, 0.24);
+  color: #f09a86;
+}
+
+/* The hero is a free-flowing section, not a bordered card. */
+.hero-container,
+:root[data-theme="dark"] .hero-container {
+  border: 0 !important;
+  outline: 0;
+  background: transparent !important;
+  box-shadow: none !important;
 }
 
 /* =========================
@@ -846,6 +1386,11 @@ html {
    ========================= */
 
 @media (max-width: 900px) {
+  .footer-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 42px 64px;
+  }
+
   .hero-container {
     padding: 52px 38px;
     grid-template-columns: 1fr;
@@ -1072,7 +1617,10 @@ html {
     min-height: auto;
     padding: 39px 22px;
     gap: 40px;
+    border: 0;
     border-radius: 22px;
+    background: transparent;
+    box-shadow: none;
   }
 
   .hero-content h1 {
@@ -1151,9 +1699,22 @@ html {
 
   /* Footer */
   .home-footer {
-    padding: 28px 20px;
+    padding: 42px 20px 30px;
+  }
+
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: 34px;
+  }
+
+  .footer-intro p {
+    max-width: 330px;
+  }
+
+  .footer-bottom {
+    align-items: flex-start;
     flex-direction: column;
-    text-align: center;
+    gap: 10px;
   }
 }
 

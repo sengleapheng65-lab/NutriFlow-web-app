@@ -1,5 +1,5 @@
 // useState remembers whether the mobile menu is open
-import { useState } from "react";
+import { useMemo, useState, type CSSProperties } from "react";
 import { Link } from "react-router-dom";
 
 import "../styles/Home.css";
@@ -46,14 +46,120 @@ const features = [
   },
 ];
 
+type DemoMeal = {
+  id: number;
+  name: string;
+  calories: number;
+  protein: number;
+  carbs: number;
+  fat: number;
+  icon: string;
+  image?: string;
+};
+
+const quickMeals: Omit<DemoMeal, "id">[] = [
+  {
+    name: "Chicken Rice Bowl",
+    calories: 520,
+    protein: 38,
+    carbs: 55,
+    fat: 14,
+    icon: "🍗",
+    image: "/chicken.png",
+  },
+  {
+    name: "Greek Yogurt",
+    calories: 180,
+    protein: 16,
+    carbs: 22,
+    fat: 3,
+    icon: "🥣",
+  },
+  {
+    name: "Salmon Salad",
+    calories: 350,
+    protein: 26,
+    carbs: 12,
+    fat: 22,
+    icon: "🐟",
+    image: "/salad.png",
+  },
+  {
+    name: "Protein Shake",
+    calories: 220,
+    protein: 30,
+    carbs: 8,
+    fat: 3,
+    icon: "🥤",
+  },
+];
+
 function Home() {
   // The mobile menu starts closed
   const [menuOpen, setMenuOpen] = useState(false);
+  const [demoMeals, setDemoMeals] = useState<DemoMeal[]>([
+    {
+      id: 1,
+      name: "Oatmeal & Banana",
+      calories: 580,
+      protein: 34,
+      carbs: 72,
+      fat: 6,
+      icon: "🥣",
+    },
+  ]);
+  const [dashboardMessage, setDashboardMessage] = useState("");
 
   // Close the mobile menu
   function closeMenu() {
     setMenuOpen(false);
   }
+
+  function addQuickMeal(meal: Omit<DemoMeal, "id">) {
+    setDemoMeals((currentMeals) => [
+      { ...meal, id: Date.now() },
+      ...currentMeals,
+    ]);
+    setDashboardMessage(`${meal.name} added`);
+  }
+
+  function deleteDemoMeal(mealId: number) {
+    setDemoMeals((currentMeals) =>
+      currentMeals.filter((meal) => meal.id !== mealId),
+    );
+  }
+
+  function resetDashboard() {
+    setDemoMeals([
+      {
+        id: 1,
+        name: "Oatmeal & Banana",
+        calories: 580,
+        protein: 34,
+        carbs: 72,
+        fat: 6,
+        icon: "🥣",
+      },
+    ]);
+    setDashboardMessage("Dashboard reset");
+  }
+
+  const demoTotals = useMemo(
+    () =>
+      demoMeals.reduce(
+        (totals, meal) => ({
+          calories: totals.calories + meal.calories,
+          protein: totals.protein + meal.protein,
+          carbs: totals.carbs + meal.carbs,
+          fat: totals.fat + meal.fat,
+        }),
+        { calories: 0, protein: 0, carbs: 0, fat: 0 },
+      ),
+    [demoMeals],
+  );
+
+  const remainingCalories = 2000 - demoTotals.calories;
+  const calorieProgress = Math.min(100, (demoTotals.calories / 2000) * 100);
 
   return (
     <main className="home-page">
@@ -187,21 +293,22 @@ function Home() {
         <div className="hero-container">
           {/* Left side */}
           <div className="hero-content">
-            <span className="hero-label">Simple nutrition tracking</span>
+            <span className="hero-label">✨ Simple nutrition tracking</span>
 
             <h1>
               Know what you eat.
-              <span> Feel better every day.</span>
+              <span> Feel better</span> every day.
             </h1>
 
             <p className="hero-description">
-              Log meals, understand calories and nutrients, and build healthier
-              habits without a complicated interface.
+              Log meals instantly, understand your calories and macros in
+              real-time, and build sustainable habits without complicated
+              interfaces.
             </p>
 
             <div className="hero-buttons">
               <Link className="primary-button" to="/register">
-                Start tracking
+                Start tracking free
                 <i className="bi bi-arrow-right" aria-hidden="true" />
               </Link>
 
@@ -218,28 +325,46 @@ function Home() {
 
               <span>
                 <i className="bi bi-check-circle-fill" aria-hidden="true" />
-                Daily progress
+                Daily progress ring
+              </span>
+
+              <span>
+                <i className="bi bi-check-circle-fill" aria-hidden="true" />
+                No ads or bloat
               </span>
             </div>
           </div>
 
           {/* Right-side dashboard preview */}
-          <div className="nutrition-preview">
+          <div className="nutrition-preview" id="demo">
             <div className="preview-heading">
               <div>
-                <small>Today</small>
-                <h2>Daily progress</h2>
+                <small>Today's overview</small>
+                <h2>
+                  Daily Progress <span className="progress-status">On Track</span>
+                </h2>
               </div>
 
-              <div className="user-icon">
-                <i className="bi bi-person-fill" aria-hidden="true" />
+              <div className="dashboard-actions">
+                <button type="button" onClick={resetDashboard}>
+                  <i className="bi bi-arrow-counterclockwise" aria-hidden="true" />
+                  Reset
+                </button>
+                <div className="user-icon">
+                  <i className="bi bi-person-fill" aria-hidden="true" />
+                </div>
               </div>
             </div>
 
             <div className="calorie-summary">
-              <div className="calorie-circle">
+              <div
+                className="calorie-circle"
+                style={{
+                  "--calorie-progress": `${calorieProgress}%`,
+                } as CSSProperties}
+              >
                 <div>
-                  <strong>1,420</strong>
+                  <strong>{demoTotals.calories.toLocaleString()}</strong>
                   <span>of 2,000 kcal</span>
                 </div>
               </div>
@@ -248,66 +373,115 @@ function Home() {
                 <div className="nutrient">
                   <div className="nutrient-heading">
                     <span>Protein</span>
-                    <strong>82 / 120g</strong>
+                    <strong>{demoTotals.protein} / 120g</strong>
                   </div>
 
                   <div className="nutrient-track">
-                    <span className="protein-progress" />
+                    <span
+                      className="protein-progress"
+                      style={{ width: `${Math.min(100, (demoTotals.protein / 120) * 100)}%` }}
+                    />
                   </div>
                 </div>
 
                 <div className="nutrient">
                   <div className="nutrient-heading">
                     <span>Carbohydrates</span>
-                    <strong>145 / 220g</strong>
+                    <strong>{demoTotals.carbs} / 220g</strong>
                   </div>
 
                   <div className="nutrient-track">
-                    <span className="carb-progress" />
+                    <span
+                      className="carb-progress"
+                      style={{ width: `${Math.min(100, (demoTotals.carbs / 220) * 100)}%` }}
+                    />
                   </div>
                 </div>
 
                 <div className="nutrient">
                   <div className="nutrient-heading">
                     <span>Fat</span>
-                    <strong>42 / 65g</strong>
+                    <strong>{demoTotals.fat} / 65g</strong>
                   </div>
 
                   <div className="nutrient-track">
-                    <span className="fat-progress" />
+                    <span
+                      className="fat-progress"
+                      style={{ width: `${Math.min(100, (demoTotals.fat / 65) * 100)}%` }}
+                    />
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="meal-preview">
-              <div className="meal-icon">
-                <img
-                  className="meal-img"
-                  src="/turkey.png"
-                  alt="chicken.icon"
-                />
-              </div>
+            <span className="remaining-calories">
+              {remainingCalories >= 0
+                ? `${remainingCalories.toLocaleString()} kcal remaining`
+                : `${Math.abs(remainingCalories).toLocaleString()} kcal over goal`}
+            </span>
 
-              <div className="meal-information">
-                <small>Latest meal</small>
-                <strong>Chicken rice bowl</strong>
-              </div>
-
-              <strong className="meal-calories">520 kcal</strong>
+            <div className="quick-meals-heading">
+              <strong>
+                <i className="bi bi-lightning-charge-fill" aria-hidden="true" />
+                Interactive quick-add meals
+              </strong>
+              <span>Click to add to widget</span>
             </div>
 
-            <div className="meal-preview">
-              <div className="meal-icon">
-                <img className="meal-img" src="/salad.png" alt="salad.icon" />
-              </div>
+            <div className="quick-meal-buttons">
+              {quickMeals.map((meal) => (
+                <button
+                  key={meal.name}
+                  type="button"
+                  onClick={() => addQuickMeal(meal)}
+                >
+                  {meal.image ? (
+                    <img src={meal.image} alt="" aria-hidden="true" />
+                  ) : (
+                    <span aria-hidden="true">{meal.icon}</span>
+                  )}
+                  {meal.name} <b>+{meal.calories} kcal</b>
+                </button>
+              ))}
+            </div>
 
-              <div className="meal-information">
-                <small>Low calories meal</small>
-                <strong>Salad</strong>
-              </div>
+            {dashboardMessage && (
+              <p className="dashboard-message" role="status">
+                <i className="bi bi-check-circle-fill" aria-hidden="true" />
+                {dashboardMessage}
+              </p>
+            )}
 
-              <strong className="meal-calories">320 kcal</strong>
+            <div className="demo-meal-feed" aria-live="polite">
+              {demoMeals.map((meal) => (
+                <div className="meal-preview featured-meal" key={meal.id}>
+                  <div className="meal-icon meal-emoji" aria-hidden="true">
+                    {meal.image ? (
+                      <img className="meal-food-image" src={meal.image} alt="" />
+                    ) : (
+                      meal.icon
+                    )}
+                  </div>
+
+                  <div className="meal-information">
+                    <strong>{meal.name}</strong>
+                    <small>
+                      {meal.protein}g P · {meal.carbs}g C · {meal.fat}g F
+                    </small>
+                  </div>
+
+                  <strong className="meal-calories">{meal.calories} kcal</strong>
+                  <button
+                    className="meal-delete-button"
+                    type="button"
+                    onClick={() => deleteDemoMeal(meal.id)}
+                    aria-label={`Delete ${meal.name} meal`}
+                    title="Delete meal"
+                  >
+                    <i className="bi bi-trash3" aria-hidden="true" />
+                  </button>
+                </div>
+              ))}
             </div>
           </div>
         </div>
@@ -400,16 +574,70 @@ function Home() {
         </Link>
       </section>
 
-      {/* Footer */}
       <footer className="home-footer">
-        <div className="footer-brand">
-          <img src="/NutriFlow.png" alt="" />
-          <span>NutriFlow</span>
+        <div className="footer-content">
+          <div className="footer-grid">
+            <div className="footer-intro">
+              <Link className="footer-brand" to="/" aria-label="NutriFlow home">
+                <img src="/NutriFlow.png" alt="" aria-hidden="true" />
+                <span>NutriFlow</span>
+              </Link>
+              <p>
+                Simple, actionable nutrition tracking to build lifelong healthy
+                habits.
+              </p>
+            </div>
+
+            <nav className="footer-column" aria-label="Product links">
+              <h2>Product</h2>
+              <a href="#features">Features</a>
+              <Link to="/goals">Macro Calculator</Link>
+              <a href="#demo">Live Demo</a>
+            </nav>
+
+            <nav className="footer-column" aria-label="Company links">
+              <h2>Company</h2>
+              <a href="#about">About Us</a>
+              <a href="#privacy">Privacy Policy</a>
+              <a href="#terms">Terms of Service</a>
+            </nav>
+
+            <div className="footer-connect">
+              <h2>Connect</h2>
+              <div className="footer-socials">
+                <a
+                  href="https://twitter.com"
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label="NutriFlow on Twitter"
+                >
+                  <i className="bi bi-twitter" aria-hidden="true" />
+                </a>
+                <a
+                  href="https://github.com"
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label="NutriFlow on GitHub"
+                >
+                  <i className="bi bi-github" aria-hidden="true" />
+                </a>
+                <a
+                  href="https://instagram.com"
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label="NutriFlow on Instagram"
+                >
+                  <i className="bi bi-instagram" aria-hidden="true" />
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div className="footer-bottom">
+            <p>© 2026 NutriFlow. All Rights Reserved.</p>
+            <p>Nutrition simplified.</p>
+          </div>
         </div>
-
-        <p>Nutrition simplified.</p>
-
-        <p>© 2026 NutriFlow All Rights Reserved.</p>
       </footer>
     </main>
   );
