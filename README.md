@@ -8,6 +8,22 @@ The application combines a **React + TypeScript frontend** with a **Java Spring 
 
 > 🚧 **Status:** Beta — Active Development
 
+## Deploy the API on Render
+
+1. Push this repository to GitHub, then create a Render Blueprint from the repository. Render will read `render.yaml` and build the `backend` Docker service.
+2. Create a private MySQL service in the same Render workspace. Set a persistent disk mounted at `/var/lib/mysql`.
+3. In the API service's environment variables, set:
+
+   ```text
+   SPRING_DATASOURCE_URL=jdbc:mysql://YOUR_MYSQL_SERVICE:3306/nutriflow
+   SPRING_DATASOURCE_USERNAME=YOUR_MYSQL_USER
+   SPRING_DATASOURCE_PASSWORD=YOUR_MYSQL_PASSWORD
+   ```
+
+4. After the API deploys, copy its `https://…onrender.com` URL. Create `frontend/.env.production` from `frontend/.env.production.example`, replace the URL, then run `npm run build` in `frontend` before updating the files embedded in Google Sites.
+
+The frontend uses `/api` through Vite's local proxy during development, so no local setup changes are required.
+
 ---
 
 ## 🛠️ Technologies & Tools

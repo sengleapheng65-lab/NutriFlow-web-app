@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: nutriflow-api
+    runtime: docker
+    rootDir: backend
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: SPRING_DATASOURCE_URL
+        sync: false
+      - key: SPRING_DATASOURCE_USERNAME
+        sync: false
+      - key: SPRING_DATASOURCE_PASSWORD
+        sync: false
