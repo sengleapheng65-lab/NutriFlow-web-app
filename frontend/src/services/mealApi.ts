@@ -5,6 +5,9 @@ import type { Meal } from "../types/Meal";
 const API_URL = (import.meta.env.VITE_API_URL || "/api").replace(/\/$/, "");
 const MEAL_API_URL = `${API_URL}/meals`;
 const FOOD_API_URL = `${API_URL}/foods`;
+// Use Vite's same-origin proxy locally so this works from a phone without
+// hard-coding localhost or exposing a separate cross-origin request.
+const VISION_API_URL = (import.meta.env.VITE_VISION_API_URL || "/vision-api").replace(/\/$/, "");
 
 // Information entered when creating a meal
 type NewMeal = Omit<Meal, "id" | "createdAt">;
@@ -19,6 +22,30 @@ export type BarcodeFood = {
   protein: number;
   carbs: number;
   fat: number;
+};
+
+export type PhotoNutritionResponse = {
+  items: Array<{
+    name: string;
+    estimated_weight_g: number;
+    calories: number;
+    protein_g: number;
+    carbs_g: number;
+    fat_g: number;
+  }>;
+  total_calories: number;
+  confidence_explanation: string;
+};
+
+export type LabelNutritionResponse = {
+  product_name: string;
+  serving_size: string;
+  calories: number;
+  protein_g: number;
+  carbs_g: number;
+  fat_g: number;
+  nutrition_basis: string;
+  confidence_explanation: string;
 };
 
 type OpenFoodFactsProduct = {
@@ -107,6 +134,54 @@ export async function getFoodByBarcode(barcode: string): Promise<BarcodeFood> {
   if (!food) throw new Error("This product has incomplete nutrition data.");
 
   return food;
+}
+
+export async function analyzeMealPhoto(file: File): Promise<PhotoNutritionResponse> {
+  const formData = new FormData();
+  formData.append("file", file);
+
+  const response = await fetch(`${VISION_API_URL}/api/v1/nutrition`, {
+    method: "POST",
+    body: formData,
+  });
+
+  if (!response.ok) {
+    let detail = "Could not analyze this meal photo.";
+    try {
+      const errorBody = (await response.json()) as { detail?: string };
+      if (errorBody.detail) detail = errorBody.detail;
+    } catch {
+      // Keep the generic message when the server does not return JSON.
+    }
+    throw new Error(detail);
+  }
+
+  return response.json();
+}
+
+export async function analyzeNutritionLabel(
+  file: File,
+): Promise<LabelNutritionResponse> {
+  const formData = new FormData();
+  formData.append("file", file);
+
+  const response = await fetch(`${VISION_API_URL}/api/v1/nutrition-label`, {
+    method: "POST",
+    body: formData,
+  });
+
+  if (!response.ok) {
+    let detail = "Could not read the nutrition label.";
+    try {
+      const errorBody = (await response.json()) as { detail?: string };
+      if (errorBody.detail) detail = errorBody.detail;
+    } catch {
+      // Keep the generic message when the server does not return JSON.
+    }
+    throw new Error(detail);
+  }
+
+  return response.json();
 }
 
 // Get every meal from the backend

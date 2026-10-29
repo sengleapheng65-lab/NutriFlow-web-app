@@ -119,6 +119,193 @@
 }
 
 /* ================================
+   PHOTO RECOGNITION
+================================ */
+
+.photo-recognition {
+  margin-bottom: 18px;
+  padding: 17px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--surface);
+}
+
+.photo-recognition h3 {
+  margin: 0;
+  color: var(--green-dark);
+  font-size: 0.98rem;
+}
+
+.photo-recognition p {
+  margin: 4px 0 12px;
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.photo-input {
+  display: none;
+}
+
+.photo-recognition-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+}
+
+.photo-recognition-button {
+  min-height: 38px;
+  padding: 0 13px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  border: 1px solid var(--green);
+  border-radius: 9px;
+  background: var(--green);
+  color: var(--white);
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.photo-recognition-button:hover:not(:disabled) {
+  background: var(--green-dark);
+}
+
+.photo-recognition-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.photo-upload-button {
+  background: var(--surface);
+  color: var(--green-dark);
+}
+
+.photo-upload-button:hover:not(:disabled) {
+  background: var(--green-pale);
+}
+
+.meal-camera-preview {
+  margin: 12px 0;
+  overflow: hidden;
+  border-radius: 12px;
+  background: #07100b;
+}
+
+.meal-camera-preview video {
+  width: 100%;
+  max-height: 360px;
+  display: block;
+  object-fit: cover;
+}
+
+.meal-camera-actions {
+  display: flex;
+  gap: 9px;
+  padding: 10px;
+}
+
+.meal-camera-actions button {
+  min-height: 36px;
+  padding: 0 11px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--green);
+  color: var(--white);
+  font: inherit;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.meal-camera-actions button:last-child {
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.photo-status {
+  margin-bottom: 0 !important;
+  margin-top: 10px !important;
+  line-height: 1.45;
+}
+
+.label-scanner {
+  margin-bottom: 25px;
+  padding: 17px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--surface);
+}
+
+.label-scanner-heading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.label-scanner-heading h3 {
+  margin: 0;
+  color: var(--green-dark);
+  font-size: 0.98rem;
+}
+
+.label-scanner-heading p {
+  margin: 3px 0 0;
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.label-camera {
+  position: relative;
+  margin-top: 16px;
+  overflow: hidden;
+  border-radius: 12px;
+  background: #07100b;
+}
+
+.label-camera video {
+  width: 100%;
+  max-height: 330px;
+  display: block;
+  object-fit: cover;
+}
+
+.label-scanner-frame {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: min(76%, 430px);
+  height: 68%;
+  border: 2px solid #7fe6a8;
+  border-radius: 10px;
+  box-shadow: 0 0 0 200vmax rgba(0, 0, 0, 0.22);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.label-camera-actions {
+  display: flex;
+  gap: 9px;
+  padding: 10px;
+}
+
+.label-camera-actions button {
+  min-height: 36px;
+  padding: 0 11px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--green);
+  color: var(--white);
+  font: inherit;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.label-camera-actions button:last-child {
+  background: rgba(255, 255, 255, 0.16);
+}
+
+/* ================================
    BARCODE SCANNER
 ================================ */
 

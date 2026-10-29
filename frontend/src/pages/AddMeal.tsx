@@ -1,9 +1,23 @@
-import { useEffect, useRef, useState, type FormEvent } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type ChangeEvent,
+  type FormEvent,
+} from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { BrowserMultiFormatOneDReader, type IScannerControls } from "@zxing/browser";
+import {
+  BrowserMultiFormatOneDReader,
+  type IScannerControls,
+} from "@zxing/browser";
 import { BarcodeFormat, DecodeHintType } from "@zxing/library";
 
-import { createMeal, getFoodByBarcode } from "../services/mealApi";
+import {
+  analyzeMealPhoto,
+  analyzeNutritionLabel,
+  createMeal,
+  getFoodByBarcode,
+} from "../services/mealApi";
 
 import "../styles/AddMeal.css";
 
@@ -12,9 +26,7 @@ type ScannerDetector = {
 };
 
 type ScannerWindow = Window & {
-  BarcodeDetector?: new (options?: {
-    formats?: string[];
-  }) => ScannerDetector;
+  BarcodeDetector?: new (options?: { formats?: string[] }) => ScannerDetector;
 };
 
 function AddMeal() {
@@ -30,6 +42,20 @@ function AddMeal() {
   const [scannerOpen, setScannerOpen] = useState(false);
   const [scanStatus, setScanStatus] = useState("");
   const [isLookingUpBarcode, setIsLookingUpBarcode] = useState(false);
+  const [isAnalyzingPhoto, setIsAnalyzingPhoto] = useState(false);
+  const [photoStatus, setPhotoStatus] = useState("");
+  const [mealCameraOpen, setMealCameraOpen] = useState(false);
+  const [labelCameraOpen, setLabelCameraOpen] = useState(false);
+  const [labelStatus, setLabelStatus] = useState("");
+  const [isReadingLabel, setIsReadingLabel] = useState(false);
+  const photoInputRef = useRef<HTMLInputElement>(null);
+  const labelInputRef = useRef<HTMLInputElement>(null);
+  const mealCameraVideoRef = useRef<HTMLVideoElement>(null);
+  const mealCameraStreamRef = useRef<MediaStream | null>(null);
+  const mealCameraCanvasRef = useRef<HTMLCanvasElement>(null);
+  const labelCameraVideoRef = useRef<HTMLVideoElement>(null);
+  const labelCameraStreamRef = useRef<MediaStream | null>(null);
+  const labelCameraCanvasRef = useRef<HTMLCanvasElement>(null);
 
   const scannerVideoRef = useRef<HTMLVideoElement>(null);
   const scannerStreamRef = useRef<MediaStream | null>(null);
@@ -49,8 +75,56 @@ function AddMeal() {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    return () => stopScanner();
+    return () => {
+      stopScanner();
+      stopMealCamera();
+      stopLabelCamera();
+    };
   }, []);
+
+  useEffect(() => {
+    if (!mealCameraOpen) return;
+
+    const video = mealCameraVideoRef.current;
+    const stream = mealCameraStreamRef.current;
+    if (!video || !stream) return;
+
+    video.srcObject = stream;
+    void video.play().catch(() => {
+      setPhotoStatus(
+        "Tap the camera preview or allow camera access in Safari.",
+      );
+    });
+  }, [mealCameraOpen]);
+
+  useEffect(() => {
+    if (!labelCameraOpen) return;
+
+    const video = labelCameraVideoRef.current;
+    const stream = labelCameraStreamRef.current;
+    if (!video || !stream) return;
+
+    video.srcObject = stream;
+    void video.play().catch(() => {
+      setLabelStatus("Tap the camera preview or allow camera access in Safari.");
+    });
+  }, [labelCameraOpen]);
+
+  function stopMealCamera() {
+    mealCameraStreamRef.current?.getTracks().forEach((track) => track.stop());
+    mealCameraStreamRef.current = null;
+    if (mealCameraVideoRef.current) {
+      mealCameraVideoRef.current.srcObject = null;
+    }
+    setMealCameraOpen(false);
+  }
+
+  function stopLabelCamera() {
+    labelCameraStreamRef.current?.getTracks().forEach((track) => track.stop());
+    labelCameraStreamRef.current = null;
+    if (labelCameraVideoRef.current) labelCameraVideoRef.current.srcObject = null;
+    setLabelCameraOpen(false);
+  }
 
   function stopScanner() {
     scanningRef.current = false;
@@ -103,20 +177,192 @@ function AddMeal() {
       const servingNote = food.servingSize
         ? ` Values are ${nutritionBasis}; package serving: ${food.servingSize}.`
         : ` Values are ${nutritionBasis}.`;
-      setScanStatus(`Calories, protein, carbohydrates, and fat were added to Meal Details.${servingNote}`);
+      setScanStatus(
+        `Calories, protein, carbohydrates, and fat were added to Meal Details.${servingNote}`,
+      );
     } catch {
-      setName((currentName) => currentName || `Product barcode: ${trimmedBarcode}`);
-      setScanStatus("Could not find nutrition data. Enter the package label values manually.");
+      setName(
+        (currentName) => currentName || `Product barcode: ${trimmedBarcode}`,
+      );
+      setScanStatus(
+        "Could not find nutrition data. Enter the package label values manually.",
+      );
     } finally {
       setIsLookingUpBarcode(false);
     }
+  }
+
+  async function analyzePhotoFile(file: File) {
+    setIsAnalyzingPhoto(true);
+    setPhotoStatus("Analyzing your meal photo…");
+    setError("");
+
+    try {
+      const result = await analyzeMealPhoto(file);
+      const firstItem = result.items[0];
+      if (!firstItem) throw new Error("No food was detected.");
+
+      setName(result.items.map((item) => item.name).join(", "));
+      setCalories(String(Math.round(result.total_calories)));
+      setProtein(
+        String(result.items.reduce((sum, item) => sum + item.protein_g, 0)),
+      );
+      setCarbs(
+        String(result.items.reduce((sum, item) => sum + item.carbs_g, 0)),
+      );
+      setFat(String(result.items.reduce((sum, item) => sum + item.fat_g, 0)));
+      setPhotoStatus(
+        `Nutrition added from photo. ${result.confidence_explanation}`,
+      );
+    } catch (requestError) {
+      console.error(requestError);
+      const message =
+        requestError instanceof Error
+          ? requestError.message
+          : "Could not analyze the photo.";
+      setPhotoStatus(`${message} You can enter the nutrition manually.`);
+    } finally {
+      setIsAnalyzingPhoto(false);
+    }
+  }
+
+  async function handlePhotoChange(event: ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    event.target.value = "";
+    if (file) await analyzePhotoFile(file);
+  }
+
+  async function analyzeLabelFile(file: File) {
+    setIsReadingLabel(true);
+    setLabelStatus("Reading the nutrition label…");
+    setError("");
+
+    try {
+      const result = await analyzeNutritionLabel(file);
+      setName((currentName) => currentName || result.product_name);
+      setCalories(String(Math.round(result.calories)));
+      setProtein(String(result.protein_g));
+      setCarbs(String(result.carbs_g));
+      setFat(String(result.fat_g));
+      setLabelStatus(
+        `Label values added ${result.nutrition_basis}. Review them before saving. ${result.confidence_explanation}`,
+      );
+    } catch (requestError) {
+      const message =
+        requestError instanceof Error
+          ? requestError.message
+          : "Could not read the nutrition label.";
+      setLabelStatus(`${message} Try a closer, well-lit photo.`);
+    } finally {
+      setIsReadingLabel(false);
+    }
+  }
+
+  async function handleLabelChange(event: ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    event.target.value = "";
+    if (file) await analyzeLabelFile(file);
+  }
+
+  async function startMealCamera() {
+    if (!navigator.mediaDevices?.getUserMedia) {
+      setPhotoStatus(
+        "Live camera access is unavailable. Use Choose photo instead.",
+      );
+      return;
+    }
+
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: { ideal: "environment" } },
+        audio: false,
+      });
+      mealCameraStreamRef.current = stream;
+      setMealCameraOpen(true);
+    } catch {
+      setPhotoStatus("Camera access was denied. Use Choose photo instead.");
+      stopMealCamera();
+    }
+  }
+
+  async function captureMealPhoto() {
+    const video = mealCameraVideoRef.current;
+    const canvas = mealCameraCanvasRef.current;
+    if (!video || !canvas || !video.videoWidth || !video.videoHeight) return;
+
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    const context = canvas.getContext("2d");
+    if (!context) return;
+    context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+    canvas.toBlob(
+      (blob) => {
+        if (!blob) {
+          setPhotoStatus("Could not capture the camera image.");
+          return;
+        }
+        stopMealCamera();
+        void analyzePhotoFile(
+          new File([blob], "meal-camera-photo.jpg", { type: "image/jpeg" }),
+        );
+      },
+      "image/jpeg",
+      0.9,
+    );
+  }
+
+  async function startLabelCamera() {
+    if (!navigator.mediaDevices?.getUserMedia) {
+      setLabelStatus("Live camera access is unavailable. Use Choose label photo instead.");
+      return;
+    }
+
+    try {
+      labelCameraStreamRef.current = await navigator.mediaDevices.getUserMedia({
+        video: {
+          facingMode: { ideal: "environment" },
+          width: { ideal: 1920 },
+          height: { ideal: 1080 },
+        },
+        audio: false,
+      });
+      setLabelCameraOpen(true);
+    } catch {
+      setLabelStatus("Camera access was denied. Use Choose label photo instead.");
+      stopLabelCamera();
+    }
+  }
+
+  async function captureLabelPhoto() {
+    const video = labelCameraVideoRef.current;
+    const canvas = labelCameraCanvasRef.current;
+    if (!video || !canvas || !video.videoWidth || !video.videoHeight) return;
+
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    const context = canvas.getContext("2d");
+    if (!context) return;
+    context.drawImage(video, 0, 0, canvas.width, canvas.height);
+    canvas.toBlob((blob) => {
+      if (!blob) {
+        setLabelStatus("Could not capture the label image.");
+        return;
+      }
+      stopLabelCamera();
+      void analyzeLabelFile(
+        new File([blob], "nutrition-label.jpg", { type: "image/jpeg" }),
+      );
+    }, "image/jpeg", 0.92);
   }
 
   async function startScanner() {
     const detectorConstructor = (window as ScannerWindow).BarcodeDetector;
 
     if (!navigator.mediaDevices?.getUserMedia) {
-      setScanStatus("Camera access is unavailable. Enter the barcode manually below.");
+      setScanStatus(
+        "Camera access is unavailable. Enter the barcode manually below.",
+      );
       return;
     }
 
@@ -266,7 +512,9 @@ function AddMeal() {
       void scanFrame();
     } catch {
       stopScanner();
-      setScanStatus("Camera access was denied or unavailable. Enter the barcode manually below.");
+      setScanStatus(
+        "Camera access was denied or unavailable. Enter the barcode manually below.",
+      );
     }
   }
 
@@ -355,7 +603,132 @@ function AddMeal() {
           </div>
 
           <form onSubmit={handleSubmit} aria-busy={isSaving}>
-            <section className="barcode-scanner" aria-labelledby="barcode-scanner-title">
+            <section
+              className="photo-recognition"
+              aria-labelledby="photo-recognition-title"
+            >
+              <div>
+                <h3 id="photo-recognition-title">Analyze a meal photo</h3>
+                <p>Upload a photo and we’ll estimate the nutrition for you.</p>
+              </div>
+              {mealCameraOpen && (
+                <div className="meal-camera-preview">
+                  <video ref={mealCameraVideoRef} muted playsInline />
+                  <div className="meal-camera-actions">
+                    <button
+                      type="button"
+                      onClick={() => void captureMealPhoto()}
+                      disabled={isAnalyzingPhoto}
+                    >
+                      <i className="bi bi-camera" aria-hidden="true" />
+                      Capture photo
+                    </button>
+                    <button type="button" onClick={stopMealCamera}>
+                      Close camera
+                    </button>
+                  </div>
+                </div>
+              )}
+              <canvas
+                ref={mealCameraCanvasRef}
+                className="photo-input"
+                aria-hidden="true"
+              />
+              <input
+                ref={photoInputRef}
+                className="photo-input"
+                type="file"
+                accept="image/*"
+                onChange={(event) => void handlePhotoChange(event)}
+                disabled={isSaving || isAnalyzingPhoto}
+              />
+              <div className="photo-recognition-actions">
+                <button
+                  className="photo-recognition-button"
+                  type="button"
+                  onClick={() => void startMealCamera()}
+                  disabled={isSaving || isAnalyzingPhoto || mealCameraOpen}
+                >
+                  <i className="bi bi-camera-video" aria-hidden="true" />
+                  Open live camera
+                </button>
+                <button
+                  className="photo-recognition-button photo-upload-button"
+                  type="button"
+                  onClick={() => photoInputRef.current?.click()}
+                  disabled={isSaving || isAnalyzingPhoto || mealCameraOpen}
+                >
+                  <i className="bi bi-image" aria-hidden="true" />
+                  {isAnalyzingPhoto ? "Analyzing…" : "Choose photo"}
+                </button>
+              </div>
+              {photoStatus && (
+                <p className="photo-status" role="status">
+                  {photoStatus}
+                </p>
+              )}
+            </section>
+
+            <section className="label-scanner" aria-labelledby="label-scanner-title">
+              <div className="label-scanner-heading">
+                <div className="barcode-scanner-icon">
+                  <i className="bi bi-card-text" aria-hidden="true" />
+                </div>
+                <div>
+                  <h3 id="label-scanner-title">Scan a nutrition label</h3>
+                  <p>Point the camera at the Nutrition Facts panel.</p>
+                </div>
+                <button
+                  className="open-scanner-button"
+                  type="button"
+                  onClick={() => void startLabelCamera()}
+                  disabled={isSaving || labelCameraOpen || isReadingLabel}
+                >
+                  <i className="bi bi-camera" aria-hidden="true" />
+                  Open camera
+                </button>
+              </div>
+
+              {labelCameraOpen && (
+                <div className="label-camera">
+                  <video ref={labelCameraVideoRef} muted playsInline />
+                  <span className="label-scanner-frame" aria-hidden="true" />
+                  <div className="label-camera-actions">
+                    <button type="button" onClick={() => void captureLabelPhoto()} disabled={isReadingLabel}>
+                      <i className="bi bi-camera" aria-hidden="true" /> Capture label
+                    </button>
+                    <button type="button" onClick={stopLabelCamera}>Close camera</button>
+                  </div>
+                </div>
+              )}
+              <canvas ref={labelCameraCanvasRef} className="photo-input" aria-hidden="true" />
+              <input
+                ref={labelInputRef}
+                className="photo-input"
+                type="file"
+                accept="image/*"
+                capture="environment"
+                onChange={(event) => void handleLabelChange(event)}
+                disabled={isSaving || isReadingLabel}
+              />
+              <div className="photo-recognition-actions">
+                <button
+                  className="photo-recognition-button photo-upload-button"
+                  type="button"
+                  onClick={() => labelInputRef.current?.click()}
+                  disabled={isSaving || isReadingLabel || labelCameraOpen}
+                >
+                  <i className="bi bi-image" aria-hidden="true" />
+                  {isReadingLabel ? "Reading…" : "Choose label photo"}
+                </button>
+              </div>
+              {labelStatus && <p className="photo-status" role="status">{labelStatus}</p>}
+            </section>
+
+            <section
+              className="barcode-scanner"
+              aria-labelledby="barcode-scanner-title"
+            >
               <div className="barcode-scanner-heading">
                 <div className="barcode-scanner-icon">
                   <i className="bi bi-upc-scan" aria-hidden="true" />
@@ -380,8 +753,15 @@ function AddMeal() {
                   <video ref={scannerVideoRef} muted playsInline />
                   <span className="scanner-frame" aria-hidden="true" />
                   {torchSupported && (
-                    <button type="button" className="torch-button" onClick={() => void toggleTorch()}>
-                      <i className={`bi bi-${torchOn ? "flashlight-fill" : "flashlight"}`} aria-hidden="true" />
+                    <button
+                      type="button"
+                      className="torch-button"
+                      onClick={() => void toggleTorch()}
+                    >
+                      <i
+                        className={`bi bi-${torchOn ? "flashlight-fill" : "flashlight"}`}
+                        aria-hidden="true"
+                      />
                       {torchOn ? "Light off" : "Light on"}
                     </button>
                   )}
@@ -395,7 +775,9 @@ function AddMeal() {
                         max="3"
                         step="0.1"
                         value={zoom}
-                        onChange={(event) => void changeZoom(Number(event.target.value))}
+                        onChange={(event) =>
+                          void changeZoom(Number(event.target.value))
+                        }
                       />
                     </label>
                   )}
@@ -426,7 +808,11 @@ function AddMeal() {
                 </button>
               </div>
 
-              {scanStatus && <p className="barcode-status" role="status">{scanStatus}</p>}
+              {scanStatus && (
+                <p className="barcode-status" role="status">
+                  {scanStatus}
+                </p>
+              )}
             </section>
 
             {/* Meal name */}
