@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { BrowserMultiFormatReader, type IScannerControls } from "@zxing/browser";
 
 import { createMeal, getFoodByBarcode } from "../services/mealApi";
 
@@ -31,6 +32,7 @@ function AddMeal() {
 
   const scannerVideoRef = useRef<HTMLVideoElement>(null);
   const scannerStreamRef = useRef<MediaStream | null>(null);
+  const scannerControlsRef = useRef<IScannerControls | null>(null);
   const scanningRef = useRef(false);
 
   // Track the backend request
@@ -43,6 +45,8 @@ function AddMeal() {
 
   function stopScanner() {
     scanningRef.current = false;
+    scannerControlsRef.current?.stop();
+    scannerControlsRef.current = null;
     scannerStreamRef.current?.getTracks().forEach((track) => track.stop());
     scannerStreamRef.current = null;
 
@@ -91,20 +95,17 @@ function AddMeal() {
   async function startScanner() {
     const detectorConstructor = (window as ScannerWindow).BarcodeDetector;
 
-    if (!detectorConstructor) {
-      setScanStatus(
-        "Camera scanning is not supported in this browser. Enter the barcode manually below.",
-      );
-      return;
-    }
-
     if (!navigator.mediaDevices?.getUserMedia) {
       setScanStatus("Camera access is unavailable. Enter the barcode manually below.");
       return;
     }
 
     try {
-      setScanStatus("Point your camera at a product barcode.");
+      setScanStatus(
+        detectorConstructor
+          ? "Point your camera at a product barcode."
+          : "Using Safari-compatible barcode scanning. Point your camera at a barcode.",
+      );
       setScannerOpen(true);
       const stream = await navigator.mediaDevices.getUserMedia({
         video: { facingMode: { ideal: "environment" } },
@@ -114,10 +115,28 @@ function AddMeal() {
       scanningRef.current = true;
 
       const video = scannerVideoRef.current;
-      if (!video) return;
+      if (!video) {
+        stopScanner();
+        return;
+      }
 
       video.srcObject = stream;
       await video.play();
+
+      if (!detectorConstructor) {
+        const reader = new BrowserMultiFormatReader();
+        const controls = await reader.decodeFromStream(stream, video, (result, _error, scanControls) => {
+          if (!result || !scanningRef.current) return;
+
+          scanningRef.current = false;
+          scanControls.stop();
+          scannerControlsRef.current = null;
+          void applyBarcode(result.getText());
+        });
+
+        scannerControlsRef.current = controls;
+        return;
+      }
 
       const detector = new detectorConstructor({
         formats: ["ean_13", "ean_8", "upc_a", "upc_e", "code_128"],
