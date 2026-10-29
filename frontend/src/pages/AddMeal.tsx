@@ -38,6 +38,7 @@ function AddMeal() {
   const scanInProgressRef = useRef(false);
   const scanTimerRef = useRef<number | null>(null);
   const scannerTrackRef = useRef<MediaStreamTrack | null>(null);
+  const scannerCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const [torchSupported, setTorchSupported] = useState(false);
   const [torchOn, setTorchOn] = useState(false);
   const [zoomSupported, setZoomSupported] = useState(false);
@@ -61,6 +62,7 @@ function AddMeal() {
     scannerControlsRef.current?.stop();
     scannerControlsRef.current = null;
     scannerTrackRef.current = null;
+    scannerCanvasRef.current = null;
     scannerStreamRef.current?.getTracks().forEach((track) => track.stop());
     scannerStreamRef.current = null;
     setTorchSupported(false);
@@ -168,16 +170,44 @@ function AddMeal() {
         const reader = new BrowserMultiFormatOneDReader(hints, {
           delayBetweenScanAttempts: 150,
         });
-        const controls = await reader.decodeFromStream(stream, video, (result, _error, scanControls) => {
-          if (!result || !scanningRef.current) return;
+        const canvas = document.createElement("canvas");
+        scannerCanvasRef.current = canvas;
 
-          scanningRef.current = false;
-          scanControls.stop();
-          scannerControlsRef.current = null;
-          void applyBarcode(result.getText());
-        });
+        const scanWithZxing = () => {
+          if (!scanningRef.current || !scannerVideoRef.current) return;
 
-        scannerControlsRef.current = controls;
+          const sourceVideo = scannerVideoRef.current;
+          const sourceWidth = sourceVideo.videoWidth;
+          const sourceHeight = sourceVideo.videoHeight;
+          if (!sourceWidth || !sourceHeight) {
+            scanTimerRef.current = window.setTimeout(scanWithZxing, 150);
+            return;
+          }
+
+          const cropWidth = Math.floor(sourceWidth * 0.82);
+          const cropHeight = Math.floor(sourceHeight * 0.5);
+          const cropX = Math.floor((sourceWidth - cropWidth) / 2);
+          const cropY = Math.floor((sourceHeight - cropHeight) / 2);
+          canvas.width = cropWidth;
+          canvas.height = cropHeight;
+
+          const context = canvas.getContext("2d", { willReadFrequently: true });
+          if (!context) return;
+          context.drawImage(sourceVideo, cropX, cropY, cropWidth, cropHeight, 0, 0, cropWidth, cropHeight);
+
+          try {
+            const result = reader.decodeFromCanvas(canvas);
+            scanningRef.current = false;
+            void applyBarcode(result.getText());
+            return;
+          } catch {
+            // Not every frame contains a decodable barcode.
+          }
+
+          scanTimerRef.current = window.setTimeout(scanWithZxing, 150);
+        };
+
+        scanWithZxing();
         return;
       }
 
