@@ -159,7 +159,7 @@ function AddMeal() {
       await video.play();
 
       if (!detectorConstructor) {
-        const hints = new Map<DecodeHintType, BarcodeFormat[]>();
+        const hints = new Map<DecodeHintType, BarcodeFormat[] | boolean>();
         hints.set(DecodeHintType.POSSIBLE_FORMATS, [
           BarcodeFormat.EAN_13,
           BarcodeFormat.EAN_8,
@@ -167,6 +167,7 @@ function AddMeal() {
           BarcodeFormat.UPC_E,
           BarcodeFormat.CODE_128,
         ]);
+        hints.set(DecodeHintType.TRY_HARDER, true);
         const reader = new BrowserMultiFormatOneDReader(hints, {
           delayBetweenScanAttempts: 150,
         });
@@ -184,38 +185,43 @@ function AddMeal() {
             return;
           }
 
-          // Short barcodes occupy fewer pixels on an iPhone preview. Scan a
-          // larger region than the guide and render it at 2x so ZXing has a
-          // clearer image to work with, especially on Safari.
-          const cropWidth = Math.floor(sourceWidth * 0.92);
-          const cropHeight = Math.floor(sourceHeight * 0.7);
-          const cropX = Math.floor((sourceWidth - cropWidth) / 2);
-          const cropY = Math.floor((sourceHeight - cropHeight) / 2);
-          const renderScale = 2;
-          canvas.width = cropWidth * renderScale;
-          canvas.height = cropHeight * renderScale;
-
           const context = canvas.getContext("2d", { willReadFrequently: true });
           if (!context) return;
-          context.drawImage(
-            sourceVideo,
-            cropX,
-            cropY,
-            cropWidth,
-            cropHeight,
-            0,
-            0,
-            canvas.width,
-            canvas.height,
-          );
 
-          try {
-            const result = reader.decodeFromCanvas(canvas);
-            scanningRef.current = false;
-            void applyBarcode(result.getText());
-            return;
-          } catch {
-            // Not every frame contains a decodable barcode.
+          // Keep the original crop first for reliable everyday scanning, then
+          // retry with a larger, upscaled crop for short barcodes.
+          const scanRegions = [
+            { width: 0.82, height: 0.5, scale: 1 },
+            { width: 0.92, height: 0.7, scale: 2 },
+          ];
+
+          for (const region of scanRegions) {
+            const cropWidth = Math.floor(sourceWidth * region.width);
+            const cropHeight = Math.floor(sourceHeight * region.height);
+            const cropX = Math.floor((sourceWidth - cropWidth) / 2);
+            const cropY = Math.floor((sourceHeight - cropHeight) / 2);
+            canvas.width = cropWidth * region.scale;
+            canvas.height = cropHeight * region.scale;
+            context.drawImage(
+              sourceVideo,
+              cropX,
+              cropY,
+              cropWidth,
+              cropHeight,
+              0,
+              0,
+              canvas.width,
+              canvas.height,
+            );
+
+            try {
+              const result = reader.decodeFromCanvas(canvas);
+              scanningRef.current = false;
+              void applyBarcode(result.getText());
+              return;
+            } catch {
+              // Try the next crop before waiting for another frame.
+            }
           }
 
           scanTimerRef.current = window.setTimeout(scanWithZxing, 150);
