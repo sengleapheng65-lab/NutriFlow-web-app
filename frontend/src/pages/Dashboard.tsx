@@ -57,6 +57,10 @@ function getLocalDateKey(date: Date) {
   return `${year}-${month}-${day}`;
 }
 
+function displayRounded(value: number) {
+  return Math.round(value);
+}
+
 function Dashboard() {
   // All meals returned by Spring Boot
   const [meals, setMeals] = useState<Meal[]>([]);
@@ -240,15 +244,15 @@ function Dashboard() {
             </h2>
 
             <div className="calorie-total">
-              <strong>{totalCalories.toLocaleString()}</strong>
+              <strong>{displayRounded(totalCalories).toLocaleString()}</strong>
 
               <span>of {goals.calories.toLocaleString()} kcal</span>
             </div>
 
             <p className="remaining-calories">
               {totalCalories > goals.calories
-                ? `${totalCalories - goals.calories} calories over your goal`
-                : `${remainingCalories} calories remaining today`}
+                ? `${displayRounded(totalCalories - goals.calories)} calories over your goal`
+                : `${displayRounded(remainingCalories)} calories remaining today`}
             </p>
           </div>
 
@@ -277,7 +281,7 @@ function Dashboard() {
               <span>Protein</span>
 
               <strong>
-                {totalProtein} / {goals.protein}g
+                {displayRounded(totalProtein)} / {goals.protein}g
               </strong>
 
               <div className="stat-progress protein-progress">
@@ -300,7 +304,7 @@ function Dashboard() {
               <span>Carbohydrates</span>
 
               <strong>
-                {totalCarbs} / {goals.carbs}g
+                {displayRounded(totalCarbs)} / {goals.carbs}g
               </strong>
 
               <div className="stat-progress carb-progress">
@@ -323,7 +327,7 @@ function Dashboard() {
               <span>Fat</span>
 
               <strong>
-                {totalFat} / {goals.fat}g
+                {displayRounded(totalFat)} / {goals.fat}g
               </strong>
 
               <div className="stat-progress fat-progress">
@@ -409,28 +413,28 @@ function Dashboard() {
                 <div className="meal-nutrition">
                   {/* Calories */}
                   <div>
-                    <strong>{meal.calories ?? 0}</strong>
+                    <strong>{displayRounded(meal.calories ?? 0)}</strong>
 
                     <span>Calories</span>
                   </div>
 
                   {/* Protein */}
                   <div>
-                    <strong>{meal.protein ?? 0}g</strong>
+                    <strong>{displayRounded(meal.protein ?? 0)}g</strong>
 
                     <span>Protein</span>
                   </div>
 
                   {/* Carbohydrates */}
                   <div>
-                    <strong>{meal.carbs ?? 0}g</strong>
+                    <strong>{displayRounded(meal.carbs ?? 0)}g</strong>
 
                     <span>Carbs</span>
                   </div>
 
                   {/* Fat */}
                   <div>
-                    <strong>{meal.fat ?? 0}g</strong>
+                    <strong>{displayRounded(meal.fat ?? 0)}g</strong>
 
                     <span>Fat</span>
                   </div>

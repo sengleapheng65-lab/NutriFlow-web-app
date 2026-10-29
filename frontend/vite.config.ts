@@ -7,6 +7,8 @@ export default defineConfig({
   server: {
     // Allow devices on the same Wi-Fi to open Vite
     host: "0.0.0.0",
+    // Allow the temporary HTTPS ngrok URL used for iPhone camera testing.
+    allowedHosts: [".ngrok-free.app", ".ngrok-free.dev", ".ngrok.app"],
 
     // Forward API requests to Spring Boot
     proxy: {

@@ -332,7 +332,8 @@ function AddMeal() {
                     id="protein"
                     type="number"
                     min="0"
-                    step="0.1"
+                    step="any"
+                    inputMode="decimal"
                     value={protein}
                     onChange={(event) => setProtein(event.target.value)}
                     placeholder="0"
@@ -355,7 +356,8 @@ function AddMeal() {
                     id="carbs"
                     type="number"
                     min="0"
-                    step="0.1"
+                    step="any"
+                    inputMode="decimal"
                     value={carbs}
                     onChange={(event) => setCarbs(event.target.value)}
                     placeholder="0"
@@ -378,7 +380,8 @@ function AddMeal() {
                     id="fat"
                     type="number"
                     min="0"
-                    step="0.1"
+                    step="any"
+                    inputMode="decimal"
                     value={fat}
                     onChange={(event) => setFat(event.target.value)}
                     placeholder="0"
