@@ -184,16 +184,30 @@ function AddMeal() {
             return;
           }
 
-          const cropWidth = Math.floor(sourceWidth * 0.82);
-          const cropHeight = Math.floor(sourceHeight * 0.5);
+          // Short barcodes occupy fewer pixels on an iPhone preview. Scan a
+          // larger region than the guide and render it at 2x so ZXing has a
+          // clearer image to work with, especially on Safari.
+          const cropWidth = Math.floor(sourceWidth * 0.92);
+          const cropHeight = Math.floor(sourceHeight * 0.7);
           const cropX = Math.floor((sourceWidth - cropWidth) / 2);
           const cropY = Math.floor((sourceHeight - cropHeight) / 2);
-          canvas.width = cropWidth;
-          canvas.height = cropHeight;
+          const renderScale = 2;
+          canvas.width = cropWidth * renderScale;
+          canvas.height = cropHeight * renderScale;
 
           const context = canvas.getContext("2d", { willReadFrequently: true });
           if (!context) return;
-          context.drawImage(sourceVideo, cropX, cropY, cropWidth, cropHeight, 0, 0, cropWidth, cropHeight);
+          context.drawImage(
+            sourceVideo,
+            cropX,
+            cropY,
+            cropWidth,
+            cropHeight,
+            0,
+            0,
+            canvas.width,
+            canvas.height,
+          );
 
           try {
             const result = reader.decodeFromCanvas(canvas);

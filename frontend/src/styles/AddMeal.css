@@ -207,8 +207,8 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  width: min(62%, 340px);
-  height: 34%;
+  width: min(82%, 420px);
+  height: 42%;
   border: 2px solid #7fe6a8;
   border-radius: 10px;
   box-shadow: 0 0 0 200vmax rgba(0, 0, 0, 0.22);
