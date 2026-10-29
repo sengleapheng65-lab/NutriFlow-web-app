@@ -50,6 +50,7 @@ function AddMeal() {
   const [isReadingLabel, setIsReadingLabel] = useState(false);
   const photoInputRef = useRef<HTMLInputElement>(null);
   const labelInputRef = useRef<HTMLInputElement>(null);
+  const labelLibraryInputRef = useRef<HTMLInputElement>(null);
   const mealCameraVideoRef = useRef<HTMLVideoElement>(null);
   const mealCameraStreamRef = useRef<MediaStream | null>(null);
   const mealCameraCanvasRef = useRef<HTMLCanvasElement>(null);
@@ -671,12 +672,12 @@ function AddMeal() {
 
             <section className="label-scanner" aria-labelledby="label-scanner-title">
               <div className="label-scanner-heading">
-                <div className="barcode-scanner-icon">
+                <div className="label-scanner-icon">
                   <i className="bi bi-card-text" aria-hidden="true" />
                 </div>
                 <div>
                   <h3 id="label-scanner-title">Scan a nutrition label</h3>
-                  <p>Point the camera at the Nutrition Facts panel.</p>
+                  <p>Point your camera at the Nutrition Facts panel.</p>
                 </div>
                 <button
                   className="open-scanner-button"
@@ -687,6 +688,10 @@ function AddMeal() {
                   <i className="bi bi-camera" aria-hidden="true" />
                   Open camera
                 </button>
+              </div>
+              <div className="label-scanner-note">
+                <i className="bi bi-stars" aria-hidden="true" />
+                <span>We'll read the serving size and core macros for you.</span>
               </div>
 
               {labelCameraOpen && (
@@ -711,15 +716,32 @@ function AddMeal() {
                 onChange={(event) => void handleLabelChange(event)}
                 disabled={isSaving || isReadingLabel}
               />
+              <input
+                ref={labelLibraryInputRef}
+                className="photo-input"
+                type="file"
+                accept="image/*"
+                onChange={(event) => void handleLabelChange(event)}
+                disabled={isSaving || isReadingLabel}
+              />
               <div className="photo-recognition-actions">
                 <button
-                  className="photo-recognition-button photo-upload-button"
+                  className="photo-recognition-button"
                   type="button"
                   onClick={() => labelInputRef.current?.click()}
                   disabled={isSaving || isReadingLabel || labelCameraOpen}
                 >
-                  <i className="bi bi-image" aria-hidden="true" />
-                  {isReadingLabel ? "Reading…" : "Choose label photo"}
+                  <i className="bi bi-camera" aria-hidden="true" />
+                  Use phone camera
+                </button>
+                <button
+                  className="photo-recognition-button photo-upload-button"
+                  type="button"
+                  onClick={() => labelLibraryInputRef.current?.click()}
+                  disabled={isSaving || isReadingLabel || labelCameraOpen}
+                >
+                  <i className="bi bi-images" aria-hidden="true" />
+                  Photo library
                 </button>
               </div>
               {labelStatus && <p className="photo-status" role="status">{labelStatus}</p>}
