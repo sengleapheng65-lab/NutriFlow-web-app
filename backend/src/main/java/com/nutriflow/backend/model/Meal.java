@@ -97,4 +97,4 @@ public class Meal {
     public void setCreatedAt(Instant createdAt) {
         this.createdAt = createdAt;
     }
-}
+}
