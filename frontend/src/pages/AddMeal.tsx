@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { BrowserMultiFormatReader, type IScannerControls } from "@zxing/browser";
+import { BrowserMultiFormatOneDReader, type IScannerControls } from "@zxing/browser";
 import { BarcodeFormat, DecodeHintType } from "@zxing/library";
 
 import { createMeal, getFoodByBarcode } from "../services/mealApi";
@@ -40,6 +40,8 @@ function AddMeal() {
   const scannerTrackRef = useRef<MediaStreamTrack | null>(null);
   const [torchSupported, setTorchSupported] = useState(false);
   const [torchOn, setTorchOn] = useState(false);
+  const [zoomSupported, setZoomSupported] = useState(false);
+  const [zoom, setZoom] = useState(1);
 
   // Track the backend request
   const [isSaving, setIsSaving] = useState(false);
@@ -63,6 +65,8 @@ function AddMeal() {
     scannerStreamRef.current = null;
     setTorchSupported(false);
     setTorchOn(false);
+    setZoomSupported(false);
+    setZoom(1);
 
     if (scannerVideoRef.current) {
       scannerVideoRef.current.srcObject = null;
@@ -135,6 +139,7 @@ function AddMeal() {
       scannerTrackRef.current = track;
       const capabilities = track.getCapabilities();
       setTorchSupported("torch" in capabilities && Boolean(capabilities.torch));
+      setZoomSupported("zoom" in capabilities);
       if ("focusMode" in capabilities) {
         await track.applyConstraints({
           advanced: [{ focusMode: "continuous" }],
@@ -160,7 +165,9 @@ function AddMeal() {
           BarcodeFormat.UPC_E,
           BarcodeFormat.CODE_128,
         ]);
-        const reader = new BrowserMultiFormatReader(hints);
+        const reader = new BrowserMultiFormatOneDReader(hints, {
+          delayBetweenScanAttempts: 150,
+        });
         const controls = await reader.decodeFromStream(stream, video, (result, _error, scanControls) => {
           if (!result || !scanningRef.current) return;
 
@@ -225,6 +232,20 @@ function AddMeal() {
       setTorchOn(nextTorchState);
     } catch {
       setScanStatus("This camera could not change its light setting.");
+    }
+  }
+
+  async function changeZoom(value: number) {
+    const track = scannerTrackRef.current;
+    if (!track || !zoomSupported) return;
+
+    try {
+      await track.applyConstraints({
+        advanced: [{ zoom: value }],
+      } as unknown as MediaTrackConstraints);
+      setZoom(value);
+    } catch {
+      setScanStatus("This camera could not change its zoom.");
     }
   }
 
@@ -313,6 +334,20 @@ function AddMeal() {
                       <i className={`bi bi-${torchOn ? "flashlight-fill" : "flashlight"}`} aria-hidden="true" />
                       {torchOn ? "Light off" : "Light on"}
                     </button>
+                  )}
+                  {zoomSupported && (
+                    <label className="zoom-control">
+                      <i className="bi bi-zoom-in" aria-hidden="true" />
+                      <span className="visually-hidden">Camera zoom</span>
+                      <input
+                        type="range"
+                        min="1"
+                        max="3"
+                        step="0.1"
+                        value={zoom}
+                        onChange={(event) => void changeZoom(Number(event.target.value))}
+                      />
+                    </label>
                   )}
                   <button type="button" onClick={stopScanner}>
                     <i className="bi bi-x-lg" aria-hidden="true" />
