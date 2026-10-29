@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { BrowserMultiFormatReader, type IScannerControls } from "@zxing/browser";
+import { BarcodeFormat, DecodeHintType } from "@zxing/library";
 
 import { createMeal, getFoodByBarcode } from "../services/mealApi";
 
@@ -34,6 +35,11 @@ function AddMeal() {
   const scannerStreamRef = useRef<MediaStream | null>(null);
   const scannerControlsRef = useRef<IScannerControls | null>(null);
   const scanningRef = useRef(false);
+  const scanInProgressRef = useRef(false);
+  const scanTimerRef = useRef<number | null>(null);
+  const scannerTrackRef = useRef<MediaStreamTrack | null>(null);
+  const [torchSupported, setTorchSupported] = useState(false);
+  const [torchOn, setTorchOn] = useState(false);
 
   // Track the backend request
   const [isSaving, setIsSaving] = useState(false);
@@ -45,10 +51,18 @@ function AddMeal() {
 
   function stopScanner() {
     scanningRef.current = false;
+    scanInProgressRef.current = false;
+    if (scanTimerRef.current !== null) {
+      window.clearTimeout(scanTimerRef.current);
+      scanTimerRef.current = null;
+    }
     scannerControlsRef.current?.stop();
     scannerControlsRef.current = null;
+    scannerTrackRef.current = null;
     scannerStreamRef.current?.getTracks().forEach((track) => track.stop());
     scannerStreamRef.current = null;
+    setTorchSupported(false);
+    setTorchOn(false);
 
     if (scannerVideoRef.current) {
       scannerVideoRef.current.srcObject = null;
@@ -108,10 +122,24 @@ function AddMeal() {
       );
       setScannerOpen(true);
       const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: { ideal: "environment" } },
+        video: {
+          facingMode: { ideal: "environment" },
+          width: { ideal: 1920 },
+          height: { ideal: 1080 },
+          frameRate: { ideal: 30, max: 30 },
+        },
       });
 
       scannerStreamRef.current = stream;
+      const track = stream.getVideoTracks()[0];
+      scannerTrackRef.current = track;
+      const capabilities = track.getCapabilities();
+      setTorchSupported("torch" in capabilities && Boolean(capabilities.torch));
+      if ("focusMode" in capabilities) {
+        await track.applyConstraints({
+          advanced: [{ focusMode: "continuous" }],
+        } as unknown as MediaTrackConstraints);
+      }
       scanningRef.current = true;
 
       const video = scannerVideoRef.current;
@@ -124,7 +152,15 @@ function AddMeal() {
       await video.play();
 
       if (!detectorConstructor) {
-        const reader = new BrowserMultiFormatReader();
+        const hints = new Map<DecodeHintType, BarcodeFormat[]>();
+        hints.set(DecodeHintType.POSSIBLE_FORMATS, [
+          BarcodeFormat.EAN_13,
+          BarcodeFormat.EAN_8,
+          BarcodeFormat.UPC_A,
+          BarcodeFormat.UPC_E,
+          BarcodeFormat.CODE_128,
+        ]);
+        const reader = new BrowserMultiFormatReader(hints);
         const controls = await reader.decodeFromStream(stream, video, (result, _error, scanControls) => {
           if (!result || !scanningRef.current) return;
 
@@ -145,6 +181,12 @@ function AddMeal() {
       const scanFrame = async () => {
         if (!scanningRef.current || !scannerVideoRef.current) return;
 
+        if (scanInProgressRef.current) {
+          scanTimerRef.current = window.setTimeout(scanFrame, 150);
+          return;
+        }
+
+        scanInProgressRef.current = true;
         try {
           const results = await detector.detect(scannerVideoRef.current);
           const result = results.find((item) => item.rawValue)?.rawValue;
@@ -155,15 +197,34 @@ function AddMeal() {
           }
         } catch {
           // Keep checking frames while camera autofocus settles.
+        } finally {
+          scanInProgressRef.current = false;
         }
 
-        window.requestAnimationFrame(scanFrame);
+        if (scanningRef.current) {
+          scanTimerRef.current = window.setTimeout(scanFrame, 150);
+        }
       };
 
-      window.requestAnimationFrame(scanFrame);
+      void scanFrame();
     } catch {
       stopScanner();
       setScanStatus("Camera access was denied or unavailable. Enter the barcode manually below.");
+    }
+  }
+
+  async function toggleTorch() {
+    const track = scannerTrackRef.current;
+    if (!track || !torchSupported) return;
+
+    const nextTorchState = !torchOn;
+    try {
+      await track.applyConstraints({
+        advanced: [{ torch: nextTorchState }],
+      } as unknown as MediaTrackConstraints);
+      setTorchOn(nextTorchState);
+    } catch {
+      setScanStatus("This camera could not change its light setting.");
     }
   }
 
@@ -247,6 +308,12 @@ function AddMeal() {
                 <div className="barcode-camera">
                   <video ref={scannerVideoRef} muted playsInline />
                   <span className="scanner-frame" aria-hidden="true" />
+                  {torchSupported && (
+                    <button type="button" className="torch-button" onClick={() => void toggleTorch()}>
+                      <i className={`bi bi-${torchOn ? "flashlight-fill" : "flashlight"}`} aria-hidden="true" />
+                      {torchOn ? "Light off" : "Light on"}
+                    </button>
+                  )}
                   <button type="button" onClick={stopScanner}>
                     <i className="bi bi-x-lg" aria-hidden="true" />
                     Close camera

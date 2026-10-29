@@ -230,6 +230,11 @@
   cursor: pointer;
 }
 
+.barcode-camera > .torch-button {
+  right: auto;
+  left: 10px;
+}
+
 .barcode-manual-entry {
   margin-top: 16px;
   display: grid;
