@@ -158,6 +158,35 @@ function Register() {
               Create Account
             </button>
 
+            <div className="divider my-4">
+              <span>Or sign up with</span>
+            </div>
+
+            <div className="social-buttons">
+              <button
+                className="social-button"
+                type="button"
+                aria-label="Sign up with Google"
+                title="Sign up with Google"
+              >
+                <img
+                  src="https://developers.google.com/identity/images/g-logo.png"
+                  alt=""
+                  width="20"
+                  height="20"
+                />
+              </button>
+
+              <button
+                className="social-button facebook-button"
+                type="button"
+                aria-label="Sign up with Facebook"
+                title="Sign up with Facebook"
+              >
+                <i className="bi bi-facebook" aria-hidden="true" />
+              </button>
+            </div>
+
             <p className="text-center text-muted mt-4">
               Already have an account?{" "}
               <button

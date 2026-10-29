@@ -1,9 +1,10 @@
 import type { Meal } from "../types/Meal";
 
-// Use localhost on the Mac and the Mac's network address on the iPad
-const BACKEND_HOST = window.location.hostname;
-const MEAL_API_URL = `http://${BACKEND_HOST}:8080/api/meals`;
-const FOOD_API_URL = `http://${BACKEND_HOST}:8080/api/foods`;
+// Leave this unset locally to use Vite's /api proxy. Set VITE_API_URL to the
+// deployed Render address when creating the production frontend build.
+const API_URL = (import.meta.env.VITE_API_URL || "/api").replace(/\/$/, "");
+const MEAL_API_URL = `${API_URL}/meals`;
+const FOOD_API_URL = `${API_URL}/foods`;
 
 // Information entered when creating a meal
 type NewMeal = Omit<Meal, "id" | "createdAt">;
