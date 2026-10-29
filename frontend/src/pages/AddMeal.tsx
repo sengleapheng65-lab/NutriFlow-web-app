@@ -1,9 +1,19 @@
-import { useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-import { createMeal } from "../services/mealApi";
+import { createMeal, getFoodByBarcode } from "../services/mealApi";
 
 import "../styles/AddMeal.css";
+
+type ScannerDetector = {
+  detect: (source: HTMLVideoElement) => Promise<Array<{ rawValue?: string }>>;
+};
+
+type ScannerWindow = Window & {
+  BarcodeDetector?: new (options?: {
+    formats?: string[];
+  }) => ScannerDetector;
+};
 
 function AddMeal() {
   const navigate = useNavigate();
@@ -14,10 +24,129 @@ function AddMeal() {
   const [protein, setProtein] = useState("");
   const [carbs, setCarbs] = useState("");
   const [fat, setFat] = useState("");
+  const [barcode, setBarcode] = useState("");
+  const [scannerOpen, setScannerOpen] = useState(false);
+  const [scanStatus, setScanStatus] = useState("");
+  const [isLookingUpBarcode, setIsLookingUpBarcode] = useState(false);
+
+  const scannerVideoRef = useRef<HTMLVideoElement>(null);
+  const scannerStreamRef = useRef<MediaStream | null>(null);
+  const scanningRef = useRef(false);
 
   // Track the backend request
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    return () => stopScanner();
+  }, []);
+
+  function stopScanner() {
+    scanningRef.current = false;
+    scannerStreamRef.current?.getTracks().forEach((track) => track.stop());
+    scannerStreamRef.current = null;
+
+    if (scannerVideoRef.current) {
+      scannerVideoRef.current.srcObject = null;
+    }
+
+    setScannerOpen(false);
+  }
+
+  async function applyBarcode(value: string) {
+    const trimmedBarcode = value.trim();
+
+    if (!trimmedBarcode) {
+      setScanStatus("Enter a barcode to continue.");
+      return;
+    }
+
+    setBarcode(trimmedBarcode);
+    stopScanner();
+    setIsLookingUpBarcode(true);
+    setScanStatus("Looking up product nutrition…");
+
+    try {
+      const food = await getFoodByBarcode(trimmedBarcode);
+
+      setName(food.name || `Product barcode: ${trimmedBarcode}`);
+      setCalories(String(Math.round(Number(food.calories) || 0)));
+      setProtein(String(Number(food.protein) || 0));
+      setCarbs(String(Number(food.carbs) || 0));
+      setFat(String(Number(food.fat) || 0));
+
+      const nutritionBasis = food.nutritionBasis || "per 100 g";
+      const servingNote = food.servingSize
+        ? ` Values are ${nutritionBasis}; package serving: ${food.servingSize}.`
+        : ` Values are ${nutritionBasis}.`;
+      setScanStatus(`Calories, protein, carbohydrates, and fat were added to Meal Details.${servingNote}`);
+    } catch {
+      setName((currentName) => currentName || `Product barcode: ${trimmedBarcode}`);
+      setScanStatus("Could not find nutrition data. Enter the package label values manually.");
+    } finally {
+      setIsLookingUpBarcode(false);
+    }
+  }
+
+  async function startScanner() {
+    const detectorConstructor = (window as ScannerWindow).BarcodeDetector;
+
+    if (!detectorConstructor) {
+      setScanStatus(
+        "Camera scanning is not supported in this browser. Enter the barcode manually below.",
+      );
+      return;
+    }
+
+    if (!navigator.mediaDevices?.getUserMedia) {
+      setScanStatus("Camera access is unavailable. Enter the barcode manually below.");
+      return;
+    }
+
+    try {
+      setScanStatus("Point your camera at a product barcode.");
+      setScannerOpen(true);
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: { ideal: "environment" } },
+      });
+
+      scannerStreamRef.current = stream;
+      scanningRef.current = true;
+
+      const video = scannerVideoRef.current;
+      if (!video) return;
+
+      video.srcObject = stream;
+      await video.play();
+
+      const detector = new detectorConstructor({
+        formats: ["ean_13", "ean_8", "upc_a", "upc_e", "code_128"],
+      });
+
+      const scanFrame = async () => {
+        if (!scanningRef.current || !scannerVideoRef.current) return;
+
+        try {
+          const results = await detector.detect(scannerVideoRef.current);
+          const result = results.find((item) => item.rawValue)?.rawValue;
+
+          if (result) {
+            applyBarcode(result);
+            return;
+          }
+        } catch {
+          // Keep checking frames while camera autofocus settles.
+        }
+
+        window.requestAnimationFrame(scanFrame);
+      };
+
+      window.requestAnimationFrame(scanFrame);
+    } catch {
+      stopScanner();
+      setScanStatus("Camera access was denied or unavailable. Enter the barcode manually below.");
+    }
+  }
 
   // Send the new meal to the Spring Boot backend
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -75,6 +204,60 @@ function AddMeal() {
           </div>
 
           <form onSubmit={handleSubmit} aria-busy={isSaving}>
+            <section className="barcode-scanner" aria-labelledby="barcode-scanner-title">
+              <div className="barcode-scanner-heading">
+                <div className="barcode-scanner-icon">
+                  <i className="bi bi-upc-scan" aria-hidden="true" />
+                </div>
+                <div>
+                  <h3 id="barcode-scanner-title">Scan a barcode</h3>
+                  <p>Use your camera to capture a packaged food’s code.</p>
+                </div>
+                <button
+                  className="open-scanner-button"
+                  type="button"
+                  onClick={startScanner}
+                  disabled={isSaving || scannerOpen || isLookingUpBarcode}
+                >
+                  <i className="bi bi-camera" aria-hidden="true" />
+                  Open camera
+                </button>
+              </div>
+
+              {scannerOpen && (
+                <div className="barcode-camera">
+                  <video ref={scannerVideoRef} muted playsInline />
+                  <span className="scanner-frame" aria-hidden="true" />
+                  <button type="button" onClick={stopScanner}>
+                    <i className="bi bi-x-lg" aria-hidden="true" />
+                    Close camera
+                  </button>
+                </div>
+              )}
+
+              <div className="barcode-manual-entry">
+                <label htmlFor="barcodeInput">Or enter the barcode</label>
+                <input
+                  id="barcodeInput"
+                  type="text"
+                  inputMode="numeric"
+                  value={barcode}
+                  onChange={(event) => setBarcode(event.target.value)}
+                  placeholder="For example, 012345678905"
+                  disabled={isSaving || isLookingUpBarcode}
+                />
+                <button
+                  type="button"
+                  onClick={() => void applyBarcode(barcode)}
+                  disabled={isSaving || isLookingUpBarcode}
+                >
+                  {isLookingUpBarcode ? "Looking up…" : "Use code"}
+                </button>
+              </div>
+
+              {scanStatus && <p className="barcode-status" role="status">{scanStatus}</p>}
+            </section>
+
             {/* Meal name */}
             <div className="meal-form-field">
               <label htmlFor="mealName">Meal name</label>

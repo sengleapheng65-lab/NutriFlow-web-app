@@ -8,6 +8,7 @@ public class FoodItem {
     private String name;
     private String brand;
     private String servingSize;
+    private String nutritionBasis;
     private int calories;
     private double protein;
     private double carbs;
@@ -18,6 +19,7 @@ public class FoodItem {
         String name,
         String brand,
         String servingSize,
+        String nutritionBasis,
         int calories,
         double protein,
         double carbs,
@@ -27,6 +29,7 @@ public class FoodItem {
         this.name = name;
         this.brand = brand;
         this.servingSize = servingSize;
+        this.nutritionBasis = nutritionBasis;
         this.calories = calories;
         this.protein = protein;
         this.carbs = carbs;
@@ -47,6 +50,10 @@ public class FoodItem {
 
     public String getServingSize() {
         return servingSize;
+    }
+
+    public String getNutritionBasis() {
+        return nutritionBasis;
     }
 
     public int getCalories() {

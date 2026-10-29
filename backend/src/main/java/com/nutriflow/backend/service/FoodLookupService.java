@@ -62,22 +62,57 @@ public class FoodLookupService {
             nutriments = new HashMap<>();
         }
 
-        double calories = getNumber(nutriments, "energy-kcal_100g");
-        double protein = getNumber(nutriments, "proteins_100g");
-        double carbs = getNumber(nutriments, "carbohydrates_100g");
-        double fat = getNumber(nutriments, "fat_100g");
+        // Package labels use serving values, so prefer them whenever the
+        // database provides the full set. Fall back to its standard 100 g data.
+        Double servingCalories = getNumberOrNull(nutriments, "energy-kcal_serving");
+        Double servingProtein = getNumberOrNull(nutriments, "proteins_serving");
+        Double servingCarbs = getNumberOrNull(nutriments, "carbohydrates_serving");
+        Double servingFat = getNumberOrNull(nutriments, "fat_serving");
+        boolean hasServingNutrition = servingCalories != null
+                && servingProtein != null
+                && servingCarbs != null
+                && servingFat != null;
 
-        return new FoodItem(barcode, name, brand, servingSize, (int) calories, protein, carbs, fat);
+        double calories = hasServingNutrition ? servingCalories : getNumber(nutriments, "energy-kcal_100g");
+        double protein = hasServingNutrition ? servingProtein : getNumber(nutriments, "proteins_100g");
+        double carbs = hasServingNutrition ? servingCarbs : getNumber(nutriments, "carbohydrates_100g");
+        double fat = hasServingNutrition ? servingFat : getNumber(nutriments, "fat_100g");
+        String nutritionBasis = hasServingNutrition ? "per serving" : "per 100 g";
+
+        return new FoodItem(
+                barcode,
+                name,
+                brand,
+                servingSize,
+                nutritionBasis,
+                (int) Math.round(calories),
+                protein,
+                carbs,
+                fat);
     }
 
     // Get a number from nutriments, or 0 if it's missing
     private double getNumber(Map<String, Object> nutriments, String key) {
+        Double value = getNumberOrNull(nutriments, key);
+        return value == null ? 0 : value;
+    }
+
+    // Some food records serialize their nutrition values as strings.
+    private Double getNumberOrNull(Map<String, Object> nutriments, String key) {
         Object value = nutriments.get(key);
 
-        if (value == null) {
-            return 0;
+        if (value instanceof Number number) {
+            return number.doubleValue();
         }
 
-        return ((Number) value).doubleValue();
+        if (value instanceof String stringValue) {
+            try {
+                return Double.parseDouble(stringValue);
+            } catch (NumberFormatException ignored) {
+                return null;
+            }
+        }
+
+        return null;
     }
 }
