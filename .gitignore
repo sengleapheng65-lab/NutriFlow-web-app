@@ -15,6 +15,7 @@ dist-ssr
 # Local Python environment and secrets
 .venv/
 .env
+frontend/.env.production
 backend/src/main/python/.env
 
 # Editor directories and files

@@ -17,14 +17,20 @@ load_dotenv(Path(__file__).with_name(".env"))
 
 api_key = os.getenv("GROQ_API_KEY")
 if not api_key:
-    raise RuntimeError("GROQ_API_KEY not found in backend/src/main/python/.env")
+    raise RuntimeError("GROQ_API_KEY is not configured")
+
+frontend_origins = [
+    origin.strip()
+    for origin in os.getenv("FRONTEND_ORIGINS", "").split(",")
+    if origin.strip()
+]
 
 
 app = FastAPI(title="NutriFlow Food Vision API")
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
-    allow_origin_regex=r"http://(10|192\.168|172\.(1[6-9]|2[0-9]|3[0-1]))\.\d+\.\d+:5173",
+    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173", *frontend_origins],
+    allow_origin_regex=r"https://[a-z0-9-]+\.vercel\.app|http://(10|192\.168|172\.(1[6-9]|2[0-9]|3[0-1]))\.\d+:5173",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

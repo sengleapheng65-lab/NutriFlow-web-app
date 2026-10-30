@@ -22,6 +22,8 @@ The application combines a **React + TypeScript frontend** with a **Java Spring 
 
 4. After the API deploys, copy its `https://…onrender.com` URL. Create `frontend/.env.production` from `frontend/.env.production.example`, replace the URL, then run `npm run build` in `frontend` before updating the files embedded in Google Sites.
 
+The Render Blueprint also deploys a separate `nutriflow-vision-api` service for meal-photo and nutrition-label recognition. Set its `GROQ_API_KEY` and `FRONTEND_ORIGINS` environment variables, then add `VITE_VISION_API_URL` in Vercel using that service's public URL. Both `VITE_API_URL` and `VITE_VISION_API_URL` must be set before the Vercel production build.
+
 The frontend uses `/api` through Vite's local proxy during development, so no local setup changes are required.
 
 ---

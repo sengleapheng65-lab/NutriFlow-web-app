@@ -11,3 +11,15 @@ services:
         sync: false
       - key: SPRING_DATASOURCE_PASSWORD
         sync: false
+
+  - type: web
+    name: nutriflow-vision-api
+    runtime: docker
+    rootDir: backend/src/main/python
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /health
+    envVars:
+      - key: GROQ_API_KEY
+        sync: false
+      - key: FRONTEND_ORIGINS
+        sync: false
