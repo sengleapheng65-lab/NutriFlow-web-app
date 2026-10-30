@@ -29,6 +29,26 @@ type ScannerWindow = Window & {
   BarcodeDetector?: new (options?: { formats?: string[] }) => ScannerDetector;
 };
 
+const AI_MEAL_NAME_LIMIT = 52;
+
+function formatNutritionValue(value: number) {
+  const numericValue = Number(value);
+  return Number.isFinite(numericValue) ? numericValue.toFixed(2) : "0.00";
+}
+
+function createConciseMealName(itemNames: string[]) {
+  const names = itemNames.map((name) => name.trim()).filter(Boolean);
+  const visibleNames = names.slice(0, 2);
+  const remainingCount = names.length - visibleNames.length;
+  const summary = `${visibleNames.join(", ")}${
+    remainingCount > 0 ? ` +${remainingCount} more` : ""
+  }` || "Meal";
+
+  return summary.length > AI_MEAL_NAME_LIMIT
+    ? `${summary.slice(0, AI_MEAL_NAME_LIMIT - 1).trimEnd()}…`
+    : summary;
+}
+
 function AddMeal() {
   const navigate = useNavigate();
 
@@ -169,10 +189,10 @@ function AddMeal() {
       const food = await getFoodByBarcode(trimmedBarcode);
 
       setName(food.name || `Product barcode: ${trimmedBarcode}`);
-      setCalories(String(Math.round(Number(food.calories) || 0)));
-      setProtein(String(Number(food.protein) || 0));
-      setCarbs(String(Number(food.carbs) || 0));
-      setFat(String(Number(food.fat) || 0));
+      setCalories(formatNutritionValue(food.calories));
+      setProtein(formatNutritionValue(food.protein));
+      setCarbs(formatNutritionValue(food.carbs));
+      setFat(formatNutritionValue(food.fat));
 
       const nutritionBasis = food.nutritionBasis || "per 100 g";
       const servingNote = food.servingSize
@@ -203,15 +223,23 @@ function AddMeal() {
       const firstItem = result.items[0];
       if (!firstItem) throw new Error("No food was detected.");
 
-      setName(result.items.map((item) => item.name).join(", "));
-      setCalories(String(Math.round(result.total_calories)));
+      setName(createConciseMealName(result.items.map((item) => item.name)));
+      setCalories(formatNutritionValue(result.total_calories));
       setProtein(
-        String(result.items.reduce((sum, item) => sum + item.protein_g, 0)),
+        formatNutritionValue(
+          result.items.reduce((sum, item) => sum + item.protein_g, 0),
+        ),
       );
       setCarbs(
-        String(result.items.reduce((sum, item) => sum + item.carbs_g, 0)),
+        formatNutritionValue(
+          result.items.reduce((sum, item) => sum + item.carbs_g, 0),
+        ),
       );
-      setFat(String(result.items.reduce((sum, item) => sum + item.fat_g, 0)));
+      setFat(
+        formatNutritionValue(
+          result.items.reduce((sum, item) => sum + item.fat_g, 0),
+        ),
+      );
       setPhotoStatus(
         `Nutrition added from photo. ${result.confidence_explanation}`,
       );
@@ -241,10 +269,10 @@ function AddMeal() {
     try {
       const result = await analyzeNutritionLabel(file);
       setName((currentName) => currentName || result.product_name);
-      setCalories(String(Math.round(result.calories)));
-      setProtein(String(result.protein_g));
-      setCarbs(String(result.carbs_g));
-      setFat(String(result.fat_g));
+      setCalories(formatNutritionValue(result.calories));
+      setProtein(formatNutritionValue(result.protein_g));
+      setCarbs(formatNutritionValue(result.carbs_g));
+      setFat(formatNutritionValue(result.fat_g));
       setLabelStatus(
         `Label values added ${result.nutrition_basis}. Review them before saving. ${result.confidence_explanation}`,
       );
@@ -609,7 +637,7 @@ function AddMeal() {
               aria-labelledby="photo-recognition-title"
             >
               <div>
-                <h3 id="photo-recognition-title">Analyze a meal photo</h3>
+                <h3 id="photo-recognition-title">NutriVision AI</h3>
                 <p>Upload a photo and we’ll estimate the nutrition for you.</p>
               </div>
               {mealCameraOpen && (
