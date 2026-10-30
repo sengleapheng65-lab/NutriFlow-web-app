@@ -65,7 +65,9 @@ function AddMeal() {
   const [isAnalyzingPhoto, setIsAnalyzingPhoto] = useState(false);
   const [photoStatus, setPhotoStatus] = useState("");
   const [mealCameraOpen, setMealCameraOpen] = useState(false);
+  const [mealCameraFacing, setMealCameraFacing] = useState<"environment" | "user">("environment");
   const [labelCameraOpen, setLabelCameraOpen] = useState(false);
+  const [labelCameraFacing, setLabelCameraFacing] = useState<"environment" | "user">("environment");
   const [labelStatus, setLabelStatus] = useState("");
   const [isReadingLabel, setIsReadingLabel] = useState(false);
   const photoInputRef = useRef<HTMLInputElement>(null);
@@ -90,6 +92,7 @@ function AddMeal() {
   const [torchOn, setTorchOn] = useState(false);
   const [zoomSupported, setZoomSupported] = useState(false);
   const [zoom, setZoom] = useState(1);
+  const [scannerCameraFacing, setScannerCameraFacing] = useState<"environment" | "user">("environment");
 
   // Track the backend request
   const [isSaving, setIsSaving] = useState(false);
@@ -293,7 +296,9 @@ function AddMeal() {
     if (file) await analyzeLabelFile(file);
   }
 
-  async function startMealCamera() {
+  async function startMealCamera(
+    facingMode: "environment" | "user" = mealCameraFacing,
+  ) {
     if (!navigator.mediaDevices?.getUserMedia) {
       setPhotoStatus(
         "Live camera access is unavailable. Use Choose photo instead.",
@@ -303,7 +308,7 @@ function AddMeal() {
 
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: { ideal: "environment" } },
+        video: { facingMode: { ideal: facingMode } },
         audio: false,
       });
       mealCameraStreamRef.current = stream;
@@ -312,6 +317,15 @@ function AddMeal() {
       setPhotoStatus("Camera access was denied. Use Choose photo instead.");
       stopMealCamera();
     }
+  }
+
+  async function flipMealCamera() {
+    const nextFacingMode =
+      mealCameraFacing === "environment" ? "user" : "environment";
+
+    stopMealCamera();
+    setMealCameraFacing(nextFacingMode);
+    await startMealCamera(nextFacingMode);
   }
 
   async function captureMealPhoto() {
@@ -341,7 +355,9 @@ function AddMeal() {
     );
   }
 
-  async function startLabelCamera() {
+  async function startLabelCamera(
+    facingMode: "environment" | "user" = labelCameraFacing,
+  ) {
     if (!navigator.mediaDevices?.getUserMedia) {
       setLabelStatus("Live camera access is unavailable. Use Choose label photo instead.");
       return;
@@ -350,7 +366,7 @@ function AddMeal() {
     try {
       labelCameraStreamRef.current = await navigator.mediaDevices.getUserMedia({
         video: {
-          facingMode: { ideal: "environment" },
+          facingMode: { ideal: facingMode },
           width: { ideal: 1920 },
           height: { ideal: 1080 },
         },
@@ -361,6 +377,15 @@ function AddMeal() {
       setLabelStatus("Camera access was denied. Use Choose label photo instead.");
       stopLabelCamera();
     }
+  }
+
+  async function flipLabelCamera() {
+    const nextFacingMode =
+      labelCameraFacing === "environment" ? "user" : "environment";
+
+    stopLabelCamera();
+    setLabelCameraFacing(nextFacingMode);
+    await startLabelCamera(nextFacingMode);
   }
 
   async function captureLabelPhoto() {
@@ -385,7 +410,9 @@ function AddMeal() {
     }, "image/jpeg", 0.92);
   }
 
-  async function startScanner() {
+  async function startScanner(
+    facingMode: "environment" | "user" = scannerCameraFacing,
+  ) {
     const detectorConstructor = (window as ScannerWindow).BarcodeDetector;
 
     if (!navigator.mediaDevices?.getUserMedia) {
@@ -404,7 +431,7 @@ function AddMeal() {
       setScannerOpen(true);
       const stream = await navigator.mediaDevices.getUserMedia({
         video: {
-          facingMode: { ideal: "environment" },
+          facingMode: { ideal: facingMode },
           width: { ideal: 1920 },
           height: { ideal: 1080 },
           frameRate: { ideal: 30, max: 30 },
@@ -547,6 +574,15 @@ function AddMeal() {
     }
   }
 
+  async function flipScannerCamera() {
+    const nextFacingMode =
+      scannerCameraFacing === "environment" ? "user" : "environment";
+
+    stopScanner();
+    setScannerCameraFacing(nextFacingMode);
+    await startScanner(nextFacingMode);
+  }
+
   async function toggleTorch() {
     const track = scannerTrackRef.current;
     if (!track || !torchSupported) return;
@@ -643,17 +679,34 @@ function AddMeal() {
               {mealCameraOpen && (
                 <div className="meal-camera-preview">
                   <video ref={mealCameraVideoRef} muted playsInline />
+                  <button
+                    className="meal-flip-camera-button"
+                    type="button"
+                    onClick={() => void flipMealCamera()}
+                    disabled={isAnalyzingPhoto}
+                    aria-label="Switch camera"
+                    title="Switch camera"
+                  >
+                    <i className="bi bi-arrow-repeat" aria-hidden="true" />
+                  </button>
                   <div className="meal-camera-actions">
                     <button
+                      className="meal-capture-button"
                       type="button"
                       onClick={() => void captureMealPhoto()}
                       disabled={isAnalyzingPhoto}
                     >
-                      <i className="bi bi-camera" aria-hidden="true" />
-                      Capture photo
+                      <span className="meal-capture-icon" aria-hidden="true">
+                        <i className="bi bi-camera-fill" />
+                      </span>
+                      {isAnalyzingPhoto ? "Analyzing…" : "Capture photo"}
                     </button>
-                    <button type="button" onClick={stopMealCamera}>
-                      Close camera
+                    <button
+                      className="meal-close-camera-button"
+                      type="button"
+                      onClick={stopMealCamera}
+                    >
+                      Close
                     </button>
                   </div>
                 </div>
@@ -726,11 +779,35 @@ function AddMeal() {
                 <div className="label-camera">
                   <video ref={labelCameraVideoRef} muted playsInline />
                   <span className="label-scanner-frame" aria-hidden="true" />
+                  <button
+                    className="label-flip-camera-button"
+                    type="button"
+                    onClick={() => void flipLabelCamera()}
+                    disabled={isReadingLabel}
+                    aria-label="Switch camera"
+                    title="Switch camera"
+                  >
+                    <i className="bi bi-arrow-repeat" aria-hidden="true" />
+                  </button>
                   <div className="label-camera-actions">
-                    <button type="button" onClick={() => void captureLabelPhoto()} disabled={isReadingLabel}>
-                      <i className="bi bi-camera" aria-hidden="true" /> Capture label
+                    <button
+                      className="label-capture-button"
+                      type="button"
+                      onClick={() => void captureLabelPhoto()}
+                      disabled={isReadingLabel}
+                    >
+                      <span className="label-capture-icon" aria-hidden="true">
+                        <i className="bi bi-camera-fill" />
+                      </span>
+                      {isReadingLabel ? "Reading label…" : "Capture label"}
                     </button>
-                    <button type="button" onClick={stopLabelCamera}>Close camera</button>
+                    <button
+                      className="label-close-camera-button"
+                      type="button"
+                      onClick={stopLabelCamera}
+                    >
+                      Close
+                    </button>
                   </div>
                 </div>
               )}
@@ -790,7 +867,7 @@ function AddMeal() {
                 <button
                   className="open-scanner-button"
                   type="button"
-                  onClick={startScanner}
+                  onClick={() => void startScanner()}
                   disabled={isSaving || scannerOpen || isLookingUpBarcode}
                 >
                   <i className="bi bi-camera" aria-hidden="true" />
@@ -802,6 +879,15 @@ function AddMeal() {
                 <div className="barcode-camera">
                   <video ref={scannerVideoRef} muted playsInline />
                   <span className="scanner-frame" aria-hidden="true" />
+                  <button
+                    className="barcode-flip-camera-button"
+                    type="button"
+                    onClick={() => void flipScannerCamera()}
+                    aria-label="Switch camera"
+                    title="Switch camera"
+                  >
+                    <i className="bi bi-arrow-repeat" aria-hidden="true" />
+                  </button>
                   {torchSupported && (
                     <button
                       type="button"
