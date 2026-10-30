@@ -2,6 +2,7 @@
 import { useMemo, useState, type CSSProperties } from "react";
 import { Link } from "react-router-dom";
 
+import MacroIcon from "../components/MacroIcon";
 import "../styles/Home.css";
 
 // Information displayed in the feature cards
@@ -9,22 +10,22 @@ const features = [
   {
     icon: "bi-journal-plus",
     color: "icon-red",
-    title: "Easy Meal Logging",
+    title: "Manual Meal Logging",
     description:
-      "Quickly record your meals, calories, and important nutrients.",
+      "Add meals yourself with calories, protein, carbohydrates, and fat.",
   },
   {
-    icon: "bi-bar-chart-line",
+    icon: "bi-stars",
     color: "icon-blue",
-    title: "Nutrition Dashboard",
+    title: "NutriVision AI",
     description:
-      "See your daily calorie and nutrient progress in one dashboard.",
+      "Analyze a meal photo to estimate nutrition and fill in your meal details.",
   },
   {
-    icon: "bi-bullseye",
+    icon: "bi-card-text",
     color: "icon-purple",
-    title: "Personal Goals",
-    description: "Create nutrition goals and follow your daily progress.",
+    title: "Label Scanner",
+    description: "Capture a Nutrition Facts label to extract serving details and macros.",
   },
   {
     icon: "bi-upc-scan",
@@ -33,16 +34,28 @@ const features = [
     description: "Scan packaged foods to quickly find nutrition information.",
   },
   {
-    icon: "bi-clock-history",
+    icon: "bi-bar-chart-line",
     color: "icon-cyan",
-    title: "Meal History",
-    description: "Review previous meals and understand your eating habits.",
+    title: "Daily Dashboard",
+    description: "Track daily calories and macro progress at a glance.",
   },
   {
-    icon: "bi-phone",
+    icon: "bi-bullseye",
     color: "icon-orange",
-    title: "Works Everywhere",
-    description: "Use NutriFlow from your phone, tablet, or computer.",
+    title: "Personal Goals",
+    description: "Set calorie and macro targets that match your nutrition goals.",
+  },
+  {
+    icon: "bi-clock-history",
+    color: "icon-red",
+    title: "Meal History",
+    description: "Review, search, sort, and manage your previous meal entries.",
+  },
+  {
+    icon: "bi-sliders",
+    color: "icon-blue",
+    title: "Profile & Preferences",
+    description: "Personalize your profile, daily targets, theme, and app settings.",
   },
 ];
 
@@ -66,6 +79,38 @@ const quickMeals: Omit<DemoMeal, "id">[] = [
     fat: 14,
     icon: "🍗",
     image: "/chicken.png",
+  },
+  {
+    name: "Garden Salad",
+    calories: 180,
+    protein: 6,
+    carbs: 18,
+    fat: 10,
+    icon: "🥗",
+  },
+  {
+    name: "Boiled Eggs",
+    calories: 156,
+    protein: 13,
+    carbs: 1,
+    fat: 11,
+    icon: "🥚",
+  },
+  {
+    name: "Banana",
+    calories: 105,
+    protein: 1,
+    carbs: 27,
+    fat: 0,
+    icon: "🍌",
+  },
+  {
+    name: "Milk",
+    calories: 122,
+    protein: 8,
+    carbs: 12,
+    fat: 5,
+    icon: "🥛",
   },
   {
     name: "Greek Yogurt",
@@ -336,10 +381,15 @@ function Home() {
           </div>
 
           {/* Right-side dashboard preview */}
-          <div className="nutrition-preview" id="demo">
+          <div className="phone-mockup" aria-label="NutriFlow dashboard preview">
+            <div className="phone-speaker" aria-hidden="true" />
+            <div className="nutrition-preview" id="demo">
             <div className="preview-heading">
               <div>
-                <small>Today's overview</small>
+                <div className="preview-eyebrow">
+                  <img src="/NutriFlow.png" alt="" aria-hidden="true" />
+                  <small>Today's overview</small>
+                </div>
                 <h2>
                   Daily Progress <span className="progress-status">On Track</span>
                 </h2>
@@ -372,7 +422,10 @@ function Home() {
               <div className="nutrient-list">
                 <div className="nutrient">
                   <div className="nutrient-heading">
-                    <span>Protein</span>
+                    <span className="protein-nutrient-label">
+                      <MacroIcon type="protein" />
+                      Protein
+                    </span>
                     <strong>{demoTotals.protein} / 120g</strong>
                   </div>
 
@@ -386,7 +439,10 @@ function Home() {
 
                 <div className="nutrient">
                   <div className="nutrient-heading">
-                    <span>Carbohydrates</span>
+                    <span className="carbs-nutrient-label">
+                      <MacroIcon type="carbs" />
+                      Carbohydrates
+                    </span>
                     <strong>{demoTotals.carbs} / 220g</strong>
                   </div>
 
@@ -400,7 +456,10 @@ function Home() {
 
                 <div className="nutrient">
                   <div className="nutrient-heading">
-                    <span>Fat</span>
+                    <span className="fat-nutrient-label">
+                      <MacroIcon type="fat" />
+                      Fat
+                    </span>
                     <strong>{demoTotals.fat} / 65g</strong>
                   </div>
 
@@ -423,7 +482,7 @@ function Home() {
             <div className="quick-meals-heading">
               <strong>
                 <i className="bi bi-lightning-charge-fill" aria-hidden="true" />
-                Interactive quick-add meals
+                Quick add meals
               </strong>
               <span>Click to add to widget</span>
             </div>
@@ -453,7 +512,7 @@ function Home() {
             )}
 
             <div className="demo-meal-feed" aria-live="polite">
-              {demoMeals.map((meal) => (
+              {demoMeals.slice(0, 2).map((meal) => (
                 <div className="meal-preview featured-meal" key={meal.id}>
                   <div className="meal-icon meal-emoji" aria-hidden="true">
                     {meal.image ? (
@@ -482,6 +541,12 @@ function Home() {
                   </button>
                 </div>
               ))}
+              {demoMeals.length > 2 && (
+                <p className="phone-more-meals">
+                  +{demoMeals.length - 2} more meal{demoMeals.length - 2 === 1 ? "" : "s"}
+                </p>
+              )}
+            </div>
             </div>
           </div>
         </div>

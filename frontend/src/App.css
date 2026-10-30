@@ -73,7 +73,7 @@ body {
   background: var(--page-background);
   color: var(--text);
   font-family:
-    Inter,
+    "DM Sans",
     system-ui,
     -apple-system,
     BlinkMacSystemFont,

@@ -27,9 +27,9 @@ html {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.14);
-  background: linear-gradient(135deg, var(--green-deep), #17603f, #2e8a60);
-  box-shadow: 0 6px 22px rgba(5, 42, 28, 0.2);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.16);
+  background: var(--green-deep);
+  box-shadow: 0 4px 18px rgba(5, 42, 28, 0.16);
 }
 
 .home-brand {
@@ -49,13 +49,17 @@ html {
 .home-links {
   display: flex;
   align-items: center;
-  gap: 27px;
+  gap: 25px;
 }
 
 .home-links a {
   position: relative;
   color: var(--white);
+  font-family: "DM Sans", system-ui, sans-serif;
+  font-size: 0.9rem;
   font-weight: 600;
+  letter-spacing: 0.005em;
+  line-height: 1;
   text-decoration: none;
   transition:
     color 0.2s ease,
@@ -88,9 +92,9 @@ html {
 
 /* Sign In button */
 .home-links .sign-in-button {
-  padding: 10px 19px;
+  padding: 10px 7px;
   border: none;
-  border-radius: 999px;
+  border-radius: 8px;
   background: transparent;
   color: var(--white);
 }
@@ -103,9 +107,9 @@ html {
 
 /* Get Started button */
 .home-links .get-started-button {
-  padding: 10px 21px;
-  border: 2px solid var(--white);
-  border-radius: 999px;
+  padding: 11px 18px;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: 10px;
   background: var(--white);
   color: var(--green-dark);
 }
@@ -177,6 +181,7 @@ html {
 .hero-content h1 {
   margin: 0;
   color: var(--text);
+  font-family: "Fraunces", Georgia, serif;
   font-size: clamp(2.7rem, 5vw, 4.5rem);
   font-weight: 780;
   line-height: 1.04;
@@ -267,17 +272,100 @@ html {
    NUTRITION PREVIEW
    ========================= */
 
+.phone-mockup {
+  position: relative;
+  width: min(310px, 100%);
+  height: 640px;
+  margin: 0 auto;
+  padding: 4px;
+  border: 1px solid #707772;
+  border-radius: 46px;
+  background: linear-gradient(135deg, #9ca29d 0%, #313832 9%, #090c0a 48%, #4d554f 100%);
+  box-shadow:
+    0 28px 54px rgba(4, 46, 29, 0.2),
+    0 3px 7px rgba(16, 36, 25, 0.2),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.18);
+  transform: translateY(-2px);
+  transform-origin: center bottom;
+  transition:
+    transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.45s ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .phone-mockup:hover {
+    box-shadow:
+      0 38px 65px rgba(4, 46, 29, 0.25),
+      0 8px 13px rgba(16, 36, 25, 0.16),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.28);
+    transform: translateY(-12px) rotate(-1.2deg);
+  }
+}
+
+@media (hover: none) {
+  .phone-mockup:active {
+    transform: scale(0.985);
+  }
+
+  .phone-mockup:active .nutrition-preview {
+    filter: brightness(0.97);
+  }
+}
+
+.phone-mockup::before {
+  position: absolute;
+  top: 126px;
+  left: -2px;
+  width: 2px;
+  height: 48px;
+  content: "";
+  border-radius: 2px 0 0 2px;
+  background: #4f5751;
+}
+
+.phone-mockup::after {
+  position: absolute;
+  top: 207px;
+  right: -2px;
+  width: 2px;
+  height: 68px;
+  content: "";
+  border-radius: 0 2px 2px 0;
+  background: #4f5751;
+}
+
+.phone-speaker {
+  position: absolute;
+  z-index: 2;
+  top: 14px;
+  left: 50%;
+  width: 76px;
+  height: 20px;
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at 58px 9px, #35423b 0 2px, transparent 2.5px),
+    #090d0b;
+  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.07);
+  transform: translateX(-50%);
+}
+
+.phone-speaker::after {
+  display: none;
+}
+
 .nutrition-preview {
+  min-height: 660px;
   padding: 26px;
   border: 1px solid var(--border);
-  border-radius: 24px;
+  border-radius: 41px;
   background: var(--surface);
   box-shadow: 0 24px 55px var(--page-shadow);
-  transform: rotate(1deg);
+  transform: none;
   transition:
     background-color 0.3s ease,
     border-color 0.3s ease,
-    box-shadow 0.3s ease;
+    box-shadow 0.3s ease,
+    filter 0.18s ease;
 }
 
 .preview-heading {
@@ -290,6 +378,19 @@ html {
 .meal-information small {
   color: var(--muted);
   font-size: 0.8rem;
+}
+
+.preview-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.preview-eyebrow img {
+  width: 18px;
+  height: 18px;
+  border-radius: 5px;
+  object-fit: cover;
 }
 
 .preview-heading h2 {
@@ -381,17 +482,17 @@ html {
 
 .protein-progress {
   width: 68%;
-  background: var(--green);
+  background: #dc5e58;
 }
 
 .carb-progress {
   width: 66%;
-  background: #e5a23a;
+  background: #c99a00;
 }
 
 .fat-progress {
   width: 64%;
-  background: #6875d8;
+  background: #3f7fdd;
 }
 
 .meal-preview {
@@ -527,12 +628,242 @@ html {
 }
 
 .nutrition-preview {
-  padding: 33px;
+  padding: 39px 16px 15px;
   border: 0;
-  border-radius: 24px;
-  background: rgba(249, 255, 252, 0.89);
-  box-shadow: 0 24px 42px rgba(5, 81, 54, 0.25);
+  border-radius: 41px;
+  overflow: hidden;
+  background: #f7fbf9;
+  box-shadow: none;
   transform: none;
+}
+
+/* Keep the hero device narrow and make its dashboard genuinely phone-first. */
+.phone-mockup .nutrition-preview {
+  min-height: 0;
+  height: 100%;
+  padding-bottom: 30px;
+  position: relative;
+}
+
+.phone-mockup .nutrition-preview::after {
+  position: absolute;
+  right: 50%;
+  bottom: 10px;
+  width: 82px;
+  height: 4px;
+  content: "";
+  border-radius: 999px;
+  background: rgba(13, 48, 33, 0.58);
+  transform: translateX(50%);
+}
+
+:root[data-theme="dark"] .phone-mockup .nutrition-preview::after {
+  background: rgba(238, 247, 242, 0.76);
+}
+
+.phone-mockup .preview-heading {
+  padding-bottom: 13px;
+}
+
+.phone-mockup .preview-heading small {
+  font-size: 0.59rem;
+}
+
+.phone-mockup .preview-eyebrow {
+  gap: 4px;
+}
+
+.phone-mockup .preview-eyebrow img {
+  width: 13px;
+  height: 13px;
+  border-radius: 4px;
+}
+
+.phone-mockup .preview-heading h2 {
+  font-size: 0.96rem;
+}
+
+.phone-mockup .progress-status {
+  margin-left: 4px;
+  padding: 3px 6px;
+  font-size: 0.52rem;
+}
+
+.phone-mockup .dashboard-actions {
+  gap: 4px;
+}
+
+.phone-mockup .dashboard-actions button {
+  padding: 4px;
+  font-size: 0.54rem;
+}
+
+.phone-mockup .user-icon {
+  width: 30px;
+  height: 30px;
+  font-size: 0.72rem;
+}
+
+.phone-mockup .calorie-summary {
+  margin: 18px 0 13px;
+  grid-template-columns: 102px 1fr;
+  gap: 15px;
+}
+
+.phone-mockup .calorie-circle {
+  width: 102px;
+  height: 102px;
+  padding: 9px;
+}
+
+.phone-mockup .calorie-circle strong {
+  font-size: 1.08rem;
+}
+
+.phone-mockup .calorie-circle span {
+  font-size: 0.48rem;
+}
+
+.phone-mockup .nutrient-list {
+  gap: 10px;
+}
+
+.phone-mockup .nutrient-heading {
+  margin-bottom: 4px;
+  font-size: 0.55rem;
+}
+
+.phone-mockup .nutrient-heading span {
+  gap: 4px;
+}
+
+.phone-mockup .nutrient-heading span::before {
+  width: 7px;
+  height: 7px;
+}
+
+.phone-mockup .nutrient-heading .macro-icon {
+  width: 0.88em;
+  height: 0.88em;
+}
+
+.phone-mockup .nutrient-track {
+  height: 6px;
+}
+
+.phone-mockup .remaining-calories {
+  margin: 2px 0 13px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: #1c9b63;
+  font-size: 0.59rem;
+  letter-spacing: 0.01em;
+}
+
+.phone-mockup .quick-meals-heading {
+  padding: 12px 0 9px;
+  border-top-color: rgba(143, 169, 156, 0.28);
+  font-size: 0.61rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  text-transform: none;
+}
+
+.phone-mockup .quick-meals-heading strong {
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  text-transform: none;
+}
+
+.phone-mockup .quick-meals-heading span {
+  display: none;
+}
+
+.phone-mockup .quick-meal-buttons {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 5px;
+}
+
+.phone-mockup .quick-meal-buttons button {
+  padding: 5px 7px;
+  border-radius: 7px;
+  font-size: 0.52rem;
+}
+
+.phone-mockup .quick-meal-buttons button:nth-child(n + 6) {
+  display: none;
+}
+
+.phone-mockup .quick-meal-buttons img {
+  width: 12px;
+  height: 12px;
+}
+
+.phone-mockup .demo-meal-feed {
+  max-height: none;
+  overflow: visible;
+}
+
+.phone-more-meals {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 0.55rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.phone-mockup .featured-meal {
+  margin-top: 10px;
+  padding: 8px;
+  gap: 7px;
+  border-radius: 10px;
+}
+
+.phone-mockup .meal-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  font-size: 0.88rem;
+}
+
+.phone-mockup .meal-information strong {
+  font-size: 0.61rem;
+}
+
+.phone-mockup .dashboard-message {
+  display: none;
+}
+
+.phone-mockup .meal-information small {
+  display: block;
+  margin-top: 2px;
+  font-size: 0.48rem;
+  line-height: 1.25;
+}
+
+.phone-mockup .meal-calories {
+  display: block;
+  font-size: 0.54rem;
+  white-space: nowrap;
+}
+
+.phone-mockup .meal-delete-button {
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 7px;
+  color: #8ea29a;
+  font-size: 0.62rem;
+}
+
+.phone-mockup .meal-delete-button:hover {
+  background: #fff0ed;
+  color: #d4513d;
 }
 
 .preview-heading {
@@ -626,6 +957,30 @@ html {
   display: flex;
   align-items: center;
   gap: 7px;
+}
+
+.nutrient-heading .macro-icon {
+  width: 1em;
+  height: 1em;
+  flex: 0 0 1em;
+}
+
+.nutrient-heading .protein-nutrient-label .macro-icon {
+  color: #dc5e58;
+}
+
+.nutrient-heading .carbs-nutrient-label .macro-icon {
+  color: #c99a00;
+}
+
+.nutrient-heading .fat-nutrient-label .macro-icon {
+  color: #3f7fdd;
+}
+
+.nutrient-heading .protein-nutrient-label::before,
+.nutrient-heading .carbs-nutrient-label::before,
+.nutrient-heading .fat-nutrient-label::before {
+  display: none;
 }
 
 .nutrient-heading span::before {
@@ -833,6 +1188,7 @@ html {
 .section-heading h2 {
   margin: 12px 0 15px;
   color: var(--text);
+  font-family: "Fraunces", Georgia, serif;
   font-size: clamp(2rem, 4vw, 3rem);
   font-weight: 750;
 }
@@ -847,7 +1203,7 @@ html {
   width: min(1120px, 100%);
   margin: 0 auto;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 22px;
 }
 
@@ -1009,6 +1365,7 @@ html {
 .about-content h2 {
   margin: 0 0 20px;
   color: var(--text);
+  font-family: "Fraunces", Georgia, serif;
   font-size: clamp(2rem, 4vw, 3rem);
   line-height: 1.15;
 }
@@ -1053,6 +1410,7 @@ html {
 .home-cta h2 {
   margin: 0 0 8px;
   color: var(--white);
+  font-family: "Fraunces", Georgia, serif;
   font-size: clamp(1.7rem, 4vw, 2.5rem);
 }
 
@@ -1207,8 +1565,16 @@ html {
    ========================= */
 
 :root[data-theme="dark"] .home-nav {
-  background: linear-gradient(135deg, #071a11, #103c29, #17603f);
-  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.4);
+  background: #0d3021;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.32);
+}
+
+/* Refined dark-mode typography: warm white hierarchy with restrained mint accents. */
+:root[data-theme="dark"] .home-page {
+  --text: #f3f6f4;
+  --muted: #aebbb4;
+  --green-dark: #9ed9b5;
+  --border: #30463a;
 }
 /* Keep the Features and About hover line white in dark mode */
 :root[data-theme="dark"]
@@ -1372,6 +1738,64 @@ html {
   color: #f09a86;
 }
 
+/* Keep the embedded dashboard and marketing sections on the same dark palette. */
+:root[data-theme="dark"] .dashboard-actions button {
+  color: #a9bbb1;
+}
+
+:root[data-theme="dark"] .dashboard-actions button:hover {
+  background: rgba(79, 202, 136, 0.14);
+  color: #a7e6bd;
+}
+
+:root[data-theme="dark"] .preview-heading,
+:root[data-theme="dark"] .quick-meals-heading {
+  border-color: rgba(157, 177, 165, 0.18);
+}
+
+:root[data-theme="dark"] .calorie-circle > div {
+  background: #16231b;
+}
+
+:root[data-theme="dark"] .nutrient-heading {
+  color: #a9bbb1;
+}
+
+:root[data-theme="dark"] .nutrient-heading strong {
+  color: var(--text);
+}
+
+:root[data-theme="dark"] .quick-meals-heading span {
+  color: #a9bbb1;
+}
+
+:root[data-theme="dark"] .meal-delete-button {
+  color: #9badb5;
+}
+
+:root[data-theme="dark"] .featured-meal {
+  border-color: rgba(157, 177, 165, 0.14);
+}
+
+:root[data-theme="dark"] .features-section {
+  background: linear-gradient(180deg, #12261c 0%, #0d1712 100%);
+}
+
+:root[data-theme="dark"] .feature-card {
+  border-color: rgba(157, 177, 165, 0.16);
+  background: linear-gradient(145deg, #1a2a20, #16231b);
+}
+
+:root[data-theme="dark"] .feature-card:hover {
+  border-color: rgba(79, 202, 136, 0.65);
+  background: linear-gradient(145deg, #1d3024, #192a20);
+}
+
+:root[data-theme="dark"] .about-section {
+  border-color: rgba(157, 177, 165, 0.16);
+  background: linear-gradient(145deg, #18281f, #16231b);
+}
+
 /* The hero is a free-flowing section, not a bordered card. */
 .hero-container,
 :root[data-theme="dark"] .hero-container {
@@ -1398,7 +1822,7 @@ html {
   }
 
   .nutrition-preview {
-    width: min(560px, 100%);
+    width: 100%;
     margin: 0 auto;
     transform: none;
   }
@@ -1565,6 +1989,8 @@ html {
     gap: 14px;
     border-radius: 9px;
     color: var(--text);
+    font-family: "DM Sans", system-ui, sans-serif;
+    font-size: 0.95rem;
     font-weight: 600;
     text-decoration: none;
   }
@@ -1646,7 +2072,14 @@ html {
   }
 
   .nutrition-preview {
-    padding: 19px;
+    min-height: 0;
+    padding: 37px 16px 15px;
+  }
+
+  .phone-mockup {
+    width: min(292px, 100%);
+    height: 610px;
+    transform: none;
   }
 
   .calorie-summary {
@@ -1732,7 +2165,7 @@ html {
   }
 
   .nutrition-preview {
-    padding: 16px;
+    padding: 45px 16px 16px;
   }
 
   .meal-preview {
