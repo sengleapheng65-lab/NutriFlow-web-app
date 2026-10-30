@@ -762,6 +762,8 @@
 
 .meal-input input {
   width: 100%;
+  min-width: 0;
+  max-width: 100%;
   min-height: 50px;
   padding: 0 15px 0 44px;
   border: 1px solid var(--border);
@@ -870,12 +872,14 @@
 
 /* Scoped to avoid interfering with Home.css */
 .add-meal-main .meal-information {
+  min-width: 0;
   display: grid;
   gap: 17px;
 }
 
 .meal-tip-card,
 .meal-preview-card {
+  min-width: 0;
   padding: 21px;
   border: 1px solid var(--border);
   border-radius: 18px;
@@ -915,6 +919,7 @@
    ================================ */
 
 .preview-meal-name {
+  min-width: 0;
   margin-top: 16px;
   display: flex;
   align-items: center;
@@ -933,6 +938,7 @@
 }
 
 .preview-meal-name span {
+  min-width: 0;
   overflow: hidden;
   color: var(--text);
   font-weight: 650;

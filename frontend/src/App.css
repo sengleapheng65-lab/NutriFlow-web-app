@@ -69,6 +69,7 @@ body,
 
 body {
   min-width: 320px;
+  overflow-x: hidden;
   background: var(--page-background);
   color: var(--text);
   font-family:
