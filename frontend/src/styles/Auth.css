@@ -444,3 +444,42 @@
     transition: none !important;
   }
 }
+
+/* ================================
+   DARK MODE
+================================ */
+
+:root[data-theme="dark"] .login-page {
+  background: linear-gradient(135deg, #06170e 0%, #0c3a26 52%, #17603f 100%);
+}
+
+:root[data-theme="dark"] .login-box {
+  border-color: var(--border);
+  background: var(--green-pale);
+  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.45);
+}
+
+:root[data-theme="dark"] .login-form .form-control,
+:root[data-theme="dark"] .login-form .input-group .btn,
+:root[data-theme="dark"] .social-button {
+  border-color: var(--border);
+  background: var(--surface);
+  color: var(--text);
+}
+
+:root[data-theme="dark"] .login-form .form-control::placeholder {
+  color: #8fa79b;
+}
+
+:root[data-theme="dark"] .login-form .input-group .btn:hover,
+:root[data-theme="dark"] .social-button:hover {
+  border-color: var(--green);
+  background: var(--green-light);
+  color: var(--green-dark);
+}
+
+@media (max-width: 800px) {
+  :root[data-theme="dark"] .login-box {
+    background: var(--green-pale);
+  }
+}
