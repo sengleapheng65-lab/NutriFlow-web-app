@@ -618,7 +618,29 @@
   /* Profile card inside the phone drawer */
   .app-mobile-drawer .app-drawer-profile {
     margin: 17px 0;
+    padding: 12px;
     display: flex;
+    justify-content: flex-start;
+    gap: 12px;
+    border-color: var(--border);
+    background: var(--page-background);
+  }
+
+  .app-mobile-drawer .app-sidebar-avatar {
+    width: 44px;
+    height: 44px;
+    flex-basis: 44px;
+    border-radius: 50%;
+    font-size: 1.15rem;
+  }
+
+  .app-mobile-drawer .app-sidebar-profile-info {
+    display: flex;
+  }
+
+  .app-mobile-drawer .app-drawer-profile:hover {
+    background: var(--green-light);
+    transform: none;
   }
 
   /* Drawer menu */
