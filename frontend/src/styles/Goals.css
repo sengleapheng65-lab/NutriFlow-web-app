@@ -144,12 +144,25 @@
   align-items: center;
 }
 
-.goal-input > i {
+.goal-input > i,
+.goal-input > .macro-icon {
   position: absolute;
   left: 15px;
   z-index: 1;
   color: var(--green);
   pointer-events: none;
+}
+
+.protein-goal-input > .macro-icon {
+  color: #dc5e58;
+}
+
+.carbs-goal-input > .macro-icon {
+  color: #c99a00;
+}
+
+.fat-goal-input > .macro-icon {
+  color: #3f7fdd;
 }
 
 .goal-input input {

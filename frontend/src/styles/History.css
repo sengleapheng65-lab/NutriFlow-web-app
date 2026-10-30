@@ -145,18 +145,18 @@
 }
 
 .history-summary-icon.protein {
-  background: #fff0da;
-  color: #e88918;
+  background: #fde8e7;
+  color: #dc5e58;
 }
 
 .history-summary-icon.carbs {
-  background: #fff2d8;
-  color: #dc8500;
+  background: #fff6d6;
+  color: #c99a00;
 }
 
 .history-summary-icon.fat {
-  background: #e6efff;
-  color: #3978dc;
+  background: #e7f0ff;
+  color: #3f7fdd;
 }
 
 /* ================================

@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from "react";
 
+import MacroIcon from "../components/MacroIcon";
 import "../styles/Goals.css";
 
 // Structure of the user's daily nutrition goals
@@ -120,11 +121,8 @@ function Goals() {
               <div className="goal-field">
                 <label htmlFor="goalProtein">Protein</label>
 
-                <div className="goal-input">
-                  <i
-                    className="bi bi-lightning-charge-fill"
-                    aria-hidden="true"
-                  />
+                <div className="goal-input protein-goal-input">
+                  <MacroIcon type="protein" />
 
                   <input
                     id="goalProtein"
@@ -147,8 +145,8 @@ function Goals() {
               <div className="goal-field">
                 <label htmlFor="goalCarbs">Carbohydrates</label>
 
-                <div className="goal-input">
-                  <i className="bi bi-circle-half" aria-hidden="true" />
+                <div className="goal-input carbs-goal-input">
+                  <MacroIcon type="carbs" />
 
                   <input
                     id="goalCarbs"
@@ -171,8 +169,8 @@ function Goals() {
               <div className="goal-field">
                 <label htmlFor="goalFat">Fat</label>
 
-                <div className="goal-input">
-                  <i className="bi bi-droplet-fill" aria-hidden="true" />
+                <div className="goal-input fat-goal-input">
+                  <MacroIcon type="fat" />
 
                   <input
                     id="goalFat"

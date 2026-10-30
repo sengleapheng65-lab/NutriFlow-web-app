@@ -96,6 +96,18 @@ img {
   max-width: 100%;
 }
 
+.macro-icon {
+  width: 1.35em;
+  height: 1.35em;
+  display: block;
+}
+
+.meal-bowl-icon {
+  width: 1.45em;
+  height: 1.45em;
+  display: block;
+}
+
 /* Floating theme button */
 
 .theme-toggle {

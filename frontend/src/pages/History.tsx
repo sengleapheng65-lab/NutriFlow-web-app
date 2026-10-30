@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 
+import MacroIcon from "../components/MacroIcon";
 import type { Meal } from "../types/Meal";
 import { deleteMeal as deleteMealFromApi, getMeals } from "../services/mealApi";
 
@@ -164,7 +165,7 @@ function History() {
         {/* Protein */}
         <article>
           <div className="history-summary-icon protein">
-            <i className="bi bi-lightning-charge-fill" aria-hidden="true" />
+            <MacroIcon type="protein" />
           </div>
 
           <div>
@@ -176,7 +177,7 @@ function History() {
         {/* Carbohydrates */}
         <article>
           <div className="history-summary-icon carbs">
-            <i className="bi bi-circle-half" aria-hidden="true" />
+            <MacroIcon type="carbs" />
           </div>
 
           <div>
@@ -188,7 +189,7 @@ function History() {
         {/* Fat */}
         <article>
           <div className="history-summary-icon fat">
-            <i className="bi bi-droplet-fill" aria-hidden="true" />
+            <MacroIcon type="fat" />
           </div>
 
           <div>

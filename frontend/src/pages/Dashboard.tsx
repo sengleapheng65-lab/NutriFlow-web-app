@@ -2,6 +2,8 @@ import { useEffect, useMemo, useState, type CSSProperties } from "react";
 
 import { Link } from "react-router-dom";
 
+import MacroIcon from "../components/MacroIcon";
+import MealBowlIcon from "../components/MealBowlIcon";
 import type { Meal } from "../types/Meal";
 import { deleteMeal as deleteMealFromApi, getMeals } from "../services/mealApi";
 
@@ -274,7 +276,7 @@ function Dashboard() {
           {/* Protein */}
           <article className="dashboard-stat-card">
             <div className="stat-icon protein-icon">
-              <i className="bi bi-lightning-charge-fill" aria-hidden="true" />
+              <MacroIcon type="protein" />
             </div>
 
             <div className="stat-content">
@@ -297,7 +299,7 @@ function Dashboard() {
           {/* Carbohydrates */}
           <article className="dashboard-stat-card">
             <div className="stat-icon carb-icon">
-              <i className="bi bi-circle-half" aria-hidden="true" />
+              <MacroIcon type="carbs" />
             </div>
 
             <div className="stat-content">
@@ -320,7 +322,7 @@ function Dashboard() {
           {/* Fat */}
           <article className="dashboard-stat-card">
             <div className="stat-icon fat-icon">
-              <i className="bi bi-droplet-fill" aria-hidden="true" />
+              <MacroIcon type="fat" />
             </div>
 
             <div className="stat-content">
@@ -343,7 +345,7 @@ function Dashboard() {
           {/* Number of meals */}
           <article className="dashboard-stat-card">
             <div className="stat-icon meal-count-icon">
-              <i className="bi bi-egg-fried" aria-hidden="true" />
+              <MealBowlIcon />
             </div>
 
             <div className="stat-content">
@@ -386,7 +388,7 @@ function Dashboard() {
           /* Empty state */
           <div className="empty-meals">
             <div className="empty-meals-icon">
-              <i className="bi bi-egg-fried" aria-hidden="true" />
+              <MealBowlIcon />
             </div>
 
             <h3>No meals logged today</h3>
@@ -401,7 +403,7 @@ function Dashboard() {
             {todayMeals.map((meal, index) => (
               <article className="dashboard-meal-card" key={meal.id}>
                 <div className="meal-card-icon">
-                  <i className="bi bi-egg-fried" aria-hidden="true" />
+                  <MealBowlIcon />
                 </div>
 
                 <div className="meal-card-information">

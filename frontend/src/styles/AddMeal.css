@@ -751,13 +751,26 @@
   position: relative;
 }
 
-.meal-input i {
+.meal-input i,
+.meal-input .macro-icon {
   position: absolute;
   top: 50%;
   left: 15px;
   color: var(--muted);
   transform: translateY(-50%);
   pointer-events: none;
+}
+
+.protein-meal-input > .macro-icon {
+  color: #dc5e58;
+}
+
+.carbs-meal-input > .macro-icon {
+  color: #c99a00;
+}
+
+.fat-meal-input > .macro-icon {
+  color: #3f7fdd;
 }
 
 .meal-input input {
@@ -956,7 +969,31 @@
 }
 
 .preview-information span {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
   color: var(--muted);
+}
+
+.preview-information .macro-icon {
+  width: 1.05em;
+  height: 1.05em;
+}
+
+.preview-calories span i {
+  color: #e75f30;
+}
+
+.preview-protein .macro-icon {
+  color: #dc5e58;
+}
+
+.preview-carbs .macro-icon {
+  color: #c99a00;
+}
+
+.preview-fat .macro-icon {
+  color: #3f7fdd;
 }
 
 .preview-information strong {

@@ -18,6 +18,8 @@ import {
   createMeal,
   getFoodByBarcode,
 } from "../services/mealApi";
+import MacroIcon from "../components/MacroIcon";
+import MealBowlIcon from "../components/MealBowlIcon";
 
 import "../styles/AddMeal.css";
 
@@ -999,8 +1001,8 @@ function AddMeal() {
               <div className="meal-form-field">
                 <label htmlFor="protein">Protein</label>
 
-                <div className="meal-input">
-                  <i className="bi bi-lightning-charge" aria-hidden="true" />
+                <div className="meal-input protein-meal-input">
+                  <MacroIcon type="protein" />
 
                   <input
                     id="protein"
@@ -1023,8 +1025,8 @@ function AddMeal() {
               <div className="meal-form-field">
                 <label htmlFor="carbs">Carbohydrates</label>
 
-                <div className="meal-input">
-                  <i className="bi bi-circle-half" aria-hidden="true" />
+                <div className="meal-input carbs-meal-input">
+                  <MacroIcon type="carbs" />
 
                   <input
                     id="carbs"
@@ -1047,8 +1049,8 @@ function AddMeal() {
               <div className="meal-form-field">
                 <label htmlFor="fat">Fat</label>
 
-                <div className="meal-input">
-                  <i className="bi bi-droplet" aria-hidden="true" />
+                <div className="meal-input fat-meal-input">
+                  <MacroIcon type="fat" />
 
                   <input
                     id="fat"
@@ -1132,29 +1134,41 @@ function AddMeal() {
 
             <div className="preview-meal-name">
               <div>
-                <i className="bi bi-egg-fried" aria-hidden="true" />
+                <MealBowlIcon />
               </div>
 
               <span>{name.trim() || "Your meal"}</span>
             </div>
 
-            <div className="preview-information">
-              <span>Calories</span>
+            <div className="preview-information preview-calories">
+              <span>
+                <i className="bi bi-fire" aria-hidden="true" />
+                Calories
+              </span>
               <strong>{calories || "—"} kcal</strong>
             </div>
 
-            <div className="preview-information">
-              <span>Protein</span>
+            <div className="preview-information preview-protein">
+              <span>
+                <MacroIcon type="protein" />
+                Protein
+              </span>
               <strong>{protein || "—"}g</strong>
             </div>
 
-            <div className="preview-information">
-              <span>Carbohydrates</span>
+            <div className="preview-information preview-carbs">
+              <span>
+                <MacroIcon type="carbs" />
+                Carbohydrates
+              </span>
               <strong>{carbs || "—"}g</strong>
             </div>
 
-            <div className="preview-information">
-              <span>Fat</span>
+            <div className="preview-information preview-fat">
+              <span>
+                <MacroIcon type="fat" />
+                Fat
+              </span>
               <strong>{fat || "—"}g</strong>
             </div>
           </section>
