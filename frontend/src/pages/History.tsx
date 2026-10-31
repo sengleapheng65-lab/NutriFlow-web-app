@@ -271,7 +271,11 @@ function History() {
             {displayedMeals.map((meal) => (
               <article className="history-meal" key={meal.id}>
                 <div className="history-meal-icon">
-                  <i className="bi bi-egg-fried" aria-hidden="true" />
+                  {meal.photo ? (
+                    <img src={meal.photo} alt={`${meal.name} meal`} />
+                  ) : (
+                    <i className="bi bi-egg-fried" aria-hidden="true" />
+                  )}
                 </div>
 
                 <div className="history-meal-name">

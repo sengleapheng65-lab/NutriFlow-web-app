@@ -51,6 +51,18 @@ function createConciseMealName(itemNames: string[]) {
     : summary;
 }
 
+function readFileAsDataUrl(file: File) {
+  return new Promise<string>((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () =>
+      typeof reader.result === "string"
+        ? resolve(reader.result)
+        : reject(new Error("Could not read the selected photo."));
+    reader.onerror = () => reject(new Error("Could not read the selected photo."));
+    reader.readAsDataURL(file);
+  });
+}
+
 function AddMeal() {
   const navigate = useNavigate();
 
@@ -60,6 +72,11 @@ function AddMeal() {
   const [protein, setProtein] = useState("");
   const [carbs, setCarbs] = useState("");
   const [fat, setFat] = useState("");
+  const [mealPhoto, setMealPhoto] = useState("");
+  const [visionPhoto, setVisionPhoto] = useState("");
+  const [photoChooserOpen, setPhotoChooserOpen] = useState(false);
+  const [mealCameraPurpose, setMealCameraPurpose] = useState<"analyze" | "attach">("analyze");
+  const mealCameraPurposeRef = useRef<"analyze" | "attach">("analyze");
   const [barcode, setBarcode] = useState("");
   const [scannerOpen, setScannerOpen] = useState(false);
   const [scanStatus, setScanStatus] = useState("");
@@ -73,6 +90,8 @@ function AddMeal() {
   const [labelStatus, setLabelStatus] = useState("");
   const [isReadingLabel, setIsReadingLabel] = useState(false);
   const photoInputRef = useRef<HTMLInputElement>(null);
+  const previewPhotoInputRef = useRef<HTMLInputElement>(null);
+  const previewCameraInputRef = useRef<HTMLInputElement>(null);
   const labelInputRef = useRef<HTMLInputElement>(null);
   const labelLibraryInputRef = useRef<HTMLInputElement>(null);
   const mealCameraVideoRef = useRef<HTMLVideoElement>(null);
@@ -219,6 +238,14 @@ function AddMeal() {
   }
 
   async function analyzePhotoFile(file: File) {
+    try {
+      const photoData = await readFileAsDataUrl(file);
+      setMealPhoto(photoData);
+      setVisionPhoto(photoData);
+    } catch {
+      setPhotoStatus("Could not attach this photo. You can still enter the meal manually.");
+    }
+
     setIsAnalyzingPhoto(true);
     setPhotoStatus("Analyzing your meal photo…");
     setError("");
@@ -254,10 +281,32 @@ function AddMeal() {
         requestError instanceof Error
           ? requestError.message
           : "Could not analyze the photo.";
-      setPhotoStatus(`${message} You can enter the nutrition manually.`);
+      setPhotoStatus(
+        `${message} The photo is still attached. Enter the nutrition manually, then save the meal.`,
+      );
     } finally {
       setIsAnalyzingPhoto(false);
     }
+  }
+
+  async function attachMealPhoto(file: File) {
+    try {
+      setMealPhoto(await readFileAsDataUrl(file));
+    } catch {
+      setError("Could not attach this photo.");
+    }
+  }
+
+  function handlePreviewTakePhoto() {
+    const isMobileDevice = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+    if (isMobileDevice) {
+      setPhotoChooserOpen(false);
+      previewCameraInputRef.current?.click();
+      return;
+    }
+
+    void startMealCamera(mealCameraFacing, "attach");
   }
 
   async function handlePhotoChange(event: ChangeEvent<HTMLInputElement>) {
@@ -300,6 +349,7 @@ function AddMeal() {
 
   async function startMealCamera(
     facingMode: "environment" | "user" = mealCameraFacing,
+    purpose: "analyze" | "attach" = "analyze",
   ) {
     if (!navigator.mediaDevices?.getUserMedia) {
       setPhotoStatus(
@@ -314,6 +364,9 @@ function AddMeal() {
         audio: false,
       });
       mealCameraStreamRef.current = stream;
+      mealCameraPurposeRef.current = purpose;
+      setMealCameraPurpose(purpose);
+      setPhotoChooserOpen(false);
       setMealCameraOpen(true);
     } catch {
       setPhotoStatus("Camera access was denied. Use Choose photo instead.");
@@ -327,7 +380,7 @@ function AddMeal() {
 
     stopMealCamera();
     setMealCameraFacing(nextFacingMode);
-    await startMealCamera(nextFacingMode);
+    await startMealCamera(nextFacingMode, mealCameraPurpose);
   }
 
   async function captureMealPhoto() {
@@ -348,9 +401,14 @@ function AddMeal() {
           return;
         }
         stopMealCamera();
-        void analyzePhotoFile(
-          new File([blob], "meal-camera-photo.jpg", { type: "image/jpeg" }),
-        );
+        const photoFile = new File([blob], "meal-camera-photo.jpg", {
+          type: "image/jpeg",
+        });
+        if (mealCameraPurposeRef.current === "attach") {
+          void attachMealPhoto(photoFile);
+        } else {
+          void analyzePhotoFile(photoFile);
+        }
       },
       "image/jpeg",
       0.9,
@@ -629,6 +687,7 @@ function AddMeal() {
         protein: Number(protein),
         carbs: Number(carbs),
         fat: Number(fat),
+        photo: mealPhoto || undefined,
       });
 
       // Return to the Dashboard after saving
@@ -678,7 +737,7 @@ function AddMeal() {
                 <h3 id="photo-recognition-title">NutriVision AI</h3>
                 <p>Upload a photo and we’ll estimate the nutrition for you.</p>
               </div>
-              {mealCameraOpen && (
+              {mealCameraOpen && mealCameraPurpose === "analyze" && (
                 <div className="meal-camera-preview">
                   <video ref={mealCameraVideoRef} muted playsInline />
                   <button
@@ -746,6 +805,12 @@ function AddMeal() {
                   {isAnalyzingPhoto ? "Analyzing…" : "Choose photo"}
                 </button>
               </div>
+              {visionPhoto && (
+                <div className="meal-photo-preview">
+                  <img src={visionPhoto} alt="Photo analyzed by NutriVision AI" />
+                  <span>Photo analyzed by NutriVision AI</span>
+                </div>
+              )}
               {photoStatus && (
                 <p className="photo-status" role="status">
                   {photoStatus}
@@ -1133,8 +1198,103 @@ function AddMeal() {
             <h2>Meal Preview</h2>
 
             <div className="preview-meal-name">
-              <div>
-                <MealBowlIcon />
+              <div className="preview-photo-picker">
+                <button
+                  className="preview-meal-photo-button"
+                  type="button"
+                  onClick={() => setPhotoChooserOpen((isOpen) => !isOpen)}
+                  aria-label="Add a photo to this meal"
+                  aria-expanded={photoChooserOpen}
+                >
+                  {mealPhoto ? (
+                    <img src={mealPhoto} alt="Selected meal" />
+                  ) : (
+                    <MealBowlIcon />
+                  )}
+                  <span className="preview-photo-camera-badge" aria-hidden="true">
+                    <i className="bi bi-camera-fill" />
+                  </span>
+                </button>
+
+                {photoChooserOpen && (
+                  <div className="preview-photo-chooser" role="menu">
+                    <button
+                      type="button"
+                      onClick={handlePreviewTakePhoto}
+                      disabled={isSaving || isAnalyzingPhoto || mealCameraOpen}
+                    >
+                      <i className="bi bi-camera" aria-hidden="true" />
+                      Take photo
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setPhotoChooserOpen(false);
+                        previewPhotoInputRef.current?.click();
+                      }}
+                      disabled={isSaving || isAnalyzingPhoto || mealCameraOpen}
+                    >
+                      <i className="bi bi-images" aria-hidden="true" />
+                      Photo library
+                    </button>
+                  </div>
+                )}
+                <input
+                  ref={previewPhotoInputRef}
+                  className="photo-input"
+                  type="file"
+                  accept="image/*"
+                  onChange={(event) => {
+                    const file = event.target.files?.[0];
+                    event.target.value = "";
+                    if (file) void attachMealPhoto(file);
+                  }}
+                />
+                <input
+                  ref={previewCameraInputRef}
+                  className="photo-input"
+                  type="file"
+                  accept="image/*"
+                  capture="environment"
+                  onChange={(event) => {
+                    const file = event.target.files?.[0];
+                    event.target.value = "";
+                    if (file) void attachMealPhoto(file);
+                  }}
+                />
+                {mealCameraOpen && mealCameraPurpose === "attach" && (
+                  <div className="meal-camera-preview preview-attach-camera">
+                    <video ref={mealCameraVideoRef} muted playsInline />
+                    <button
+                      className="meal-flip-camera-button"
+                      type="button"
+                      onClick={() => void flipMealCamera()}
+                      aria-label="Switch camera"
+                      title="Switch camera"
+                    >
+                      <i className="bi bi-arrow-repeat" aria-hidden="true" />
+                    </button>
+                    <div className="meal-camera-actions">
+                      <button
+                        className="meal-capture-button"
+                        type="button"
+                        onClick={() => void captureMealPhoto()}
+                      >
+                        <span className="meal-capture-icon" aria-hidden="true">
+                          <i className="bi bi-camera-fill" />
+                        </span>
+                        Capture photo
+                      </button>
+                      <button
+                        className="meal-close-camera-button"
+                        type="button"
+                        onClick={stopMealCamera}
+                      >
+                        Close
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
 
               <span>{name.trim() || "Your meal"}</span>

@@ -7,4 +7,5 @@ export type Meal = {
   carbs: number;
   fat: number;
   createdAt: string;
+  photo?: string;
 };

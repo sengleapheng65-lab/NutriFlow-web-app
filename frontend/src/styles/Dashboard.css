@@ -336,6 +336,15 @@
   font-size: 1.25rem;
 }
 
+.meal-card-icon img,
+.history-meal-icon img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  border-radius: inherit;
+}
+
 .meal-card-information h3 {
   margin: 0;
   color: var(--text);

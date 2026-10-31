@@ -297,6 +297,14 @@
   font-size: 1.3rem;
 }
 
+.history-meal-icon img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  border-radius: inherit;
+}
+
 /* Meal name and date */
 
 .history-meal-name {

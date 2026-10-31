@@ -63,6 +63,32 @@ function displayRounded(value: number) {
   return Math.round(value);
 }
 
+function useCountUp(target: number, duration = 900) {
+  const [value, setValue] = useState(0);
+
+  useEffect(() => {
+    let animationFrame = 0;
+    const startedAt = performance.now();
+
+    const animate = (now: number) => {
+      const progress = Math.min((now - startedAt) / duration, 1);
+      const easedProgress = 1 - Math.pow(1 - progress, 3);
+
+      setValue(target * easedProgress);
+
+      if (progress < 1) {
+        animationFrame = window.requestAnimationFrame(animate);
+      }
+    };
+
+    animationFrame = window.requestAnimationFrame(animate);
+
+    return () => window.cancelAnimationFrame(animationFrame);
+  }, [target, duration]);
+
+  return value;
+}
+
 function Dashboard() {
   // All meals returned by Spring Boot
   const [meals, setMeals] = useState<Meal[]>([]);
@@ -175,6 +201,12 @@ function Dashboard() {
   // Prevent remaining calories from becoming negative
   const remainingCalories = Math.max(goals.calories - totalCalories, 0);
 
+  const animatedCalories = useCountUp(totalCalories);
+  const animatedProtein = useCountUp(totalProtein);
+  const animatedCarbs = useCountUp(totalCarbs);
+  const animatedFat = useCountUp(totalFat);
+  const animatedRemainingCalories = useCountUp(remainingCalories);
+
   // Display today's date
   const currentDate = new Date().toLocaleDateString("en-US", {
     weekday: "long",
@@ -246,15 +278,15 @@ function Dashboard() {
             </h2>
 
             <div className="calorie-total">
-              <strong>{displayRounded(totalCalories).toLocaleString()}</strong>
+              <strong>{displayRounded(animatedCalories).toLocaleString()}</strong>
 
               <span>of {goals.calories.toLocaleString()} kcal</span>
             </div>
 
             <p className="remaining-calories">
               {totalCalories > goals.calories
-                ? `${displayRounded(totalCalories - goals.calories)} calories over your goal`
-                : `${displayRounded(remainingCalories)} calories remaining today`}
+                ? `${Math.max(displayRounded(animatedCalories - goals.calories), 0)} calories over your goal`
+                : `${displayRounded(animatedRemainingCalories)} calories remaining today`}
             </p>
           </div>
 
@@ -283,7 +315,7 @@ function Dashboard() {
               <span>Protein</span>
 
               <strong>
-                {displayRounded(totalProtein)} / {goals.protein}g
+                {displayRounded(animatedProtein)} / {goals.protein}g
               </strong>
 
               <div className="stat-progress protein-progress">
@@ -306,7 +338,7 @@ function Dashboard() {
               <span>Carbohydrates</span>
 
               <strong>
-                {displayRounded(totalCarbs)} / {goals.carbs}g
+                {displayRounded(animatedCarbs)} / {goals.carbs}g
               </strong>
 
               <div className="stat-progress carb-progress">
@@ -329,7 +361,7 @@ function Dashboard() {
               <span>Fat</span>
 
               <strong>
-                {displayRounded(totalFat)} / {goals.fat}g
+                {displayRounded(animatedFat)} / {goals.fat}g
               </strong>
 
               <div className="stat-progress fat-progress">
@@ -403,7 +435,11 @@ function Dashboard() {
             {todayMeals.map((meal, index) => (
               <article className="dashboard-meal-card" key={meal.id}>
                 <div className="meal-card-icon">
-                  <MealBowlIcon />
+                  {meal.photo ? (
+                    <img src={meal.photo} alt={`${meal.name} meal`} />
+                  ) : (
+                    <MealBowlIcon />
+                  )}
                 </div>
 
                 <div className="meal-card-information">

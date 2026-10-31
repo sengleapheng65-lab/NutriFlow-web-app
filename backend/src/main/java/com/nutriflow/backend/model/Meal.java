@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 
 // @Entity makes this class a table in MySQL (table name: meal)
 @Entity
@@ -20,6 +21,8 @@ public class Meal {
     private double fat;
     private double carbs;
     private Instant createdAt;
+    @Lob
+    private String photo;
 
     // Empty constructor required for converting JSON into a Meal
     public Meal() {
@@ -96,5 +99,13 @@ public class Meal {
 
     public void setCreatedAt(Instant createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public String getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(String photo) {
+        this.photo = photo;
     }
 }
