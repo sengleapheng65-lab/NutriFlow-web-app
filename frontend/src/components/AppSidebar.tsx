@@ -277,7 +277,22 @@ function AppSidebar() {
         <p className="app-drawer-label">Menu</p>
 
         {/* Phone navigation links */}
-        <nav className="app-drawer-links">
+        <nav
+          className="app-drawer-links"
+          style={
+            {
+              ["--active-index"]: [
+                "/dashboard",
+                "/add-meal",
+                "/goals",
+                "/history",
+                "/profile",
+                "/settings",
+              ].indexOf(location.pathname),
+            } as CSSProperties
+          }
+        >
+          <span className="sidebar-active-indicator" aria-hidden="true" />
           {/* Dashboard */}
           <NavLink
             to="/dashboard"
