@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, type CSSProperties } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
 
 import "../styles/AppSidebar.css";
@@ -126,7 +126,22 @@ function AppSidebar() {
         <p className="app-sidebar-label">Menu</p>
 
         {/* Desktop navigation */}
-        <nav className="app-sidebar-links">
+        <nav
+          className="app-sidebar-links"
+          style={
+            {
+              ["--active-index"]: [
+                "/dashboard",
+                "/add-meal",
+                "/goals",
+                "/history",
+                "/profile",
+                "/settings",
+              ].indexOf(location.pathname),
+            } as CSSProperties
+          }
+        >
+          <span className="sidebar-active-indicator" aria-hidden="true" />
           {/* Dashboard */}
           <NavLink
             to="/dashboard"
