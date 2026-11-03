@@ -325,10 +325,6 @@ function Dashboard() {
       isSelected: dateKey === selectedDateKey,
     };
   });
-  const selectedWeekIndex = mobileWeek.findIndex(
-    (item) => item.dateKey === selectedDateKey,
-  );
-
   return (
     <main className="dashboard-main">
       {/* Purpose-built condensed dashboard for phones */}
