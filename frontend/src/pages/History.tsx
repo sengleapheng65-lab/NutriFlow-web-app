@@ -37,6 +37,32 @@ function formatMealDate(createdAt?: string | null) {
   });
 }
 
+function useCountUp(target: number, duration = 900) {
+  const [value, setValue] = useState(0);
+
+  useEffect(() => {
+    let animationFrame = 0;
+    const startedAt = performance.now();
+
+    const animate = (now: number) => {
+      const progress = Math.min((now - startedAt) / duration, 1);
+      const easedProgress = 1 - Math.pow(1 - progress, 3);
+
+      setValue(target * easedProgress);
+
+      if (progress < 1) {
+        animationFrame = window.requestAnimationFrame(animate);
+      }
+    };
+
+    animationFrame = window.requestAnimationFrame(animate);
+
+    return () => window.cancelAnimationFrame(animationFrame);
+  }, [target, duration]);
+
+  return value;
+}
+
 function History() {
   // Meals returned by Spring Boot
   const [meals, setMeals] = useState<Meal[]>([]);
@@ -103,6 +129,11 @@ function History() {
 
   const totalFat = meals.reduce((total, meal) => total + meal.fat, 0);
 
+  const animatedTotalCalories = useCountUp(totalCalories);
+  const animatedTotalProtein = useCountUp(totalProtein);
+  const animatedTotalCarbs = useCountUp(totalCarbs);
+  const animatedTotalFat = useCountUp(totalFat);
+
   // Delete a meal from Spring Boot
   async function handleDeleteMeal(mealId: number) {
     try {
@@ -158,7 +189,7 @@ function History() {
 
           <div>
             <span>Total calories</span>
-            <strong>{totalCalories.toLocaleString()} kcal</strong>
+            <strong>{Math.round(animatedTotalCalories).toLocaleString()} kcal</strong>
           </div>
         </article>
 
@@ -170,7 +201,7 @@ function History() {
 
           <div>
             <span>Total protein</span>
-            <strong>{totalProtein}g</strong>
+            <strong>{Math.round(animatedTotalProtein)}g</strong>
           </div>
         </article>
 
@@ -182,7 +213,7 @@ function History() {
 
           <div>
             <span>Total carbohydrates</span>
-            <strong>{totalCarbs}g</strong>
+            <strong>{Math.round(animatedTotalCarbs)}g</strong>
           </div>
         </article>
 
@@ -194,7 +225,7 @@ function History() {
 
           <div>
             <span>Total fat</span>
-            <strong>{totalFat}g</strong>
+            <strong>{Math.round(animatedTotalFat)}g</strong>
           </div>
         </article>
       </section>
