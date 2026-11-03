@@ -838,12 +838,12 @@
   }
 
   .mobile-macro-capsules article {
-    min-height: 108px;
-    padding: 13px 7px 11px;
+    min-height: 90px;
+    padding: 10px 7px 9px;
     display: grid;
     place-items: center;
     align-content: center;
-    gap: 10px;
+    gap: 7px;
     border: 1px solid color-mix(in srgb, var(--border) 78%, transparent);
     border-radius: 999px;
     background: color-mix(in srgb, var(--surface) 34%, transparent);
@@ -851,8 +851,8 @@
   }
 
   .mobile-macro-capsule-icon {
-    width: 34px;
-    height: 34px;
+    width: 30px;
+    height: 30px;
     display: grid;
     place-items: center;
     border-radius: 50%;

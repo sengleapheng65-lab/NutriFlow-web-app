@@ -96,8 +96,8 @@
 
 .history-summary article {
   min-width: 0;
-  min-height: 96px;
-  padding: 14px 16px;
+  min-height: 80px;
+  padding: 10px 14px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -133,15 +133,15 @@
 /* Summary icons */
 
 .history-summary-icon {
-  width: 34px;
-  height: 34px;
-  flex: 0 0 34px;
+  width: 30px;
+  height: 30px;
+  flex: 0 0 30px;
   display: grid;
   place-items: center;
   border-radius: 50%;
   background: var(--green-light) !important;
   color: var(--green-dark) !important;
-  font-size: 1.2rem;
+  font-size: 1rem;
 }
 
 .history-summary-icon.calories {
