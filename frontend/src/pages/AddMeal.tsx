@@ -3,6 +3,7 @@ import {
   useRef,
   useState,
   type ChangeEvent,
+  type CSSProperties,
   type FormEvent,
 } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -32,6 +33,7 @@ type ScannerWindow = Window & {
 };
 
 const AI_MEAL_NAME_LIMIT = 52;
+type CaptureMode = "meal" | "label" | "barcode";
 
 function formatNutritionValue(value: number) {
   const numericValue = Number(value);
@@ -84,6 +86,7 @@ function AddMeal() {
   const [isAnalyzingPhoto, setIsAnalyzingPhoto] = useState(false);
   const [photoStatus, setPhotoStatus] = useState("");
   const [mealCameraOpen, setMealCameraOpen] = useState(false);
+  const [captureMode, setCaptureMode] = useState<CaptureMode>("meal");
   const [mealCameraFacing, setMealCameraFacing] = useState<"environment" | "user">("environment");
   const [labelCameraOpen, setLabelCameraOpen] = useState(false);
   const [labelCameraFacing, setLabelCameraFacing] = useState<"environment" | "user">("environment");
@@ -194,6 +197,29 @@ function AddMeal() {
     }
 
     setScannerOpen(false);
+  }
+
+  function switchCaptureMode(mode: CaptureMode) {
+    if (mode === captureMode) return;
+
+    const cameraWasOpen = mealCameraOpen || labelCameraOpen || scannerOpen;
+
+    stopMealCamera();
+    stopLabelCamera();
+    stopScanner();
+    setCaptureMode(mode);
+
+    if (cameraWasOpen) {
+      window.setTimeout(() => {
+        if (mode === "meal") {
+          void startMealCamera();
+        } else if (mode === "label") {
+          void startLabelCamera();
+        } else {
+          void startScanner();
+        }
+      }, 0);
+    }
   }
 
   async function applyBarcode(value: string) {
@@ -729,8 +755,62 @@ function AddMeal() {
           </div>
 
           <form onSubmit={handleSubmit} aria-busy={isSaving}>
-            <section
-              className="photo-recognition"
+            <section className="capture-workspace" aria-labelledby="capture-workspace-title">
+              <div className="capture-workspace-heading">
+                <div>
+                  <p className="capture-eyebrow">AI scan · quick actions</p>
+                  <h3 id="capture-workspace-title">Scan your meal</h3>
+                </div>
+                <i className="bi bi-camera2" aria-hidden="true" />
+              </div>
+
+              <div
+                className="capture-mode-tabs"
+                role="tablist"
+                aria-label="Choose capture mode"
+                style={
+                  {
+                    ["--capture-tab-index"]: ["meal", "label", "barcode"].indexOf(
+                      captureMode,
+                    ),
+                  } as CSSProperties
+                }
+              >
+                <span className="capture-mode-indicator" aria-hidden="true" />
+                <button
+                  className={captureMode === "meal" ? "active" : ""}
+                  type="button"
+                  role="tab"
+                  aria-selected={captureMode === "meal"}
+                  onClick={() => switchCaptureMode("meal")}
+                >
+                  <i className="bi bi-stars" aria-hidden="true" />
+                  AI scan
+                </button>
+                <button
+                  className={captureMode === "label" ? "active" : ""}
+                  type="button"
+                  role="tab"
+                  aria-selected={captureMode === "label"}
+                  onClick={() => switchCaptureMode("label")}
+                >
+                  <i className="bi bi-card-text" aria-hidden="true" />
+                  Label
+                </button>
+                <button
+                  className={captureMode === "barcode" ? "active" : ""}
+                  type="button"
+                  role="tab"
+                  aria-selected={captureMode === "barcode"}
+                  onClick={() => switchCaptureMode("barcode")}
+                >
+                  <i className="bi bi-upc-scan" aria-hidden="true" />
+                  Barcode
+                </button>
+              </div>
+
+              {captureMode === "meal" && <section
+              className="photo-recognition capture-mode-panel"
               aria-labelledby="photo-recognition-title"
             >
               <div>
@@ -816,9 +896,9 @@ function AddMeal() {
                   {photoStatus}
                 </p>
               )}
-            </section>
+            </section>}
 
-            <section className="label-scanner" aria-labelledby="label-scanner-title">
+            {captureMode === "label" && <section className="label-scanner capture-mode-panel" aria-labelledby="label-scanner-title">
               <div className="label-scanner-heading">
                 <div className="label-scanner-icon">
                   <i className="bi bi-card-text" aria-hidden="true" />
@@ -917,10 +997,10 @@ function AddMeal() {
                 </button>
               </div>
               {labelStatus && <p className="photo-status" role="status">{labelStatus}</p>}
-            </section>
+            </section>}
 
-            <section
-              className="barcode-scanner"
+            {captureMode === "barcode" && <section
+              className="barcode-scanner capture-mode-panel"
               aria-labelledby="barcode-scanner-title"
             >
               <div className="barcode-scanner-heading">
@@ -1016,6 +1096,7 @@ function AddMeal() {
                   {scanStatus}
                 </p>
               )}
+            </section>}
             </section>
 
             {/* Meal name */}

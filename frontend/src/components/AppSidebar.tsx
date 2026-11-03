@@ -42,23 +42,10 @@ function loadSidebarProfile(): SidebarProfile {
 function AppSidebar() {
   const location = useLocation();
 
-  // Remember whether the phone menu is open
-  const [menuOpen, setMenuOpen] = useState(false);
-
   // Store the profile information shown in the sidebar
   const [profile, setProfile] = useState<SidebarProfile>(() =>
     loadSidebarProfile(),
   );
-
-  // Close the phone menu
-  function closeMenu() {
-    setMenuOpen(false);
-  }
-
-  // Close the phone menu whenever the page changes
-  useEffect(() => {
-    setMenuOpen(false);
-  }, [location.pathname]);
 
   // Reload the sidebar after the Profile page saves new information
   useEffect(() => {
@@ -89,17 +76,14 @@ function AppSidebar() {
           </div>
         </Link>
 
-        {/* Phone hamburger button */}
-        <button
-          className="app-menu-button"
-          type="button"
-          onClick={() => setMenuOpen(true)}
-          aria-label="Open navigation menu"
-          aria-expanded={menuOpen}
-          aria-controls="app-mobile-menu"
-        >
-          <i className="bi bi-list" aria-hidden="true" />
-        </button>
+        {/* Phone profile shortcut */}
+        <Link className="app-mobile-profile-button" to="/profile" aria-label="Open profile">
+          {profile.photo ? (
+            <img src={profile.photo} alt={`${profile.fullName || "User"} profile`} />
+          ) : (
+            <i className="bi bi-person-fill" aria-hidden="true" />
+          )}
+        </Link>
 
         {/* User profile summary */}
         <Link className="app-sidebar-profile" to="/profile">
@@ -147,7 +131,7 @@ function AppSidebar() {
             to="/dashboard"
             className={({ isActive }) => (isActive ? "active" : "")}
           >
-            <i className="bi bi-grid" aria-hidden="true" />
+            <i className="bi bi-house-door-fill" aria-hidden="true" />
             <span>Dashboard</span>
           </NavLink>
 
@@ -156,7 +140,7 @@ function AppSidebar() {
             to="/add-meal"
             className={({ isActive }) => (isActive ? "active" : "")}
           >
-            <i className="bi bi-plus-circle" aria-hidden="true" />
+            <i className="bi bi-plus-lg" aria-hidden="true" />
             <span>Add Meal</span>
           </NavLink>
 
@@ -165,7 +149,7 @@ function AppSidebar() {
             to="/goals"
             className={({ isActive }) => (isActive ? "active" : "")}
           >
-            <i className="bi bi-bullseye" aria-hidden="true" />
+            <i className="bi bi-graph-up-arrow" aria-hidden="true" />
             <span>Goals</span>
           </NavLink>
 
@@ -174,7 +158,7 @@ function AppSidebar() {
             to="/history"
             className={({ isActive }) => (isActive ? "active" : "")}
           >
-            <i className="bi bi-clock-history" aria-hidden="true" />
+            <i className="bi bi-journal-text" aria-hidden="true" />
             <span>History</span>
           </NavLink>
 
@@ -192,7 +176,7 @@ function AppSidebar() {
             to="/settings"
             className={({ isActive }) => (isActive ? "active" : "")}
           >
-            <i className="bi bi-gear-wide" aria-hidden="true" />
+            <i className="bi bi-gear-wide-connected" aria-hidden="true" />
             <span>Settings</span>
           </NavLink>
         </nav>
@@ -204,162 +188,74 @@ function AppSidebar() {
         </Link>
       </aside>
 
-      {/* Dark background behind the phone drawer */}
-      <button
+      {/* Primary phone navigation stays within easy thumb reach. */}
+      <nav
         className={
-          menuOpen
-            ? "app-menu-overlay app-menu-overlay-open"
-            : "app-menu-overlay"
+          location.pathname === "/profile"
+            ? "app-mobile-tabbar app-mobile-tabbar-no-active"
+            : "app-mobile-tabbar"
         }
-        type="button"
-        onClick={closeMenu}
-        aria-label="Close navigation menu"
-        tabIndex={menuOpen ? 0 : -1}
-      />
-
-      {/* Phone navigation drawer */}
-      <aside
-        className={
-          menuOpen
-            ? "app-mobile-drawer app-mobile-drawer-open"
-            : "app-mobile-drawer"
+        aria-label="Primary navigation"
+        style={
+          {
+            ["--mobile-tab-index"]: [
+              "/dashboard",
+              "/history",
+              "/add-meal",
+              "/goals",
+              "/settings",
+            ].indexOf(location.pathname),
+          } as CSSProperties
         }
-        id="app-mobile-menu"
-        aria-hidden={!menuOpen}
       >
-        {/* Drawer heading */}
-        <header className="app-drawer-header">
-          <Link to="/dashboard" onClick={closeMenu}>
-            <img src="/NutriFlow.png" alt="NutriFlow" />
-
-            <div>
-              <strong>NutriFlow</strong>
-              <small>Nutrition simplified</small>
-            </div>
-          </Link>
-
-          {/* Close drawer */}
-          <button
-            type="button"
-            onClick={closeMenu}
-            aria-label="Close navigation menu"
-          >
-            <i className="bi bi-x-lg" aria-hidden="true" />
-          </button>
-        </header>
-
-        {/* Mobile profile summary */}
-        <Link
-          className="app-sidebar-profile app-drawer-profile"
-          to="/profile"
-          onClick={closeMenu}
+        <span className="app-mobile-tab-indicator" aria-hidden="true" />
+        <NavLink
+          to="/dashboard"
+          className={({ isActive }) => (isActive ? "active" : "")}
+          aria-label="Home"
         >
-          <div className="app-sidebar-avatar">
-            {profile.photo ? (
-              <img
-                src={profile.photo}
-                alt={`${profile.fullName || "User"} profile`}
-              />
-            ) : (
-              <i className="bi bi-person" aria-hidden="true" />
-            )}
-          </div>
+          <i className="bi bi-house-door-fill" aria-hidden="true" />
+          <span>Home</span>
+        </NavLink>
 
-          <div className="app-sidebar-profile-info">
-            <strong>{profile.fullName || "Complete your profile"}</strong>
-
-            <small>
-              {profile.weight ? `${profile.weight} kg` : "Add your information"}
-            </small>
-          </div>
-        </Link>
-
-        <p className="app-drawer-label">Menu</p>
-
-        {/* Phone navigation links */}
-        <nav
-          className="app-drawer-links"
-          style={
-            {
-              ["--active-index"]: [
-                "/dashboard",
-                "/add-meal",
-                "/goals",
-                "/history",
-                "/profile",
-                "/settings",
-              ].indexOf(location.pathname),
-            } as CSSProperties
-          }
+        <NavLink
+          to="/history"
+          className={({ isActive }) => (isActive ? "active" : "")}
+          aria-label="History"
         >
-          <span className="sidebar-active-indicator" aria-hidden="true" />
-          {/* Dashboard */}
-          <NavLink
-            to="/dashboard"
-            className={({ isActive }) => (isActive ? "active" : "")}
-            onClick={closeMenu}
-          >
-            <i className="bi bi-grid" aria-hidden="true" />
-            <span>Dashboard</span>
-          </NavLink>
+          <i className="bi bi-journal-text" aria-hidden="true" />
+          <span>History</span>
+        </NavLink>
 
-          {/* Add Meal */}
-          <NavLink
-            to="/add-meal"
-            className={({ isActive }) => (isActive ? "active" : "")}
-            onClick={closeMenu}
-          >
-            <i className="bi bi-plus-circle" aria-hidden="true" />
-            <span>Add Meal</span>
-          </NavLink>
+        <NavLink
+          to="/add-meal"
+          className={({ isActive }) => (isActive ? "active add-meal" : "add-meal")}
+          aria-label="Add meal"
+        >
+          <span className="app-mobile-add-icon" aria-hidden="true">
+            <i className="bi bi-plus-lg" />
+          </span>
+          <span>Add meal</span>
+        </NavLink>
 
-          {/* Goals */}
-          <NavLink
-            to="/goals"
-            className={({ isActive }) => (isActive ? "active" : "")}
-            onClick={closeMenu}
-          >
-            <i className="bi bi-bullseye" aria-hidden="true" />
-            <span>Goals</span>
-          </NavLink>
+        <NavLink
+          to="/goals"
+          className={({ isActive }) => (isActive ? "active" : "")}
+          aria-label="Goals"
+        >
+          <i className="bi bi-graph-up-arrow" aria-hidden="true" />
+          <span>Goals</span>
+        </NavLink>
 
-          {/* Meal History */}
-          <NavLink
-            to="/history"
-            className={({ isActive }) => (isActive ? "active" : "")}
-            onClick={closeMenu}
-          >
-            <i className="bi bi-clock-history" aria-hidden="true" />
-            <span>History</span>
-          </NavLink>
-
-          {/* Profile */}
-          <NavLink
-            to="/profile"
-            className={({ isActive }) => (isActive ? "active" : "")}
-            onClick={closeMenu}
-          >
-            <i className="bi bi-person-circle" aria-hidden="true" />
-            <span>Profile</span>
-          </NavLink>
-
-          {/* Settings */}
-          <NavLink
-            to="/settings"
-            className={({ isActive }) => (isActive ? "active" : "")}
-            onClick={closeMenu}
-          >
-            <i className="bi bi-gear-wide" aria-hidden="true" />
-            <span>Settings</span>
-          </NavLink>
-        </nav>
-
-        {/* Phone sign out */}
-        <Link className="app-drawer-signout" to="/login" onClick={closeMenu}>
-          <i className="bi bi-box-arrow-left" aria-hidden="true" />
-          <span>Sign Out</span>
-        </Link>
-      </aside>
+        <NavLink
+          to="/settings"
+          className={({ isActive }) => (isActive ? "active" : "")}
+          aria-label="Settings"
+        >
+          <i className="bi bi-gear-wide-connected" aria-hidden="true" />
+          <span>Settings</span>
+        </NavLink>
+      </nav>
     </>
   );
 }

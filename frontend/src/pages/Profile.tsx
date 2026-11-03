@@ -214,11 +214,11 @@ function Profile() {
       {/* Page heading */}
       <header className="profile-header">
         <div>
-          <p className="profile-label">Health profile</p>
+          <p className="profile-label">DAILY NUTRITION</p>
 
-          <h1>My Profile</h1>
+          <h1>Your profile</h1>
 
-          <p>Manage your personal and health information.</p>
+          <p>Keep your personal and health information up to date.</p>
         </div>
 
         <div className="profile-header-icon">

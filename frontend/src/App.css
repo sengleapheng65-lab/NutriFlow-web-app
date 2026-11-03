@@ -159,7 +159,7 @@ textarea:focus-visible {
 @media (max-width: 650px) {
   .theme-toggle {
     right: 15px;
-    bottom: 15px;
+    bottom: calc(92px + env(safe-area-inset-bottom));
     width: 44px;
     height: 44px;
   }

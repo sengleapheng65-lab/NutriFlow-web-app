@@ -72,11 +72,11 @@ function Settings() {
       {/* Page heading */}
       <header className="settings-header">
         <div>
-          <p className="settings-label">Application preferences</p>
+          <p className="settings-label">DAILY NUTRITION</p>
 
-          <h1>Settings</h1>
+          <h1>App settings</h1>
 
-          <p>Manage your preferences and NutriFlow data.</p>
+          <p>Shape your NutriFlow experience.</p>
         </div>
 
         <div className="settings-header-icon">

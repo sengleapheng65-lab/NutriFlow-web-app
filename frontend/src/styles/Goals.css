@@ -57,6 +57,7 @@
   background: var(--green-light);
   color: var(--green);
   font-size: 1.7rem;
+  box-shadow: 0 8px 20px var(--page-shadow);
 }
 
 /* ================================
@@ -75,11 +76,23 @@
    ================================ */
 
 .goals-form-card {
+  position: relative;
+  overflow: hidden;
   padding: 28px;
   border: 1px solid var(--border);
   border-radius: 21px;
   background: var(--surface);
   box-shadow: 0 12px 32px var(--page-shadow);
+}
+
+.goals-form-card::before {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--green), var(--green-light));
+  content: "";
 }
 
 .goals-card-heading {
@@ -90,7 +103,7 @@
 .goals-card-heading h2 {
   margin: 0;
   color: var(--green-dark);
-  font-size: 1.25rem;
+  font-size: 1.35rem;
   font-weight: 700;
 }
 
@@ -122,13 +135,23 @@
   padding: 24px 0;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 21px;
+  gap: 14px;
+}
+
+.goal-field {
+  min-height: 132px;
+  padding: 17px 18px;
+  border: 1px solid var(--border);
+  border-radius: 28px;
+  background: color-mix(in srgb, var(--surface) 78%, var(--green-pale));
+  box-shadow: 0 7px 18px var(--page-shadow);
 }
 
 .goal-field label {
-  margin-bottom: 8px;
+  margin-bottom: 10px;
   display: block;
   color: var(--text);
+  text-align: center;
   font-weight: 650;
 }
 
@@ -136,6 +159,7 @@
   margin-top: 7px;
   display: block;
   color: var(--muted);
+  text-align: center;
 }
 
 .goal-input {
@@ -170,7 +194,7 @@
   min-height: 50px;
   padding: 0 55px 0 44px;
   border: 1px solid var(--border);
-  border-radius: 11px;
+  border-radius: 999px;
   outline: none;
   background: var(--surface);
   color: var(--text);
@@ -191,6 +215,15 @@
   color: var(--muted);
   font-size: 0.85rem;
   pointer-events: none;
+}
+
+.goal-field:focus-within {
+  border-color: var(--green);
+  box-shadow: 0 0 0 4px rgba(25, 135, 84, 0.1), 0 8px 20px var(--page-shadow);
+}
+
+.goal-field:focus-within .goal-input input {
+  border-color: var(--green);
 }
 
 /* Remove number-input arrows */
@@ -273,11 +306,26 @@
 }
 
 .goals-tip-card {
+  position: relative;
+  overflow: hidden;
   padding: 22px;
   border: 1px solid var(--border);
   border-radius: 18px;
   background: var(--surface);
   box-shadow: 0 8px 24px var(--page-shadow);
+}
+
+.goals-tip-card::after {
+  position: absolute;
+  right: -35px;
+  bottom: -50px;
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  background: var(--green-light);
+  content: "";
+  opacity: 0.45;
+  pointer-events: none;
 }
 
 .goals-tip-icon {
@@ -290,6 +338,7 @@
   background: var(--green-light);
   color: var(--green);
   font-size: 1.15rem;
+  box-shadow: 0 6px 16px var(--page-shadow);
 }
 
 .goals-tip-card h2 {
@@ -365,7 +414,7 @@
 
 @media (max-width: 650px) {
   .goals-main {
-    padding: 23px 15px 30px;
+    padding: 23px 15px calc(116px + env(safe-area-inset-bottom));
   }
 
   .goals-header {
@@ -381,6 +430,11 @@
 
   .goals-form-card {
     padding: 22px 17px;
+  }
+
+  .goal-field {
+    min-height: 124px;
+    padding: 15px;
   }
 
   .goals-fields {
@@ -399,7 +453,7 @@
 
 @media (max-width: 400px) {
   .goals-main {
-    padding: 20px 11px 28px;
+    padding: 20px 11px calc(116px + env(safe-area-inset-bottom));
   }
 
   .goals-header h1 {

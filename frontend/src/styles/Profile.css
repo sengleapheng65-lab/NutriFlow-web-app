@@ -57,6 +57,7 @@
   background: var(--green-light);
   color: var(--green);
   font-size: 1.65rem;
+  box-shadow: 0 8px 20px var(--page-shadow);
 }
 
 /* ================================
@@ -97,14 +98,15 @@
 }
 
 .profile-stat {
-  min-height: 125px;
-  padding: 22px;
+  min-height: 96px;
+  padding: 14px 18px;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: space-between;
   gap: 15px;
   border: 1px solid var(--border);
-  border-radius: 18px;
+  border-radius: 999px;
   box-shadow: 0 8px 24px var(--page-shadow);
 }
 
@@ -112,6 +114,8 @@
   min-width: 0;
   display: flex;
   flex-direction: column;
+  align-items: center;
+  text-align: center;
 }
 
 .profile-stat span {
@@ -130,7 +134,15 @@
 }
 
 .profile-stat > i {
-  font-size: 1.8rem;
+  order: -1;
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--green-light);
+  color: var(--green-dark);
+  font-size: 1rem;
 }
 
 .bmi-stat {
@@ -155,7 +167,7 @@
 .profile-card {
   overflow: hidden;
   border: 1px solid var(--border);
-  border-radius: 21px;
+  border-radius: 23px;
   background: var(--surface);
   box-shadow: 0 12px 32px var(--page-shadow);
 }
@@ -287,7 +299,7 @@
   min-height: 50px;
   padding: 12px 14px;
   border: 1px solid var(--border);
-  border-radius: 11px;
+  border-radius: 999px;
   outline: none;
   background: var(--surface);
   color: var(--text);
@@ -296,6 +308,7 @@
 
 .profile-field textarea {
   min-height: 110px;
+  border-radius: 18px;
   resize: vertical;
 }
 
@@ -331,7 +344,7 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  border-radius: 11px;
+  border-radius: 999px;
   font: inherit;
   font-weight: 650;
   cursor: pointer;
@@ -405,7 +418,7 @@
 
 @media (max-width: 650px) {
   .profile-main {
-    padding: 23px 15px 30px;
+    padding: 23px 15px calc(116px + env(safe-area-inset-bottom));
   }
 
   .profile-header {
@@ -444,7 +457,7 @@
 
 @media (max-width: 400px) {
   .profile-main {
-    padding: 20px 11px 28px;
+    padding: 20px 11px calc(116px + env(safe-area-inset-bottom));
   }
 
   .profile-header h1 {

@@ -96,14 +96,16 @@
 
 .history-summary article {
   min-width: 0;
-  min-height: 88px;
-  padding: 18px;
+  min-height: 96px;
+  padding: 14px 16px;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 14px;
+  justify-content: center;
+  gap: 8px;
   border: 1px solid var(--border);
-  border-radius: 16px;
-  background: var(--surface);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--surface) 76%, transparent);
   box-shadow: 0 8px 24px var(--page-shadow);
 }
 
@@ -111,6 +113,7 @@
   min-width: 0;
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 3px;
 }
 
@@ -122,7 +125,7 @@
 .history-summary article strong {
   overflow: hidden;
   color: var(--text);
-  font-size: 1.05rem;
+  font-size: 1rem;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -130,12 +133,14 @@
 /* Summary icons */
 
 .history-summary-icon {
-  width: 45px;
-  height: 45px;
-  flex: 0 0 45px;
+  width: 34px;
+  height: 34px;
+  flex: 0 0 34px;
   display: grid;
   place-items: center;
-  border-radius: 13px;
+  border-radius: 50%;
+  background: var(--green-light) !important;
+  color: var(--green-dark) !important;
   font-size: 1.2rem;
 }
 
@@ -503,7 +508,7 @@
 @media (max-width: 650px) {
   .history-main {
     width: 100%;
-    padding: 23px 15px 30px;
+    padding: 23px 15px calc(116px + env(safe-area-inset-bottom));
   }
 
   .history-header {
@@ -524,7 +529,7 @@
   .history-summary article {
     min-height: auto;
     padding: 15px;
-    align-items: flex-start;
+    align-items: center;
     flex-direction: column;
   }
 
@@ -578,7 +583,7 @@
 
 @media (max-width: 400px) {
   .history-main {
-    padding: 20px 11px 28px;
+    padding: 20px 11px calc(116px + env(safe-area-inset-bottom));
   }
 
   .history-header h1 {

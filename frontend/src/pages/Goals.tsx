@@ -63,9 +63,9 @@ function Goals() {
       {/* Page heading */}
       <header className="goals-header">
         <div>
-          <p className="goals-label">Personal targets</p>
-          <h1>Nutrition Goals</h1>
-          <p>Set the daily targets shown on your dashboard.</p>
+          <p className="goals-label">DAILY NUTRITION</p>
+          <h1>Your nutrition goals</h1>
+          <p>Set the daily targets that keep your dashboard on track.</p>
         </div>
 
         <div className="goals-header-icon">
@@ -78,8 +78,8 @@ function Goals() {
         <section className="goals-form-card">
           <div className="goals-card-heading">
             <div>
-              <h2>Daily Targets</h2>
-              <p>Enter the amount you want to reach each day.</p>
+              <h2>Daily targets</h2>
+              <p>Choose the numbers you want to work toward each day.</p>
             </div>
           </div>
 

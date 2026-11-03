@@ -1,4 +1,11 @@
-import { useEffect, useMemo, useState, type CSSProperties } from "react";
+import {
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+  type CSSProperties,
+} from "react";
 
 import { Link } from "react-router-dom";
 
@@ -18,6 +25,11 @@ type NutritionGoals = {
   fat: number;
 };
 
+type MobileProfile = {
+  firstName: string;
+  photo: string;
+};
+
 // Goals used when the user has not saved custom settings
 const defaultGoals: NutritionGoals = {
   calories: 2000,
@@ -25,6 +37,22 @@ const defaultGoals: NutritionGoals = {
   carbs: 250,
   fat: 65,
 };
+
+const mobileDotRows = [16, 16, 16, 16, 16];
+
+function loadMobileProfile(): MobileProfile {
+  try {
+    const savedProfile = localStorage.getItem("userProfile");
+    const fullName = savedProfile ? JSON.parse(savedProfile).fullName || "" : "";
+
+    return {
+      firstName: fullName.trim().split(/\s+/)[0] || "there",
+      photo: savedProfile ? JSON.parse(savedProfile).photo || "" : "",
+    };
+  } catch {
+    return { firstName: "there", photo: "" };
+  }
+}
 
 // Load the nutrition goals saved by the Settings page
 function loadNutritionGoals(): NutritionGoals {
@@ -97,11 +125,21 @@ function Dashboard() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
 
-  // Track the current local date
-  const [todayKey, setTodayKey] = useState(() => getLocalDateKey(new Date()));
+  const [selectedDateKey, setSelectedDateKey] = useState(() =>
+    getLocalDateKey(new Date()),
+  );
+  const [visibleDayCount, setVisibleDayCount] = useState(() =>
+    window.innerWidth >= 901 ? 14 : 7,
+  );
+  const weekPickerRef = useRef<HTMLDivElement>(null);
+  const [weekIndicatorPosition, setWeekIndicatorPosition] = useState<{
+    x: number;
+    y: number;
+  } | null>(null);
 
   // Load the nutrition goals from Settings
   const [goals] = useState<NutritionGoals>(() => loadNutritionGoals());
+  const [mobileProfile] = useState<MobileProfile>(() => loadMobileProfile());
 
   // Load meals when the Dashboard opens
   useEffect(() => {
@@ -127,19 +165,48 @@ function Dashboard() {
     void loadMeals();
   }, []);
 
-  // Check every minute to determine whether a new day started
-  useEffect(() => {
-    const timer = window.setInterval(() => {
-      setTodayKey(getLocalDateKey(new Date()));
-    }, 60_000);
+  // Measure the selected number so the animated circle remains centered at
+  // every breakpoint, including the wider desktop date range.
+  useLayoutEffect(() => {
+    function positionWeekIndicator() {
+      const picker = weekPickerRef.current;
+      const selectedNumber = picker?.querySelector<HTMLElement>(
+        ".mobile-week-day.active strong",
+      );
 
-    // Stop the timer when the Dashboard closes
-    return () => {
-      window.clearInterval(timer);
+      if (!picker || !selectedNumber) {
+        return;
+      }
+
+      const pickerBounds = picker.getBoundingClientRect();
+      const numberBounds = selectedNumber.getBoundingClientRect();
+
+      setWeekIndicatorPosition({
+        x: numberBounds.left - pickerBounds.left,
+        y: numberBounds.top - pickerBounds.top,
+      });
+    }
+
+    positionWeekIndicator();
+    window.addEventListener("resize", positionWeekIndicator);
+
+    return () => window.removeEventListener("resize", positionWeekIndicator);
+  }, [selectedDateKey, visibleDayCount]);
+
+  // Desktop has room for a two-week date range; compact screens retain one week.
+  useEffect(() => {
+    const desktopQuery = window.matchMedia("(min-width: 901px)");
+    const updateVisibleDayCount = () => {
+      setVisibleDayCount(desktopQuery.matches ? 14 : 7);
     };
+
+    updateVisibleDayCount();
+    desktopQuery.addEventListener("change", updateVisibleDayCount);
+
+    return () => desktopQuery.removeEventListener("change", updateVisibleDayCount);
   }, []);
 
-  // Only include meals created today
+  // Only include meals created on the day selected in the phone date picker.
   const todayMeals = useMemo(() => {
     return meals.filter((meal) => {
       if (!meal.createdAt) {
@@ -152,9 +219,9 @@ function Dashboard() {
         return false;
       }
 
-      return getLocalDateKey(mealDate) === todayKey;
+      return getLocalDateKey(mealDate) === selectedDateKey;
     });
-  }, [meals, todayKey]);
+  }, [meals, selectedDateKey]);
 
   // Calculate today's calories
   const totalCalories = todayMeals.reduce(
@@ -198,21 +265,28 @@ function Dashboard() {
 
   const fatProgress = Math.min(Math.round((totalFat / goals.fat) * 100), 100);
 
-  // Prevent remaining calories from becoming negative
+  // Prevent remaining calories from becoming negative for the desktop summary.
   const remainingCalories = Math.max(goals.calories - totalCalories, 0);
 
   const animatedCalories = useCountUp(totalCalories);
+  const animatedGoalCalories = useCountUp(goals.calories);
   const animatedProtein = useCountUp(totalProtein);
   const animatedCarbs = useCountUp(totalCarbs);
   const animatedFat = useCountUp(totalFat);
   const animatedRemainingCalories = useCountUp(remainingCalories);
 
-  // Display today's date
-  const currentDate = new Date().toLocaleDateString("en-US", {
+  const [selectedYear, selectedMonth, selectedDay] = selectedDateKey
+    .split("-")
+    .map(Number);
+  const selectedDate = new Date(selectedYear, selectedMonth - 1, selectedDay);
+
+  // Display the selected date
+  const currentDate = selectedDate.toLocaleDateString("en-US", {
     weekday: "long",
     month: "long",
     day: "numeric",
   });
+  const isSelectedToday = selectedDateKey === getLocalDateKey(new Date());
 
   // Delete a selected meal
   async function handleDeleteMeal(mealId: number) {
@@ -238,8 +312,148 @@ function Dashboard() {
     "--calorie-progress": `${calorieProgress * 3.6}deg`,
   } as CSSProperties;
 
+  const mobileWeek = Array.from({ length: visibleDayCount }, (_, index) => {
+    const date = new Date();
+    date.setDate(date.getDate() - Math.floor((visibleDayCount - 1) / 2) + index);
+
+    const dateKey = getLocalDateKey(date);
+
+    return {
+      day: date.toLocaleDateString("en-US", { weekday: "short" }),
+      date: date.getDate(),
+      dateKey,
+      isSelected: dateKey === selectedDateKey,
+    };
+  });
+  const selectedWeekIndex = mobileWeek.findIndex(
+    (item) => item.dateKey === selectedDateKey,
+  );
+
   return (
     <main className="dashboard-main">
+      {/* Purpose-built condensed dashboard for phones */}
+      <section className="mobile-dashboard-view" aria-label="Daily nutrition overview">
+        <header className="mobile-dashboard-greeting">
+          <div>
+            <p className="mobile-dashboard-greeting-label">DAILY NUTRITION</p>
+            <h1>Good morning, {mobileProfile.firstName}</h1>
+          </div>
+
+          <button type="button" aria-label="Notifications" className="mobile-notification-button">
+            <i className="bi bi-bell" aria-hidden="true" />
+          </button>
+        </header>
+
+        <div className="mobile-week-picker" aria-label="Current week" ref={weekPickerRef}>
+          <span
+            className={
+              weekIndicatorPosition
+                ? "mobile-week-indicator mobile-week-indicator-ready"
+                : "mobile-week-indicator"
+            }
+            aria-hidden="true"
+            style={{
+              transform: weekIndicatorPosition
+                ? `translate3d(${weekIndicatorPosition.x}px, ${weekIndicatorPosition.y}px, 0)`
+                : "translate3d(-999px, -999px, 0)",
+            }}
+          />
+          {mobileWeek.map((item) => (
+            <button
+              className={item.isSelected ? "mobile-week-day active" : "mobile-week-day"}
+              type="button"
+              key={item.dateKey}
+              onClick={() => setSelectedDateKey(item.dateKey)}
+              aria-pressed={item.isSelected}
+              aria-label={`Show meals for ${item.day} ${item.date}`}
+            >
+              <span>{item.day}</span>
+              <strong>{item.date}</strong>
+            </button>
+          ))}
+        </div>
+
+        <div className="mobile-selected-day-content" key={selectedDateKey}>
+          <article className="mobile-daily-goal-card">
+            <div className="mobile-goal-topline">
+              <p>Daily goal</p>
+              <span>{displayRounded(animatedGoalCalories).toLocaleString()}</span>
+            </div>
+
+            <div className="mobile-goal-macros">
+              <div>
+                <i className="bi bi-fire" aria-hidden="true" />
+                <span>{displayRounded(animatedProtein)}g protein</span>
+              </div>
+              <div>
+                <i className="bi bi-apple" aria-hidden="true" />
+                <span>{displayRounded(animatedCarbs)}g carbs</span>
+              </div>
+            </div>
+
+            <div className="mobile-goal-total">
+              <strong>{displayRounded(animatedCalories).toLocaleString()}</strong>
+              <span>kcal</span>
+            </div>
+
+            <div
+              className="mobile-goal-dots"
+              role="img"
+              aria-label={`${calorieProgress}% of calorie goal completed`}
+            >
+              {mobileDotRows.map((rowLength, rowIndex) => {
+                return (
+                  <div className="mobile-goal-dot-row" key={rowIndex}>
+                    {Array.from({ length: rowLength }, (_, dotIndex) => (
+                      <span
+                        className={
+                          dotIndex < Math.round((calorieProgress / 100) * rowLength)
+                            ? "lit"
+                            : ""
+                        }
+                        key={dotIndex}
+                        style={
+                          {
+                            ["--dot-delay"]: `${dotIndex * 35}ms`,
+                          } as CSSProperties
+                        }
+                      />
+                    ))}
+                  </div>
+                );
+              })}
+            </div>
+          </article>
+
+          <div className="mobile-macro-capsules">
+            <article>
+              <div className="mobile-macro-capsule-icon">
+                <MacroIcon type="protein" />
+              </div>
+              <strong>
+                <b>{displayRounded(animatedProtein)}</b> / {goals.protein}g
+              </strong>
+            </article>
+            <article>
+              <div className="mobile-macro-capsule-icon">
+                <MacroIcon type="carbs" />
+              </div>
+              <strong>
+                <b>{displayRounded(animatedCarbs)}</b> / {goals.carbs}g
+              </strong>
+            </article>
+            <article>
+              <div className="mobile-macro-capsule-icon">
+                <MacroIcon type="fat" />
+              </div>
+              <strong>
+                <b>{displayRounded(animatedFat)}</b> / {goals.fat}g
+              </strong>
+            </article>
+          </div>
+        </div>
+      </section>
+
       {/* Dashboard heading */}
       <header className="dashboard-header">
         <div>
@@ -395,7 +609,7 @@ function Dashboard() {
       <section className="dashboard-meals-section">
         <div className="meals-heading">
           <div>
-            <h2>Today’s Meals</h2>
+            <h2>{isSelectedToday ? "Today’s Meals" : "Selected Day Meals"}</h2>
 
             <p>Meals logged for {currentDate}.</p>
           </div>

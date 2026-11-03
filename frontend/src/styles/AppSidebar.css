@@ -330,7 +330,9 @@
 /* Hide phone navigation on desktop */
 .app-menu-button,
 .app-menu-overlay,
-.app-mobile-drawer {
+.app-mobile-drawer,
+.app-mobile-tabbar,
+.app-mobile-profile-button {
   display: none;
 }
 
@@ -437,6 +439,12 @@
 @media (max-width: 650px) {
   .app-layout {
     display: block;
+    background:
+      radial-gradient(ellipse 90% 34% at 8% 100%, rgba(99, 212, 157, 0.45), transparent 72%),
+      radial-gradient(ellipse 70% 28% at 92% 88%, rgba(177, 239, 207, 0.55), transparent 72%),
+      radial-gradient(ellipse 80% 36% at 52% -8%, var(--page-glow), transparent 72%),
+      var(--page-background);
+    background-attachment: fixed;
   }
 
   .app-layout-content {
@@ -452,7 +460,7 @@
   .profile-main,
   .settings-main {
     width: 100%;
-    padding: 23px 15px 30px;
+    padding: 23px 15px calc(104px + env(safe-area-inset-bottom));
   }
 
   /* Phone header */
@@ -480,6 +488,37 @@
 
   .app-sidebar-brand div {
     display: flex;
+  }
+
+  .app-mobile-profile-button {
+    width: 42px;
+    height: 42px;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    flex: 0 0 42px;
+    border: 2px solid var(--green-light);
+    border-radius: 50%;
+    background: var(--green-light);
+    color: var(--green-dark);
+    font-size: 1.1rem;
+    text-decoration: none;
+    box-shadow: 0 4px 12px var(--page-shadow);
+    transition:
+      border-color 0.2s ease,
+      transform 0.2s ease;
+  }
+
+  .app-mobile-profile-button img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+  }
+
+  .app-mobile-profile-button:hover {
+    border-color: var(--green);
+    transform: translateY(-1px);
   }
 
   /* Hide desktop navigation from phone header */
@@ -583,6 +622,182 @@
   .app-mobile-drawer-open {
     transform: translateX(0);
     visibility: visible;
+  }
+
+  /* Bottom tab bar: the most-used destinations stay visible on phone. */
+  .app-mobile-tabbar {
+    position: fixed;
+    z-index: 1800;
+    right: 8px;
+    bottom: max(10px, env(safe-area-inset-bottom));
+    left: 8px;
+    height: 76px;
+    padding: 8px 12px;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    align-items: center;
+    isolation: isolate;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.58);
+    border-radius: 40px;
+    background: rgba(255, 255, 255, 0.005);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.88),
+      inset 0 -1px 0 color-mix(in srgb, var(--green) 18%, transparent),
+      0 14px 34px color-mix(in srgb, var(--green-deep) 18%, transparent);
+    backdrop-filter: blur(28px) saturate(165%);
+    -webkit-backdrop-filter: blur(28px) saturate(165%);
+  }
+
+  /* A clean, native-style light catch along the upper glass edge. */
+  .app-mobile-tabbar::before {
+    position: absolute;
+    z-index: 0;
+    inset: 0 1px auto;
+    height: 42%;
+    border-radius: inherit;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent);
+    filter: blur(1px);
+    opacity: 0.12;
+    content: "";
+    pointer-events: none;
+  }
+
+  .app-mobile-tabbar::after {
+    position: absolute;
+    z-index: 0;
+    right: 20px;
+    bottom: 1px;
+    left: 20px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.42) 25%, transparent 75%);
+    content: "";
+    opacity: 0.1;
+    pointer-events: none;
+  }
+
+  .app-mobile-tab-indicator {
+    position: absolute;
+    z-index: 1;
+    top: 8px;
+    left: 12px;
+    width: calc((100% - 24px) / 5);
+    height: 60px;
+    pointer-events: none;
+    transform: translateX(calc(var(--mobile-tab-index, 0) * 100%));
+    transition:
+      opacity 180ms ease,
+      transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .app-mobile-tab-indicator::before {
+    width: 60px;
+    height: 60px;
+    display: block;
+    margin: 0 auto;
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    border-radius: 50%;
+    background: linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--green-deep) 72%, transparent),
+      color-mix(in srgb, var(--green) 56%, transparent)
+    );
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.38),
+      0 8px 18px color-mix(in srgb, var(--green-deep) 32%, transparent);
+    content: "";
+  }
+
+  .app-mobile-tabbar-no-active .app-mobile-tab-indicator {
+    opacity: 0;
+  }
+
+  .app-mobile-tabbar a {
+    position: relative;
+    z-index: 2;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    justify-self: center;
+    border: 1px solid color-mix(in srgb, var(--green-light) 68%, rgba(255, 255, 255, 0.32));
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--green-pale) 18%, transparent);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.64),
+      inset 0 -1px 0 color-mix(in srgb, var(--green) 14%, transparent),
+      0 5px 12px color-mix(in srgb, var(--green-deep) 8%, transparent);
+    backdrop-filter: blur(20px) saturate(150%) brightness(1.1);
+    -webkit-backdrop-filter: blur(20px) saturate(150%) brightness(1.1);
+    color: var(--text);
+    line-height: 1;
+    text-decoration: none;
+    transition:
+      border-color 0.25s ease,
+      color 0.2s ease,
+      background-color 0.2s ease,
+      box-shadow 0.25s ease,
+      transform 0.2s ease;
+  }
+
+  .app-mobile-tabbar a > i {
+    font-size: 1.45rem;
+    line-height: 1;
+  }
+
+  .app-mobile-tabbar a.active:not(.add-meal) {
+    border-color: color-mix(in srgb, var(--green-light) 82%, var(--white));
+    background: color-mix(in srgb, var(--green-deep) 12%, transparent);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.34),
+      0 6px 14px color-mix(in srgb, var(--green-deep) 35%, transparent);
+    color: var(--white);
+  }
+
+  .app-mobile-tabbar a > span:last-child {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  .app-mobile-tabbar a:active {
+    transform: scale(0.94);
+  }
+
+  .app-mobile-tabbar .add-meal {
+    color: var(--text);
+  }
+
+  .app-mobile-tabbar .add-meal.active {
+    border-color: color-mix(in srgb, var(--green-light) 82%, var(--white));
+    background: color-mix(in srgb, var(--green-deep) 12%, transparent);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.34),
+      0 6px 14px color-mix(in srgb, var(--green-deep) 35%, transparent);
+    color: var(--white);
+  }
+
+  .app-mobile-add-icon {
+    width: auto;
+    height: auto;
+    display: grid;
+    place-items: center;
+    margin: 0;
+    border: 0;
+    background: transparent;
+    color: currentColor;
+    box-shadow: none;
+    font-size: 1.65rem;
+  }
+
+  .app-mobile-tabbar .add-meal.active .app-mobile-add-icon {
+    background: transparent;
+    box-shadow: none;
   }
 
   /* Drawer heading */
@@ -715,7 +930,7 @@
   .goals-main,
   .profile-main,
   .settings-main {
-    padding: 20px 11px 28px;
+    padding: 20px 11px calc(108px + env(safe-area-inset-bottom));
   }
 
   .app-sidebar {
@@ -733,6 +948,29 @@
 
   .app-sidebar-brand small {
     font-size: 0.68rem;
+  }
+
+}
+
+@media (max-width: 340px) {
+  .app-mobile-tabbar {
+    padding-right: 12px;
+    padding-left: 12px;
+  }
+
+  .app-mobile-tab-indicator {
+    left: 12px;
+    width: calc((100% - 24px) / 5);
+  }
+
+  .app-mobile-tabbar a,
+  .app-mobile-tab-indicator::before {
+    width: 56px;
+    height: 56px;
+  }
+
+  .app-mobile-tab-indicator {
+    top: 10px;
   }
 }
 
