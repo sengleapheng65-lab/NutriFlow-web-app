@@ -271,6 +271,41 @@
    MEAL LIST
    ================================ */
 
+.history-date-group + .history-date-group {
+  border-top: 1px solid var(--border);
+}
+
+.history-date-heading {
+  padding: 18px 28px 4px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.history-date-heading > div {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.history-date-heading i {
+  color: var(--green);
+}
+
+.history-date-heading h3 {
+  margin: 0;
+  color: var(--green-dark);
+  font-size: 0.95rem;
+  font-weight: 750;
+}
+
+.history-date-heading > span {
+  color: var(--muted);
+  font-size: 0.76rem;
+  font-weight: 650;
+}
+
 .history-list {
   padding: 8px 28px 24px;
 }
@@ -552,6 +587,10 @@
     padding: 5px 18px 18px;
   }
 
+  .history-date-heading {
+    padding: 16px 18px 3px;
+  }
+
   .history-meal {
     grid-template-columns: auto minmax(0, 1fr) auto;
     gap: 12px;
@@ -609,6 +648,11 @@
 
   .history-list {
     padding: 5px 15px 15px;
+  }
+
+  .history-date-heading {
+    padding-right: 15px;
+    padding-left: 15px;
   }
 }
 

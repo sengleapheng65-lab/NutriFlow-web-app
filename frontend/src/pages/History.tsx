@@ -37,6 +37,38 @@ function formatMealDate(createdAt?: string | null) {
   });
 }
 
+function getHistoryDateKey(createdAt?: string | Date | null) {
+  if (!createdAt) return "unknown-date";
+
+  const date = createdAt instanceof Date ? createdAt : new Date(createdAt);
+  if (Number.isNaN(date.getTime())) return "unknown-date";
+
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+}
+
+function formatHistoryDateHeading(dateKey: string) {
+  if (dateKey === "unknown-date") return "Date unavailable";
+
+  const [year, month, day] = dateKey.split("-").map(Number);
+  const date = new Date(year, month - 1, day);
+  const today = new Date();
+  const yesterday = new Date();
+  yesterday.setDate(today.getDate() - 1);
+
+  const todayKey = getHistoryDateKey(today);
+  const yesterdayKey = getHistoryDateKey(yesterday);
+
+  if (dateKey === todayKey) return "Today";
+  if (dateKey === yesterdayKey) return "Yesterday";
+
+  return date.toLocaleDateString("en-US", {
+    weekday: "long",
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  });
+}
+
 function useCountUp(target: number, duration = 900) {
   const [value, setValue] = useState(0);
 
@@ -116,6 +148,21 @@ function History() {
       }
     });
   }, [meals, search, sortOption]);
+
+  const groupedMeals = useMemo(() => {
+    const groups = new Map<string, Meal[]>();
+
+    displayedMeals.forEach((meal) => {
+      const dateKey = getHistoryDateKey(meal.createdAt);
+      const existingMeals = groups.get(dateKey) || [];
+      groups.set(dateKey, [...existingMeals, meal]);
+    });
+
+    return Array.from(groups, ([dateKey, groupMeals]) => ({
+      dateKey,
+      meals: groupMeals,
+    }));
+  }, [displayedMeals]);
 
   // Calculate history totals
   const totalCalories = meals.reduce((total, meal) => total + meal.calories, 0);
@@ -298,9 +345,20 @@ function History() {
 
         {/* Meal records */}
         {!isLoading && displayedMeals.length > 0 && (
-          <div className="history-list">
-            {displayedMeals.map((meal) => (
-              <article className="history-meal" key={meal.id}>
+          <div className="history-groups">
+            {groupedMeals.map((group) => (
+              <section className="history-date-group" key={group.dateKey}>
+                <div className="history-date-heading">
+                  <div>
+                    <i className="bi bi-calendar3" aria-hidden="true" />
+                    <h3>{formatHistoryDateHeading(group.dateKey)}</h3>
+                  </div>
+                  <span>{group.meals.length} {group.meals.length === 1 ? "meal" : "meals"}</span>
+                </div>
+
+                <div className="history-list">
+                  {group.meals.map((meal) => (
+                    <article className="history-meal" key={meal.id}>
                 <div className="history-meal-icon">
                   {meal.photo ? (
                     <img src={meal.photo} alt={`${meal.name} meal`} />
@@ -351,7 +409,10 @@ function History() {
                 >
                   <i className="bi bi-trash3" aria-hidden="true" />
                 </button>
-              </article>
+                    </article>
+                  ))}
+                </div>
+              </section>
             ))}
           </div>
         )}
