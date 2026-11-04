@@ -117,6 +117,9 @@ public class AuthController {
 
     @GetMapping("/me")
     public Map<String, Object> me(Authentication authentication) {
+        if (authentication == null) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Not signed in.");
+        }
         User user = users.findByEmailIgnoreCase(authentication.getName()).orElseThrow();
         return userResponse(user);
     }
