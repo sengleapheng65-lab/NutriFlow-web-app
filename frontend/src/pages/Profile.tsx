@@ -1,7 +1,8 @@
-import { useState, type ChangeEvent, type FormEvent } from "react";
+import { useEffect, useState, type ChangeEvent, type FormEvent } from "react";
 
 import "../styles/Profile.css";
 import { getUserStorageKey } from "../services/userStorage";
+import { getProfile, saveProfile } from "../services/profileApi";
 
 type Gender = "" | "male" | "female" | "prefer-not";
 
@@ -12,7 +13,7 @@ type ActivityLevel =
   | "active"
   | "very-active";
 
-type UserProfile = {
+export type UserProfile = {
   fullName: string;
   email: string;
   bio: string;
@@ -100,6 +101,17 @@ function Profile() {
   // Load the saved profile when the page opens
   const [profile, setProfile] = useState<UserProfile>(() => loadProfile());
 
+  useEffect(() => {
+    void getProfile()
+      .then((remoteProfile) => {
+        setProfile({ ...defaultProfile, ...remoteProfile });
+        localStorage.setItem(getUserStorageKey("userProfile"), JSON.stringify(remoteProfile));
+      })
+      .catch(() => {
+        // Keep the cached profile if the API is temporarily unavailable.
+      });
+  }, []);
+
   // Track page messages
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
@@ -185,13 +197,18 @@ function Profile() {
     event.preventDefault();
 
     try {
-      localStorage.setItem(getUserStorageKey("userProfile"), JSON.stringify(profile));
-
-      // Update the profile information displayed in the sidebar
-      window.dispatchEvent(new Event("profileUpdated"));
-
-      setError("");
-      setMessage("Your profile was saved.");
+      void saveProfile(profile)
+        .then((savedProfile) => {
+          setProfile({ ...defaultProfile, ...savedProfile });
+          localStorage.setItem(getUserStorageKey("userProfile"), JSON.stringify(savedProfile));
+          window.dispatchEvent(new Event("profileUpdated"));
+          setError("");
+          setMessage("Your profile was saved.");
+        })
+        .catch((requestError: Error) => {
+          setMessage("");
+          setError(requestError.message);
+        });
     } catch {
       setMessage("");
       setError(
