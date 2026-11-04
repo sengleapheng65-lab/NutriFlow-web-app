@@ -46,7 +46,10 @@ export async function loginWithGoogle(credential: string): Promise<AuthUser> {
     credentials: "include",
     body: JSON.stringify({ credential }),
   });
-  if (!response.ok) throw new Error("Google sign-in could not be completed.");
+  if (!response.ok) {
+    const body = (await response.json().catch(() => ({}))) as { detail?: string; message?: string };
+    throw new Error(body.detail || body.message || `Google sign-in failed (${response.status}).`);
+  }
   const user = (await response.json()) as AuthUser;
   setActiveUserEmail(user.email);
   return user;
