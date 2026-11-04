@@ -49,7 +49,7 @@ public class ProfileController {
             user.getGender(), user.getHeight(), user.getWeight(), user.getActivityLevel(), user.getPhoto());
     }
 
-    public record ProfileRequest(String fullName, String bio, String age, String gender, String height,
+    public record ProfileRequest(String fullName, String email, String bio, String age, String gender, String height,
         String weight, String activityLevel, String photo) {}
 
     public record ProfileResponse(String fullName, String email, String bio, String age, String gender,
