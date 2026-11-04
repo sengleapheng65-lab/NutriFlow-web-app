@@ -13,9 +13,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 import com.nutriflow.backend.repository.UserRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Configuration
 public class SecurityConfig {
+    @Bean
+    ObjectMapper objectMapper() {
+        return new ObjectMapper();
+    }
+
     @Bean
     UserDetailsService userDetailsService(UserRepository users) {
         return email -> users.findByEmailIgnoreCase(email)
