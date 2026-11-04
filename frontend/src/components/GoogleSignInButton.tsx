@@ -26,7 +26,7 @@ function GoogleSignInButton({ onSuccess, onError }: Props) {
         theme: "outline",
         type: "icon",
         size: "large",
-        shape: "rectangular",
+        shape: "square",
       });
     };
     if (window.google) render();

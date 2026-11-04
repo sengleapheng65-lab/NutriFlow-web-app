@@ -196,6 +196,23 @@
     transform 0.2s ease;
 }
 
+/* Keep Google's official icon renderer aligned with the previous social button. */
+.google-sign-in-button {
+  width: 50px;
+  height: 45px;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--white);
+}
+
+.google-sign-in-button > div {
+  display: flex;
+  justify-content: center;
+}
+
 /* Social button hover effect */
 .social-button:hover {
   border-color: var(--green);
