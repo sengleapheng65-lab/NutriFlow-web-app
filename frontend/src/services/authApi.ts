@@ -61,7 +61,10 @@ export async function requestPasswordReset(email: string): Promise<void> {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email }),
   });
-  if (!response.ok) throw new Error("Could not request a password reset.");
+  if (!response.ok) {
+    const body = (await response.json().catch(() => ({}))) as { detail?: string; message?: string };
+    throw new Error(body.detail || body.message || `Could not request a password reset (${response.status}).`);
+  }
 }
 
 export async function resetPassword(token: string, password: string): Promise<void> {
