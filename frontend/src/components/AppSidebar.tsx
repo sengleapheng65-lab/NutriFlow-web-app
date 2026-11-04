@@ -1,5 +1,7 @@
 import { useEffect, useState, type CSSProperties } from "react";
-import { Link, NavLink, useLocation } from "react-router-dom";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
+import { logout } from "../services/authApi";
+import { getUserStorageKey } from "../services/userStorage";
 
 import "../styles/AppSidebar.css";
 
@@ -13,7 +15,7 @@ type SidebarProfile = {
 // Load the saved profile from localStorage
 function loadSidebarProfile(): SidebarProfile {
   try {
-    const savedProfile = localStorage.getItem("userProfile");
+    const savedProfile = localStorage.getItem(getUserStorageKey("userProfile"));
 
     if (!savedProfile) {
       return {
@@ -41,6 +43,7 @@ function loadSidebarProfile(): SidebarProfile {
 
 function AppSidebar() {
   const location = useLocation();
+  const navigate = useNavigate();
 
   // Store the profile information shown in the sidebar
   const [profile, setProfile] = useState<SidebarProfile>(() =>
@@ -182,10 +185,10 @@ function AppSidebar() {
         </nav>
 
         {/* Sign out */}
-        <Link className="app-sidebar-signout" to="/login">
+        <button className="app-sidebar-signout" type="button" onClick={() => void logout().finally(() => navigate("/login"))}>
           <i className="bi bi-box-arrow-left" aria-hidden="true" />
           <span>Sign Out</span>
-        </Link>
+        </button>
       </aside>
 
       {/* Primary phone navigation stays within easy thumb reach. */}

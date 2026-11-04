@@ -15,6 +15,7 @@ import type { Meal } from "../types/Meal";
 import { deleteMeal as deleteMealFromApi, getMeals } from "../services/mealApi";
 
 import "../styles/Dashboard.css";
+import { getUserStorageKey } from "../services/userStorage";
 
 // Daily Nutrition Goal Setting setup
 // Describes the user's daily nutrition goals
@@ -42,7 +43,7 @@ const mobileDotRows = [16, 16, 16, 16, 16];
 
 function loadMobileProfile(): MobileProfile {
   try {
-    const savedProfile = localStorage.getItem("userProfile");
+    const savedProfile = localStorage.getItem(getUserStorageKey("userProfile"));
     const fullName = savedProfile ? JSON.parse(savedProfile).fullName || "" : "";
 
     return {
@@ -57,7 +58,7 @@ function loadMobileProfile(): MobileProfile {
 // Load the nutrition goals saved by the Settings page
 function loadNutritionGoals(): NutritionGoals {
   try {
-    const savedGoals = localStorage.getItem("nutritionGoals");
+    const savedGoals = localStorage.getItem(getUserStorageKey("nutritionGoals"));
 
     if (!savedGoals) {
       return defaultGoals;

@@ -186,7 +186,7 @@ export async function analyzeNutritionLabel(
 
 // Get every meal from the backend
 export async function getMeals(): Promise<Meal[]> {
-  const response = await fetch(MEAL_API_URL);
+  const response = await fetch(MEAL_API_URL, { credentials: "include" });
 
   if (!response.ok) {
     throw new Error("Could not load meals.");
@@ -202,6 +202,7 @@ export async function createMeal(meal: NewMeal): Promise<Meal> {
     headers: {
       "Content-Type": "application/json",
     },
+    credentials: "include",
     body: JSON.stringify(meal),
   });
 
@@ -216,6 +217,7 @@ export async function createMeal(meal: NewMeal): Promise<Meal> {
 export async function deleteMeal(id: number): Promise<void> {
   const response = await fetch(`${MEAL_API_URL}/${id}`, {
     method: "DELETE",
+    credentials: "include",
   });
 
   if (!response.ok) {

@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../styles/Auth.css";
+import { register } from "../services/authApi";
 
 function Register() {
   const navigate = useNavigate();
@@ -8,6 +9,10 @@ function Register() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
+  const [serverError, setServerError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -21,9 +26,12 @@ function Register() {
     }
 
     setPasswordError("");
-
-    // Temporary until Spring Boot registration is connected.
-    navigate("/login");
+    setServerError("");
+    setIsSubmitting(true);
+    void register(fullName, email, password)
+      .then(() => navigate("/login"))
+      .catch((requestError: Error) => setServerError(requestError.message))
+      .finally(() => setIsSubmitting(false));
   }
 
   return (
@@ -51,6 +59,8 @@ function Register() {
                 type="text"
                 placeholder="Your name"
                 autoComplete="name"
+                value={fullName}
+                onChange={(event) => setFullName(event.target.value)}
                 required
               />
             </div>
@@ -66,6 +76,8 @@ function Register() {
                 type="email"
                 placeholder="name@example.com"
                 autoComplete="email"
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
                 required
               />
             </div>
@@ -154,8 +166,9 @@ function Register() {
               )}
             </div>
 
-            <button className="btn login-button w-100" type="submit">
-              Create Account
+            {serverError && <div className="alert alert-danger py-2">{serverError}</div>}
+            <button className="btn login-button w-100" type="submit" disabled={isSubmitting}>
+              {isSubmitting ? "Creating account…" : "Create Account"}
             </button>
 
             <div className="divider my-4">

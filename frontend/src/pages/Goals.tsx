@@ -2,6 +2,7 @@ import { useState, type FormEvent } from "react";
 
 import MacroIcon from "../components/MacroIcon";
 import "../styles/Goals.css";
+import { getUserStorageKey } from "../services/userStorage";
 
 // Structure of the user's daily nutrition goals
 export type NutritionGoals = {
@@ -23,7 +24,7 @@ function Goals() {
   // Load previously saved goals
   const [goals, setGoals] = useState<NutritionGoals>(() => {
     try {
-      const savedGoals = localStorage.getItem("nutritionGoals");
+      const savedGoals = localStorage.getItem(getUserStorageKey("nutritionGoals"));
 
       return savedGoals ? JSON.parse(savedGoals) : defaultGoals;
     } catch {
@@ -47,14 +48,14 @@ function Goals() {
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    localStorage.setItem("nutritionGoals", JSON.stringify(goals));
+    localStorage.setItem(getUserStorageKey("nutritionGoals"), JSON.stringify(goals));
     setMessage("Your daily nutrition goals were saved.");
   }
 
   // Restore the default goals
   function resetGoals() {
     setGoals(defaultGoals);
-    localStorage.setItem("nutritionGoals", JSON.stringify(defaultGoals));
+    localStorage.setItem(getUserStorageKey("nutritionGoals"), JSON.stringify(defaultGoals));
     setMessage("Your goals were reset to the default values.");
   }
 

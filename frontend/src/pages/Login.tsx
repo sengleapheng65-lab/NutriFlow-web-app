@@ -1,14 +1,28 @@
 import { useState, type FormEvent } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { login } from "../services/authApi";
 import "../styles/Auth.css";
 
 function Login() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const location = useLocation();
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    navigate("/dashboard");
+    setError("");
+    setIsSubmitting(true);
+    void login(email, password)
+      .then(() => {
+        // Reload App so its initial /auth/me check picks up the new session.
+        window.location.assign((location.state as { from?: string } | null)?.from || "/dashboard");
+      })
+      .catch((requestError: Error) => setError(requestError.message))
+      .finally(() => setIsSubmitting(false));
   }
 
   return (
@@ -38,6 +52,8 @@ function Login() {
                 type="email"
                 placeholder="name@example.com"
                 autoComplete="email"
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
                 required
               />
             </div>
@@ -54,6 +70,8 @@ function Login() {
                   type={showPassword ? "text" : "password"}
                   placeholder="Enter your password"
                   autoComplete="current-password"
+                  value={password}
+                  onChange={(event) => setPassword(event.target.value)}
                   required
                 />
 
@@ -77,8 +95,9 @@ function Login() {
               </button>
             </div>
 
-            <button className="btn login-button w-100" type="submit">
-              Sign In
+            {error && <div className="alert alert-danger py-2">{error}</div>}
+            <button className="btn login-button w-100" type="submit" disabled={isSubmitting}>
+              {isSubmitting ? "Signing in…" : "Sign In"}
             </button>
 
             <div className="divider my-4">

@@ -1,4 +1,5 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 import Home from "./pages/Home";
 import Login from "./pages/Login";
@@ -12,10 +13,23 @@ import Settings from "./pages/Settings";
 
 import AppLayout from "./components/AppLayout";
 import ThemeToggle from "./components/ThemeToggle";
+import ProtectedRoute from "./components/ProtectedRoute";
+import { getCurrentUser, type AuthUser } from "./services/authApi";
+import { setActiveUserEmail } from "./services/userStorage";
 
 import "./App.css";
 
 function AppContent() {
+  const [user, setUser] = useState<AuthUser | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    getCurrentUser().then((currentUser) => {
+      if (currentUser) setActiveUserEmail(currentUser.email);
+      setUser(currentUser);
+    }).catch(() => setUser(null)).finally(() => setIsLoading(false));
+  }, []);
+
   return (
     <>
       {/* Global light and dark mode button */}
@@ -28,17 +42,19 @@ function AppContent() {
         <Route path="/register" element={<Register />} />
 
         {/* Pages that share the application sidebar */}
-        <Route element={<AppLayout />}>
+        <Route element={<ProtectedRoute isLoading={isLoading} isAuthenticated={Boolean(user)} />}>
+          <Route element={<AppLayout />}>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/add-meal" element={<AddMeal />} />
           <Route path="/goals" element={<Goals />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/history" element={<History />} />
           <Route path="/settings" element={<Settings />} />
+          </Route>
         </Route>
 
         {/* Unknown URLs return to Home */}
-        <Route path="*" element={<Home />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </>
   );

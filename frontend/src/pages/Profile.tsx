@@ -1,6 +1,7 @@
 import { useState, type ChangeEvent, type FormEvent } from "react";
 
 import "../styles/Profile.css";
+import { getUserStorageKey } from "../services/userStorage";
 
 type Gender = "" | "male" | "female" | "prefer-not";
 
@@ -38,7 +39,7 @@ const defaultProfile: UserProfile = {
 // Load a previously saved profile
 function loadProfile(): UserProfile {
   try {
-    const savedProfile = localStorage.getItem("userProfile");
+    const savedProfile = localStorage.getItem(getUserStorageKey("userProfile"));
 
     if (!savedProfile) {
       return defaultProfile;
@@ -184,7 +185,7 @@ function Profile() {
     event.preventDefault();
 
     try {
-      localStorage.setItem("userProfile", JSON.stringify(profile));
+      localStorage.setItem(getUserStorageKey("userProfile"), JSON.stringify(profile));
 
       // Update the profile information displayed in the sidebar
       window.dispatchEvent(new Event("profileUpdated"));

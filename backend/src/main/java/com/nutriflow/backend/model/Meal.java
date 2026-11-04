@@ -6,6 +6,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.JoinColumn;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 // @Entity makes this class a table in MySQL (table name: meal)
 @Entity
@@ -23,6 +26,10 @@ public class Meal {
     private Instant createdAt;
     @Lob
     private String photo;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
     // Empty constructor required for converting JSON into a Meal
     public Meal() {
@@ -107,5 +114,14 @@ public class Meal {
 
     public void setPhoto(String photo) {
         this.photo = photo;
+    }
+
+    @JsonIgnore
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }
