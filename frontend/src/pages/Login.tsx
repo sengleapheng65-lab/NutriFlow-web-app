@@ -90,7 +90,7 @@ function Login() {
             </div>
 
             <div className="text-end mb-4">
-              <button className="btn btn-link forgot-link p-0" type="button">
+              <button className="btn btn-link forgot-link p-0" type="button" onClick={() => navigate("/forgot-password")}>
                 Forgot password?
               </button>
             </div>

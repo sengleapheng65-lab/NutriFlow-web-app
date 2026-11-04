@@ -54,3 +54,24 @@ export async function logout(): Promise<void> {
   await fetch(`${API_URL}/auth/logout`, { method: "POST", credentials: "include" });
   localStorage.removeItem("activeUserEmail");
 }
+
+export async function requestPasswordReset(email: string): Promise<void> {
+  const response = await fetch(`${API_URL}/auth/forgot-password`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email }),
+  });
+  if (!response.ok) throw new Error("Could not request a password reset.");
+}
+
+export async function resetPassword(token: string, password: string): Promise<void> {
+  const response = await fetch(`${API_URL}/auth/reset-password`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ token, password }),
+  });
+  if (!response.ok) {
+    const body = (await response.json().catch(() => ({}))) as { detail?: string };
+    throw new Error(body.detail || "Could not reset your password.");
+  }
+}

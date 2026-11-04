@@ -23,6 +23,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.nutriflow.backend.model.User;
 import com.nutriflow.backend.repository.UserRepository;
+import com.nutriflow.backend.service.PasswordResetService;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -30,12 +31,15 @@ public class AuthController {
     private final UserRepository users;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
+    private final PasswordResetService passwordResetService;
     private final SecurityContextRepository securityContextRepository = new HttpSessionSecurityContextRepository();
 
-    public AuthController(UserRepository users, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager) {
+    public AuthController(UserRepository users, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager,
+        PasswordResetService passwordResetService) {
         this.users = users;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
+        this.passwordResetService = passwordResetService;
     }
 
     @PostMapping("/register")
@@ -76,6 +80,29 @@ public class AuthController {
         if (request.getSession(false) != null) request.getSession(false).invalidate();
     }
 
+    @PostMapping("/forgot-password")
+    public Map<String, String> forgotPassword(@RequestBody ForgotPasswordRequest request) {
+        users.findByEmailIgnoreCase(normalizeEmail(request.email())).ifPresent(passwordResetService::sendResetEmail);
+        return Map.of("message", "If an account exists for that email, a reset link has been sent.");
+    }
+
+    @PostMapping("/reset-password")
+    public Map<String, String> resetPassword(@RequestBody ResetPasswordRequest request) {
+        if (request.password() == null || request.password().length() < 8) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password must be at least 8 characters.");
+        }
+        try {
+            var resetToken = passwordResetService.findValidToken(request.token());
+            User user = resetToken.getUser();
+            user.setPassword(passwordEncoder.encode(request.password()));
+            users.save(user);
+            passwordResetService.markUsed(resetToken);
+            return Map.of("message", "Your password has been reset.");
+        } catch (IllegalArgumentException | java.util.NoSuchElementException error) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Reset link is invalid or expired.");
+        }
+    }
+
     private Map<String, Object> userResponse(User user) {
         return Map.of("id", user.getId(), "fullName", user.getFullName(), "email", user.getEmail());
     }
@@ -84,4 +111,6 @@ public class AuthController {
 
     public record RegisterRequest(String fullName, String email, String password) {}
     public record LoginRequest(String email, String password) {}
+    public record ForgotPasswordRequest(String email) {}
+    public record ResetPasswordRequest(String token, String password) {}
 }

@@ -10,6 +10,8 @@ import Goals from "./pages/Goals";
 import Profile from "./pages/Profile";
 import History from "./pages/History";
 import Settings from "./pages/Settings";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 
 import AppLayout from "./components/AppLayout";
 import ThemeToggle from "./components/ThemeToggle";
@@ -40,6 +42,8 @@ function AppContent() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
 
         {/* Pages that share the application sidebar */}
         <Route element={<ProtectedRoute isLoading={isLoading} isAuthenticated={Boolean(user)} />}>
