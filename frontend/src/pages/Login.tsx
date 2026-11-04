@@ -2,6 +2,7 @@ import { useState, type FormEvent } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { login } from "../services/authApi";
 import "../styles/Auth.css";
+import GoogleSignInButton from "../components/GoogleSignInButton";
 
 function Login() {
   const navigate = useNavigate();
@@ -105,19 +106,7 @@ function Login() {
             </div>
 
             <div className="social-buttons">
-              <button
-                className="social-button"
-                type="button"
-                aria-label="Continue with Google"
-                title="Continue with Google"
-              >
-                <img
-                  src="https://developers.google.com/identity/images/g-logo.png"
-                  alt=""
-                  width="20"
-                  height="20"
-                />
-              </button>
+              <GoogleSignInButton onSuccess={() => window.location.assign("/dashboard")} onError={setError} />
 
               <button
                 className="social-button facebook-button"

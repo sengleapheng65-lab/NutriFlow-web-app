@@ -4,6 +4,10 @@ import java.util.Map;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -20,6 +24,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.beans.factory.annotation.Value;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import com.nutriflow.backend.model.User;
 import com.nutriflow.backend.repository.UserRepository;
@@ -32,14 +39,18 @@ public class AuthController {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final PasswordResetService passwordResetService;
+    private final ObjectMapper objectMapper;
+    @Value("${app.google-client-id:}")
+    private String googleClientId;
     private final SecurityContextRepository securityContextRepository = new HttpSessionSecurityContextRepository();
 
     public AuthController(UserRepository users, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager,
-        PasswordResetService passwordResetService) {
+        PasswordResetService passwordResetService, ObjectMapper objectMapper) {
         this.users = users;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
         this.passwordResetService = passwordResetService;
+        this.objectMapper = objectMapper;
     }
 
     @PostMapping("/register")
@@ -60,12 +71,48 @@ public class AuthController {
     public Map<String, Object> login(@RequestBody LoginRequest request, HttpServletRequest httpRequest, HttpServletResponse httpResponse) {
         Authentication authentication = authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(normalizeEmail(request.email()), request.password()));
+        establishSession(authentication, httpRequest, httpResponse);
+        User user = users.findByEmailIgnoreCase(authentication.getName()).orElseThrow();
+        return userResponse(user);
+    }
+
+    @PostMapping("/google")
+    public Map<String, Object> googleLogin(@RequestBody GoogleLoginRequest request,
+        HttpServletRequest httpRequest, HttpServletResponse httpResponse) {
+        if (googleClientId.isBlank() || request.credential() == null || request.credential().isBlank()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Google sign-in is not configured.");
+        }
+        try {
+            HttpRequest tokenRequest = HttpRequest.newBuilder(URI.create(
+                    "https://oauth2.googleapis.com/tokeninfo?id_token=" + java.net.URLEncoder.encode(request.credential(), java.nio.charset.StandardCharsets.UTF_8)))
+                .GET().build();
+            HttpResponse<String> tokenResponse = HttpClient.newHttpClient().send(tokenRequest, HttpResponse.BodyHandlers.ofString());
+            if (tokenResponse.statusCode() != 200) throw new IllegalArgumentException("Invalid Google token");
+            JsonNode token = objectMapper.readTree(tokenResponse.body());
+            if (!googleClientId.equals(token.path("aud").asText()) || !"true".equals(token.path("email_verified").asText())) {
+                throw new IllegalArgumentException("Google token was not issued for this app");
+            }
+            String email = normalizeEmail(token.path("email").asText());
+            User user = users.findByEmailIgnoreCase(email).orElseGet(() ->
+                users.save(new User(token.path("name").asText("Google user"), email,
+                    passwordEncoder.encode(java.util.UUID.randomUUID().toString()))));
+            Authentication authentication = UsernamePasswordAuthenticationToken.authenticated(
+                email, null, java.util.List.of(new org.springframework.security.core.authority.SimpleGrantedAuthority("ROLE_USER")));
+            establishSession(authentication, httpRequest, httpResponse);
+            return userResponse(user);
+        } catch (InterruptedException error) {
+            Thread.currentThread().interrupt();
+            throw new ResponseStatusException(HttpStatus.BAD_GATEWAY, "Google sign-in was interrupted.");
+        } catch (Exception error) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Google sign-in could not be verified.");
+        }
+    }
+
+    private void establishSession(Authentication authentication, HttpServletRequest httpRequest, HttpServletResponse httpResponse) {
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         context.setAuthentication(authentication);
         SecurityContextHolder.setContext(context);
         securityContextRepository.saveContext(context, httpRequest, httpResponse);
-        User user = users.findByEmailIgnoreCase(authentication.getName()).orElseThrow();
-        return userResponse(user);
     }
 
     @GetMapping("/me")
@@ -111,6 +158,7 @@ public class AuthController {
 
     public record RegisterRequest(String fullName, String email, String password) {}
     public record LoginRequest(String email, String password) {}
+    public record GoogleLoginRequest(String credential) {}
     public record ForgotPasswordRequest(String email) {}
     public record ResetPasswordRequest(String token, String password) {}
 }
