@@ -3,23 +3,30 @@ import { loginWithGoogle } from "../services/authApi";
 
 declare global {
   interface Window {
-    google?: { accounts: { id: { initialize: (options: { client_id: string; callback: (response: { credential: string }) => void }) => void; prompt: () => void } } };
+    google?: { accounts: { id: { initialize: (options: { client_id: string; callback: (response: { credential: string }) => void }) => void; renderButton: (element: HTMLElement, options: Record<string, string>) => void } } };
   }
 }
 
 type Props = { onSuccess: () => void; onError: (message: string) => void };
 
 function GoogleSignInButton({ onSuccess, onError }: Props) {
-  const containerRef = useRef<HTMLButtonElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID as string | undefined;
 
   useEffect(() => {
     if (!clientId) return;
     const render = () => {
-      if (!window.google) return;
+      if (!window.google || !containerRef.current) return;
       window.google.accounts.id.initialize({
         client_id: clientId,
         callback: (response) => void loginWithGoogle(response.credential).then(onSuccess).catch((error: Error) => onError(error.message)),
+      });
+      containerRef.current.innerHTML = "";
+      window.google.accounts.id.renderButton(containerRef.current, {
+        theme: "outline",
+        type: "icon",
+        size: "large",
+        shape: "rectangular",
       });
     };
     if (window.google) render();
@@ -33,18 +40,7 @@ function GoogleSignInButton({ onSuccess, onError }: Props) {
   }, [clientId, onError, onSuccess]);
 
   if (!clientId) return null;
-  return (
-    <button
-      ref={containerRef}
-      className="social-button"
-      type="button"
-      aria-label="Continue with Google"
-      title="Continue with Google"
-      onClick={() => window.google?.accounts.id.prompt()}
-    >
-      <img src="https://developers.google.com/identity/images/g-logo.png" alt="" width="20" height="20" />
-    </button>
-  );
+  return <div ref={containerRef} className="google-sign-in-button" aria-label="Continue with Google" />;
 }
 
 export default GoogleSignInButton;
