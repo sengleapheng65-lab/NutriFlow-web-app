@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.DataIntegrityViolationException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -68,8 +69,12 @@ public class AuthController {
         if (users.existsByEmailIgnoreCase(email)) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "An account with this email already exists.");
         }
-        User user = users.save(new User(request.fullName().trim(), email, passwordEncoder.encode(request.password())));
-        return userResponse(user);
+        try {
+            User user = users.save(new User(request.fullName().trim(), email, passwordEncoder.encode(request.password())));
+            return userResponse(user);
+        } catch (DataIntegrityViolationException error) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "An account with this email already exists.");
+        }
     }
 
     @PostMapping("/login")

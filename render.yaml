@@ -13,6 +13,12 @@ services:
         sync: false
       - key: ADMIN_EMAILS
         sync: false
+      - key: AUTH_RATE_LIMIT_MAX_REQUESTS
+        sync: false
+      - key: PASSWORD_RESET_RATE_LIMIT_MAX_REQUESTS
+        sync: false
+      - key: RATE_LIMIT_WINDOW_SECONDS
+        sync: false
 
   - type: web
     name: nutriflow-vision-api
