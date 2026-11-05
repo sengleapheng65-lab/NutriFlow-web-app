@@ -318,6 +318,12 @@ function Profile() {
             )}
           </div>
 
+          <div className="profile-preview-copy">
+            <span>Live preview</span>
+            <strong>{profile.fullName || "Your profile"}</strong>
+            <small>{profile.email || "Add your email address"}</small>
+          </div>
+
           <div className="profile-photo-actions">
             <label className="profile-upload-button">
               <i className="bi bi-camera" aria-hidden="true" />
