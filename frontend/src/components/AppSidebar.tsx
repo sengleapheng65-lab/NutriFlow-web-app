@@ -41,9 +41,10 @@ function loadSidebarProfile(): SidebarProfile {
   }
 }
 
-function AppSidebar() {
+function AppSidebar({ isAdmin }: { isAdmin: boolean }) {
   const location = useLocation();
   const navigate = useNavigate();
+  const activePath = location.pathname.startsWith("/admin") ? "/admin" : location.pathname;
 
   // Store the profile information shown in the sidebar
   const [profile, setProfile] = useState<SidebarProfile>(() =>
@@ -124,7 +125,8 @@ function AppSidebar() {
                 "/history",
                 "/profile",
                 "/settings",
-              ].indexOf(location.pathname),
+                ...(isAdmin ? ["/admin"] : []),
+              ].indexOf(activePath),
             } as CSSProperties
           }
         >
@@ -182,6 +184,13 @@ function AppSidebar() {
             <i className="bi bi-gear-wide-connected" aria-hidden="true" />
             <span>Settings</span>
           </NavLink>
+
+          {isAdmin && (
+            <NavLink to="/admin" className={({ isActive }) => (isActive ? "active" : "")}>
+              <i className="bi bi-shield-lock" aria-hidden="true" />
+              <span>Admin</span>
+            </NavLink>
+          )}
         </nav>
 
         {/* Sign out */}
@@ -193,11 +202,9 @@ function AppSidebar() {
 
       {/* Primary phone navigation stays within easy thumb reach. */}
       <nav
-        className={
-          location.pathname === "/profile"
-            ? "app-mobile-tabbar app-mobile-tabbar-no-active"
-            : "app-mobile-tabbar"
-        }
+        className={`${location.pathname === "/profile"
+          ? "app-mobile-tabbar app-mobile-tabbar-no-active"
+          : "app-mobile-tabbar"}${isAdmin ? " app-mobile-tabbar-admin" : ""}`}
         aria-label="Primary navigation"
         style={
           {
@@ -207,7 +214,8 @@ function AppSidebar() {
               "/add-meal",
               "/goals",
               "/settings",
-            ].indexOf(location.pathname),
+              ...(isAdmin ? ["/admin"] : []),
+            ].indexOf(activePath),
           } as CSSProperties
         }
       >
@@ -258,6 +266,17 @@ function AppSidebar() {
           <i className="bi bi-gear-wide-connected" aria-hidden="true" />
           <span>Settings</span>
         </NavLink>
+
+        {isAdmin && (
+          <NavLink
+            to="/admin"
+            className={({ isActive }) => (isActive ? "active" : "")}
+            aria-label="Admin"
+          >
+            <i className="bi bi-shield-lock" aria-hidden="true" />
+            <span>Admin</span>
+          </NavLink>
+        )}
       </nav>
     </>
   );

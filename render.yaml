@@ -11,6 +11,8 @@ services:
         sync: false
       - key: SPRING_DATASOURCE_PASSWORD
         sync: false
+      - key: ADMIN_EMAILS
+        sync: false
 
   - type: web
     name: nutriflow-vision-api

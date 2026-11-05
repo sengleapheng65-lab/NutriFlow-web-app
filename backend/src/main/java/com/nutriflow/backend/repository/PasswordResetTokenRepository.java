@@ -8,4 +8,5 @@ import com.nutriflow.backend.model.PasswordResetToken;
 
 public interface PasswordResetTokenRepository extends JpaRepository<PasswordResetToken, Long> {
     Optional<PasswordResetToken> findByTokenHash(String tokenHash);
+    void deleteAllByUserId(Long userId);
 }

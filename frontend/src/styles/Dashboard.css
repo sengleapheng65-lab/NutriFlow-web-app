@@ -208,6 +208,16 @@
   color: #dc5e58;
 }
 
+.burned-calories-icon {
+  background: #fde8e7;
+  color: #dc5e58;
+}
+
+.eaten-calories-icon {
+  background: #e3f5ec;
+  color: #198754;
+}
+
 .fat-icon {
   background: #e7f0ff;
   color: #3f7fdd;
@@ -260,6 +270,10 @@
 
 .carb-progress div {
   background: linear-gradient(90deg, #f6b73c, #ef8f00);
+}
+
+.calories-progress div {
+  background: linear-gradient(90deg, #198754, #67c992);
 }
 
 .fat-progress div {

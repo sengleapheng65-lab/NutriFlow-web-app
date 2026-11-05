@@ -254,16 +254,6 @@ function Dashboard() {
     100,
   );
 
-  const proteinProgress = Math.min(
-    Math.round((totalProtein / goals.protein) * 100),
-    100,
-  );
-
-  const carbProgress = Math.min(
-    Math.round((totalCarbs / goals.carbs) * 100),
-    100,
-  );
-
   const fatProgress = Math.min(Math.round((totalFat / goals.fat) * 100), 100);
 
   // Prevent remaining calories from becoming negative for the desktop summary.
@@ -380,11 +370,11 @@ function Dashboard() {
             <div className="mobile-goal-macros">
               <div>
                 <i className="bi bi-fire" aria-hidden="true" />
-                <span>{displayRounded(animatedProtein)}g protein</span>
+                <span>{displayRounded(animatedGoalCalories).toLocaleString()} calories burned</span>
               </div>
               <div>
-                <i className="bi bi-apple" aria-hidden="true" />
-                <span>{displayRounded(animatedCarbs)}g carbs</span>
+                <MealBowlIcon />
+                <span>{displayRounded(animatedCalories).toLocaleString()} calories eaten</span>
               </div>
             </div>
 
@@ -516,46 +506,38 @@ function Dashboard() {
 
         {/* Daily nutrition statistics */}
         <div className="dashboard-stats">
-          {/* Protein */}
+          {/* Calories burned */}
           <article className="dashboard-stat-card">
-            <div className="stat-icon protein-icon">
-              <MacroIcon type="protein" />
+            <div className="stat-icon burned-calories-icon">
+              <i className="bi bi-fire" aria-hidden="true" />
             </div>
 
             <div className="stat-content">
-              <span>Protein</span>
+              <span>Calories burned</span>
 
               <strong>
-                {displayRounded(animatedProtein)} / {goals.protein}g
+                {displayRounded(animatedGoalCalories).toLocaleString()} kcal
               </strong>
-
-              <div className="stat-progress protein-progress">
-                <div
-                  style={{
-                    width: `${proteinProgress}%`,
-                  }}
-                />
-              </div>
             </div>
           </article>
 
-          {/* Carbohydrates */}
+          {/* Calories eaten */}
           <article className="dashboard-stat-card">
-            <div className="stat-icon carb-icon">
-              <MacroIcon type="carbs" />
+            <div className="stat-icon eaten-calories-icon">
+              <MealBowlIcon />
             </div>
 
             <div className="stat-content">
-              <span>Carbohydrates</span>
+              <span>Calories eaten</span>
 
               <strong>
-                {displayRounded(animatedCarbs)} / {goals.carbs}g
+                {displayRounded(animatedCalories).toLocaleString()} / {goals.calories.toLocaleString()} kcal
               </strong>
 
-              <div className="stat-progress carb-progress">
+              <div className="stat-progress calories-progress">
                 <div
                   style={{
-                    width: `${carbProgress}%`,
+                    width: `${calorieProgress}%`,
                   }}
                 />
               </div>

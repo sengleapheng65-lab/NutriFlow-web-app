@@ -9,4 +9,7 @@ import java.util.List;
 // (save, findAll, deleteById, ...)
 public interface MealRepository extends JpaRepository<Meal, Long> {
     List<Meal> findAllByUserEmailIgnoreCase(String email);
+    List<Meal> findAllByUserIdOrderByCreatedAtDesc(Long userId);
+    long countByUserId(Long userId);
+    void deleteAllByUserId(Long userId);
 }

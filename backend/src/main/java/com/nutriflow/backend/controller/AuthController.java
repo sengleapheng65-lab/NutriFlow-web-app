@@ -31,6 +31,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nutriflow.backend.model.User;
 import com.nutriflow.backend.repository.UserRepository;
 import com.nutriflow.backend.service.PasswordResetService;
+import com.nutriflow.backend.service.AdminAccessService;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -40,6 +41,7 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final PasswordResetService passwordResetService;
     private final ObjectMapper objectMapper;
+    private final AdminAccessService adminAccess;
     @Value("${app.google-client-id:}")
     private String googleClientId;
     @Value("${app.google-client-secret:}")
@@ -47,12 +49,13 @@ public class AuthController {
     private final SecurityContextRepository securityContextRepository = new HttpSessionSecurityContextRepository();
 
     public AuthController(UserRepository users, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager,
-        PasswordResetService passwordResetService, ObjectMapper objectMapper) {
+        PasswordResetService passwordResetService, ObjectMapper objectMapper, AdminAccessService adminAccess) {
         this.users = users;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
         this.passwordResetService = passwordResetService;
         this.objectMapper = objectMapper;
+        this.adminAccess = adminAccess;
     }
 
     @PostMapping("/register")
@@ -99,7 +102,7 @@ public class AuthController {
                 users.save(new User(token.path("name").asText("Google user"), email,
                     passwordEncoder.encode(java.util.UUID.randomUUID().toString()))));
             Authentication authentication = UsernamePasswordAuthenticationToken.authenticated(
-                email, null, java.util.List.of(new org.springframework.security.core.authority.SimpleGrantedAuthority("ROLE_USER")));
+                email, null, authoritiesFor(email));
             establishSession(authentication, httpRequest, httpResponse);
             return userResponse(user);
         } catch (InterruptedException error) {
@@ -133,7 +136,7 @@ public class AuthController {
             String idToken = objectMapper.readTree(tokenResponse.body()).path("id_token").asText();
             User user = googleUserFromToken(idToken);
             Authentication authentication = UsernamePasswordAuthenticationToken.authenticated(
-                user.getEmail(), null, java.util.List.of(new org.springframework.security.core.authority.SimpleGrantedAuthority("ROLE_USER")));
+                user.getEmail(), null, authoritiesFor(user.getEmail()));
             establishSession(authentication, httpRequest, httpResponse);
             return userResponse(user);
         } catch (InterruptedException error) {
@@ -209,7 +212,13 @@ public class AuthController {
     }
 
     private Map<String, Object> userResponse(User user) {
-        return Map.of("id", user.getId(), "fullName", user.getFullName(), "email", user.getEmail());
+        return Map.of("id", user.getId(), "fullName", user.getFullName(), "email", user.getEmail(),
+            "isAdmin", adminAccess.isAdmin(user.getEmail()));
+    }
+
+    private java.util.List<org.springframework.security.core.GrantedAuthority> authoritiesFor(String email) {
+        String role = adminAccess.isAdmin(email) ? "ROLE_ADMIN" : "ROLE_USER";
+        return java.util.List.of(new org.springframework.security.core.authority.SimpleGrantedAuthority(role));
     }
 
     private String normalizeEmail(String email) { return email == null ? "" : email.trim().toLowerCase(); }

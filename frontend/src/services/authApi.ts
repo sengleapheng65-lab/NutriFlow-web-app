@@ -4,6 +4,7 @@ export type AuthUser = {
   id: number;
   fullName: string;
   email: string;
+  isAdmin: boolean;
 };
 
 const API_URL = (import.meta.env.VITE_API_URL || "/api").replace(/\/$/, "");

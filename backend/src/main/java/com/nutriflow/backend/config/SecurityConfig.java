@@ -14,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 import com.nutriflow.backend.repository.UserRepository;
+import com.nutriflow.backend.service.AdminAccessService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Configuration
@@ -24,12 +25,12 @@ public class SecurityConfig {
     }
 
     @Bean
-    UserDetailsService userDetailsService(UserRepository users) {
+    UserDetailsService userDetailsService(UserRepository users, AdminAccessService adminAccess) {
         return email -> users.findByEmailIgnoreCase(email)
             .map(user -> org.springframework.security.core.userdetails.User
                 .withUsername(user.getEmail())
                 .password(user.getPassword())
-                .roles("USER")
+                .roles(adminAccess.isAdmin(user.getEmail()) ? "ADMIN" : "USER")
                 .build())
             .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
@@ -64,7 +65,8 @@ public class SecurityConfig {
                     "/api/auth/google/code",
                     "/api/auth/forgot-password",
                     "/api/auth/reset-password").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/auth/me", "/actuator/health").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/auth/me", "/api/health", "/actuator/health").permitAll()
+                .requestMatchers("/api/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated())
             .sessionManagement(session -> session
                 .sessionCreationPolicy(org.springframework.security.config.http.SessionCreationPolicy.IF_REQUIRED));
