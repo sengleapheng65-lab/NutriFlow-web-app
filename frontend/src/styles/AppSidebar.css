@@ -18,14 +18,15 @@
 }
 
 .page-transition {
-  animation: page-section-enter 280ms ease-out both;
+  animation: page-section-enter 380ms cubic-bezier(0.22, 1, 0.36, 1) both;
   transform-origin: top center;
+  will-change: opacity, transform;
 }
 
 @keyframes page-section-enter {
   from {
     opacity: 0;
-    transform: translateY(-10px);
+    transform: translateY(16px);
   }
 
   to {
