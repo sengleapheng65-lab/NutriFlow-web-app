@@ -4,11 +4,11 @@
 
 .profile-main {
   width: 100%;
-  max-width: 1450px;
+  max-width: 1240px;
   min-width: 0;
   min-height: 100vh;
   margin: 0 auto;
-  padding: 35px 40px;
+  padding: 42px 40px 56px;
   color: var(--text);
 }
 
@@ -17,8 +17,8 @@
    ================================ */
 
 .profile-header {
-  min-height: 82px;
-  margin-bottom: 26px;
+  min-height: 76px;
+  margin-bottom: 30px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -35,7 +35,7 @@
 }
 
 .profile-header h1 {
-  margin: 5px 0;
+  margin: 6px 0 4px;
   color: var(--green-dark);
   font-size: clamp(1.8rem, 3vw, 2.3rem);
   font-weight: 750;
@@ -91,31 +91,31 @@
    ================================ */
 
 .profile-stat-grid {
-  margin-bottom: 20px;
+  margin-bottom: 24px;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 16px;
+  gap: 18px;
 }
 
 .profile-stat {
-  min-height: 96px;
-  padding: 14px 18px;
+  min-height: 128px;
+  padding: 20px 22px;
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  flex-direction: row;
+  align-items: flex-start;
   justify-content: space-between;
-  gap: 15px;
+  gap: 12px;
   border: 1px solid var(--border);
-  border-radius: 999px;
-  box-shadow: 0 8px 24px var(--page-shadow);
+  border-radius: 20px;
+  box-shadow: 0 10px 26px var(--page-shadow);
 }
 
 .profile-stat div {
   min-width: 0;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  text-align: center;
+  align-items: flex-start;
+  text-align: left;
 }
 
 .profile-stat span {
@@ -125,8 +125,9 @@
 }
 
 .profile-stat strong {
-  margin: 4px 0;
-  font-size: 1.8rem;
+  margin: 5px 0 2px;
+  font-size: 2rem;
+  line-height: 1.1;
 }
 
 .profile-stat small {
@@ -134,9 +135,9 @@
 }
 
 .profile-stat > i {
-  order: -1;
-  width: 34px;
-  height: 34px;
+  width: 40px;
+  height: 40px;
+  flex: 0 0 40px;
   display: grid;
   place-items: center;
   border-radius: 50%;
@@ -166,12 +167,13 @@
 
 .profile-card {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 250px;
+  grid-template-columns: 280px minmax(0, 1fr);
+  grid-template-rows: auto auto;
   overflow: hidden;
-  border: 1px solid var(--border);
-  border-radius: 23px;
+  border: 1px solid color-mix(in srgb, var(--border) 85%, transparent);
+  border-radius: 26px;
   background: var(--surface);
-  box-shadow: 0 12px 32px var(--page-shadow);
+  box-shadow: 0 16px 40px var(--page-shadow);
 }
 
 /* ================================
@@ -179,14 +181,14 @@
    ================================ */
 
 .profile-photo-section {
-  grid-column: 2;
+  grid-column: 1;
   grid-row: 1;
-  padding: 28px 22px;
+  padding: 34px 24px;
   display: grid;
   place-items: center;
   align-content: start;
-  border-bottom: 0;
-  border-left: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  background: linear-gradient(160deg, var(--green-pale), var(--surface));
   text-align: center;
 }
 
@@ -223,8 +225,8 @@
 }
 
 .profile-photo {
-  width: 120px;
-  height: 120px;
+  width: 136px;
+  height: 136px;
   overflow: hidden;
   display: grid;
   place-items: center;
@@ -286,13 +288,13 @@
    ================================ */
 
 .profile-form-section {
-  grid-column: 1;
+  grid-column: 2;
   grid-row: 1;
-  padding: 28px;
+  padding: 32px 34px 20px;
 }
 
 .profile-section-heading {
-  padding-bottom: 16px;
+  padding-bottom: 18px;
   display: flex;
   align-items: center;
   gap: 9px;
@@ -311,10 +313,10 @@
 }
 
 .profile-form-grid {
-  padding-top: 22px;
+  padding-top: 24px;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 20px;
+  gap: 18px 20px;
 }
 
 .profile-field {
@@ -339,7 +341,7 @@
   min-height: 50px;
   padding: 12px 14px;
   border: 1px solid var(--border);
-  border-radius: 999px;
+  border-radius: 12px;
   outline: none;
   background: var(--surface);
   color: var(--text);
@@ -370,8 +372,10 @@
    ================================ */
 
 .profile-actions {
-  grid-column: 1 / -1;
-  padding: 20px 28px 28px;
+  grid-column: 2;
+  grid-row: 2;
+  padding: 14px 34px 30px;
+  border-top: 1px solid var(--border);
   display: flex;
   justify-content: flex-end;
   gap: 11px;
@@ -480,7 +484,7 @@
   .profile-photo-section {
     padding: 24px 18px;
     border-bottom: 1px solid var(--border);
-    border-left: 0;
+    border-right: 0;
   }
 
   .profile-stat-grid {
@@ -545,6 +549,7 @@
     padding: 18px 17px 22px;
     display: grid;
     grid-template-columns: 1fr 1fr;
+    border-top: 1px solid var(--border);
   }
 }
 
