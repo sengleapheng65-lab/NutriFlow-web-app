@@ -20,6 +20,7 @@ import com.nutriflow.backend.model.User;
 import com.nutriflow.backend.repository.PasswordResetTokenRepository;
 
 @Service
+/** Creates hashed reset tokens and sends the corresponding password-reset email through Resend. */
 public class PasswordResetService {
     private final PasswordResetTokenRepository tokens;
     private final String resetUrl;

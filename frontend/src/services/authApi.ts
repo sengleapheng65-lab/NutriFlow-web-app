@@ -1,5 +1,6 @@
 import { setActiveUserEmail } from "./userStorage";
 
+/** Shape returned by the server for the account that owns the active session. */
 export type AuthUser = {
   id: number;
   fullName: string;

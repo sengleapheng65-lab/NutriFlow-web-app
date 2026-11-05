@@ -1,3 +1,4 @@
+/** Displays NutriFlow's reusable meal-bowl SVG icon. */
 function MealBowlIcon() {
   return (
     <svg

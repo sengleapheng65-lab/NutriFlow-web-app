@@ -27,6 +27,7 @@ function loadGoogleScript() {
   return scriptPromise;
 }
 
+/** Loads Google's OAuth script and exchanges the returned authorization code with the backend. */
 function GoogleSignInButton({ onSuccess, onError }: Props) {
   const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID as string | undefined;
 

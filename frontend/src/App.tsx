@@ -22,11 +22,13 @@ import { setActiveUserEmail } from "./services/userStorage";
 
 import "./App.css";
 
+/** Defines public, authenticated, and admin-only routes for the single-page app. */
 function AdminRoute({ isAdmin }: { isAdmin: boolean }) {
   if (!isAdmin) return <Navigate to="/dashboard" replace />;
   return <AdminDashboard />;
 }
 
+/** Loads the signed-in user once, then supplies route-level access decisions. */
 function AppContent() {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);

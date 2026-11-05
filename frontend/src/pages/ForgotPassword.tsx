@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { requestPasswordReset } from "../services/authApi";
 import "../styles/Auth.css";
 
+/** Lets a visitor request a password-reset link without revealing account existence. */
 function ForgotPassword() {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");

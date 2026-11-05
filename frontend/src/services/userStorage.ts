@@ -1,3 +1,4 @@
+/** Namespaces browser-cached profile/settings values by the active account email. */
 export function setActiveUserEmail(email: string) {
   localStorage.setItem("activeUserEmail", email.toLowerCase());
   localStorage.removeItem("userProfile");

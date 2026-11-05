@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
+/** Resolves whether an account email appears in the configured ADMIN_EMAILS allow-list. */
 public class AdminAccessService {
     private final Set<String> adminEmails;
 

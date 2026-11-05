@@ -4,6 +4,7 @@ type MacroIconProps = {
   type: MacroIconType;
 };
 
+/** Renders the compact SVG icon associated with a nutrition macro. */
 function MacroIcon({ type }: MacroIconProps) {
   return (
     <svg

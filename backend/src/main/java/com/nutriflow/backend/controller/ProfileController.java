@@ -14,6 +14,7 @@ import com.nutriflow.backend.repository.UserRepository;
 
 @RestController
 @RequestMapping("/api/profile")
+/** Reads and updates the profile record belonging to the authenticated account. */
 public class ProfileController {
     private final UserRepository users;
 

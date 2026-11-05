@@ -3,11 +3,13 @@ import { Link } from "react-router-dom";
 import { deleteAdminUser, getAdminUser, getAdminUsers, type AdminUser, type AdminUserDetails } from "../services/adminApi";
 import "../styles/AdminDashboard.css";
 
+/** Formats stored UTC meal timestamps in the administrator's local date format. */
 function formatDate(value: string) {
   if (!value) return "—";
   return new Intl.DateTimeFormat(undefined, { dateStyle: "medium" }).format(new Date(value));
 }
 
+/** Admin-only account review screen with user selection and destructive-account controls. */
 export default function AdminDashboard() {
   const [users, setUsers] = useState<AdminUser[]>([]);
   const [selectedUser, setSelectedUser] = useState<AdminUserDetails | null>(null);

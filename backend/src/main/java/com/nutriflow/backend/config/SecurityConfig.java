@@ -18,6 +18,7 @@ import com.nutriflow.backend.service.AdminAccessService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Configuration
+/** Configures password authentication, route authorization, sessions, and CORS-aware security. */
 public class SecurityConfig {
     @Bean
     ObjectMapper objectMapper() {

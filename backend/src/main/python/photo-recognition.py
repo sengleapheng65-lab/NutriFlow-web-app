@@ -1,3 +1,5 @@
+"""FastAPI service that sends meal and nutrition-label images to Groq vision models."""
+
 import base64
 import io
 import json
@@ -66,11 +68,13 @@ class LabelNutritionResponse(BaseModel):
 
 @app.get("/health")
 def health_check():
+    """Render health probe for the independent vision service."""
     return {"status": "ok"}
 
 
 @app.post("/api/v1/nutrition", response_model=NutritionResponse)
 async def analyze_food_image(file: UploadFile = File(...)):
+    """Validate a meal image and return model-estimated nutrition for its visible foods."""
     if not file.content_type or not file.content_type.startswith("image/"):
         raise HTTPException(status_code=400, detail="Uploaded file must be an image.")
 

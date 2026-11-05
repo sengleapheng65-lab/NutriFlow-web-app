@@ -1,3 +1,4 @@
+/** Typed client for backend endpoints that are protected by the ADMIN role. */
 export type AdminUser = {
   id: number;
   fullName: string;

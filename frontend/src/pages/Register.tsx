@@ -4,6 +4,7 @@ import "../styles/Auth.css";
 import { register } from "../services/authApi";
 import GoogleSignInButton from "../components/GoogleSignInButton";
 
+/** Collects validated registration details and creates a new NutriFlow account. */
 function Register() {
   const navigate = useNavigate();
 

@@ -145,6 +145,41 @@ img {
   transform: translateY(-2px);
 }
 
+.pull-refresh-indicator {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  z-index: 2500;
+  min-width: 154px;
+  min-height: 42px;
+  padding: 0 14px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--green-dark);
+  font-size: 0.8rem;
+  font-weight: 700;
+  box-shadow: 0 8px 20px var(--page-shadow);
+  pointer-events: none;
+  transition: transform 160ms ease;
+}
+
+.pull-refresh-indicator.visible {
+  display: inline-flex;
+}
+
+.pull-refresh-indicator .spinning {
+  animation: pull-refresh-spin 720ms linear infinite;
+}
+
+@keyframes pull-refresh-spin {
+  to { transform: rotate(360deg); }
+}
+
 /* Keyboard accessibility */
 
 a:focus-visible,

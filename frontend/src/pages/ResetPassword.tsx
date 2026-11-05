@@ -3,6 +3,7 @@ import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { resetPassword } from "../services/authApi";
 import "../styles/Auth.css";
 
+/** Accepts a reset token from the URL and submits the user's replacement password. */
 function ResetPassword() {
   const [params] = useSearchParams();
   const navigate = useNavigate();

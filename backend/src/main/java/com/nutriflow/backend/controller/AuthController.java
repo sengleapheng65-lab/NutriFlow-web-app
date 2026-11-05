@@ -36,6 +36,7 @@ import com.nutriflow.backend.service.AdminAccessService;
 
 @RestController
 @RequestMapping("/api/auth")
+/** Owns account registration, session login, Google OAuth, and password-reset flows. */
 public class AuthController {
     private final UserRepository users;
     private final PasswordEncoder passwordEncoder;

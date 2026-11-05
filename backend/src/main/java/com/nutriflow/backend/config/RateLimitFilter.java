@@ -16,7 +16,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-/** Limits high-risk anonymous authentication requests before they reach the controllers. */
+/** Limits high-risk anonymous authentication requests before they reach the controllers.
+ * Limits are tracked per route and client IP for the configured time window. */
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE + 50)
 public class RateLimitFilter extends OncePerRequestFilter {

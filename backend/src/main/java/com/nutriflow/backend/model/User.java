@@ -11,6 +11,7 @@ import jakarta.persistence.Lob;
 
 @Entity
 @Table(name = "app_user", uniqueConstraints = @UniqueConstraint(name = "uk_app_user_email", columnNames = "email"))
+/** Persistent account and profile data. Password values are BCrypt hashes, never plain text. */
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

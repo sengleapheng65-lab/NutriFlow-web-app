@@ -1,5 +1,6 @@
 import type { UserProfile } from "../pages/Profile";
 
+/** Handles authenticated profile reads and writes through the Spring Boot API. */
 const API_URL = (import.meta.env.VITE_API_URL || "/api").replace(/\/$/, "");
 
 async function profileError(response: Response): Promise<Error> {

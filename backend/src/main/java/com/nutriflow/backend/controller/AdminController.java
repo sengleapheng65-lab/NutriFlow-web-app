@@ -23,6 +23,7 @@ import com.nutriflow.backend.repository.UserRepository;
 
 @RestController
 @RequestMapping("/api/admin")
+/** Supplies ADMIN-only user summaries, meal details, and account deletion. */
 public class AdminController {
     private final UserRepository users;
     private final MealRepository meals;
