@@ -42,6 +42,8 @@ public class AuthController {
     private final ObjectMapper objectMapper;
     @Value("${app.google-client-id:}")
     private String googleClientId;
+    @Value("${app.google-client-secret:}")
+    private String googleClientSecret;
     private final SecurityContextRepository securityContextRepository = new HttpSessionSecurityContextRepository();
 
     public AuthController(UserRepository users, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager,
@@ -108,6 +110,59 @@ public class AuthController {
         }
     }
 
+    @PostMapping("/google/code")
+    public Map<String, Object> googleCodeLogin(@RequestBody GoogleCodeRequest request,
+        HttpServletRequest httpRequest, HttpServletResponse httpResponse) {
+        if (googleClientId.isBlank() || googleClientSecret.isBlank() || request.code() == null || request.code().isBlank()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Google sign-in is not configured.");
+        }
+        if (!"XMLHttpRequest".equals(httpRequest.getHeader("X-Requested-With"))) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Invalid Google sign-in request.");
+        }
+        String origin = httpRequest.getHeader("Origin");
+        if (origin == null || origin.isBlank()) throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Missing request origin.");
+        try {
+            String form = "code=" + encode(request.code()) + "&client_id=" + encode(googleClientId)
+                + "&client_secret=" + encode(googleClientSecret) + "&redirect_uri=" + encode(origin)
+                + "&grant_type=authorization_code";
+            HttpRequest tokenRequest = HttpRequest.newBuilder(URI.create("https://oauth2.googleapis.com/token"))
+                .header("Content-Type", "application/x-www-form-urlencoded")
+                .POST(HttpRequest.BodyPublishers.ofString(form)).build();
+            HttpResponse<String> tokenResponse = HttpClient.newHttpClient().send(tokenRequest, HttpResponse.BodyHandlers.ofString());
+            if (tokenResponse.statusCode() != 200) throw new IllegalArgumentException("Google code exchange failed");
+            String idToken = objectMapper.readTree(tokenResponse.body()).path("id_token").asText();
+            User user = googleUserFromToken(idToken);
+            Authentication authentication = UsernamePasswordAuthenticationToken.authenticated(
+                user.getEmail(), null, java.util.List.of(new org.springframework.security.core.authority.SimpleGrantedAuthority("ROLE_USER")));
+            establishSession(authentication, httpRequest, httpResponse);
+            return userResponse(user);
+        } catch (InterruptedException error) {
+            Thread.currentThread().interrupt();
+            throw new ResponseStatusException(HttpStatus.BAD_GATEWAY, "Google sign-in was interrupted.");
+        } catch (Exception error) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Google sign-in could not be verified.");
+        }
+    }
+
+    private User googleUserFromToken(String idToken) throws java.io.IOException, InterruptedException {
+        HttpRequest tokenRequest = HttpRequest.newBuilder(URI.create(
+                "https://oauth2.googleapis.com/tokeninfo?id_token=" + encode(idToken))).GET().build();
+        HttpResponse<String> tokenResponse = HttpClient.newHttpClient().send(tokenRequest, HttpResponse.BodyHandlers.ofString());
+        if (tokenResponse.statusCode() != 200) throw new IllegalArgumentException("Invalid Google token");
+        JsonNode token = objectMapper.readTree(tokenResponse.body());
+        if (!googleClientId.equals(token.path("aud").asText()) || !"true".equals(token.path("email_verified").asText())) {
+            throw new IllegalArgumentException("Google token was not issued for this app");
+        }
+        String email = normalizeEmail(token.path("email").asText());
+        return users.findByEmailIgnoreCase(email).orElseGet(() ->
+            users.save(new User(token.path("name").asText("Google user"), email,
+                passwordEncoder.encode(java.util.UUID.randomUUID().toString()))));
+    }
+
+    private String encode(String value) {
+        return java.net.URLEncoder.encode(value, java.nio.charset.StandardCharsets.UTF_8);
+    }
+
     private void establishSession(Authentication authentication, HttpServletRequest httpRequest, HttpServletResponse httpResponse) {
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         context.setAuthentication(authentication);
@@ -162,6 +217,7 @@ public class AuthController {
     public record RegisterRequest(String fullName, String email, String password) {}
     public record LoginRequest(String email, String password) {}
     public record GoogleLoginRequest(String credential) {}
+    public record GoogleCodeRequest(String code) {}
     public record ForgotPasswordRequest(String email) {}
     public record ResetPasswordRequest(String token, String password) {}
 }

@@ -1,16 +1,16 @@
 import { useEffect } from "react";
-import { loginWithGoogle } from "../services/authApi";
+import { loginWithGoogleCode } from "../services/authApi";
 
 declare global {
   interface Window {
-    google?: { accounts: { id: { initialize: (options: { client_id: string; callback: (response: { credential: string }) => void }) => void; prompt: () => void } } };
+    google?: { accounts: { oauth2: { initCodeClient: (options: { client_id: string; scope: string; ux_mode: "popup"; select_account: boolean; callback: (response: { code?: string; error?: string }) => void; error_callback: () => void }) => { requestCode: () => void } } } };
   }
 }
 
 type Props = { onSuccess: () => void; onError: (message: string) => void };
 
 let initializedClientId = "";
-let credentialHandler: ((credential: string) => void) | null = null;
+let codeClient: { requestCode: () => void } | null = null;
 let scriptPromise: Promise<void> | null = null;
 
 function loadGoogleScript() {
@@ -32,12 +32,18 @@ function GoogleSignInButton({ onSuccess, onError }: Props) {
 
   useEffect(() => {
     if (!clientId) return;
-    credentialHandler = (credential) => void loginWithGoogle(credential).then(onSuccess).catch((error: Error) => onError(error.message));
     void loadGoogleScript().then(() => {
       if (!window.google || initializedClientId === clientId) return;
-      window.google.accounts.id.initialize({
+      codeClient = window.google.accounts.oauth2.initCodeClient({
         client_id: clientId,
-        callback: (response) => credentialHandler?.(response.credential),
+        scope: "openid email profile",
+        ux_mode: "popup",
+        select_account: true,
+        callback: (response) => {
+          if (!response.code) { onError(response.error || "Google sign-in was cancelled."); return; }
+          void loginWithGoogleCode(response.code).then(onSuccess).catch((error: Error) => onError(error.message));
+        },
+        error_callback: () => onError("Google sign-in popup could not be opened."),
       });
       initializedClientId = clientId;
     }).catch((error: Error) => onError(error.message));
@@ -46,7 +52,7 @@ function GoogleSignInButton({ onSuccess, onError }: Props) {
   if (!clientId) return null;
   return (
     <button className="social-button" type="button" aria-label="Continue with Google" title="Continue with Google"
-      onClick={() => window.google?.accounts.id.prompt()}>
+      onClick={() => codeClient?.requestCode()}>
       <img src="https://developers.google.com/identity/images/g-logo.png" alt="" width="20" height="20" />
     </button>
   );

@@ -55,6 +55,22 @@ export async function loginWithGoogle(credential: string): Promise<AuthUser> {
   return user;
 }
 
+export async function loginWithGoogleCode(code: string): Promise<AuthUser> {
+  const response = await fetch(`${API_URL}/auth/google/code`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "X-Requested-With": "XMLHttpRequest" },
+    credentials: "include",
+    body: JSON.stringify({ code }),
+  });
+  if (!response.ok) {
+    const body = (await response.json().catch(() => ({}))) as { detail?: string; message?: string };
+    throw new Error(body.detail || body.message || `Google sign-in failed (${response.status}).`);
+  }
+  const user = (await response.json()) as AuthUser;
+  setActiveUserEmail(user.email);
+  return user;
+}
+
 export async function register(fullName: string, email: string, password: string): Promise<AuthUser> {
   const response = await fetch(`${API_URL}/auth/register`, {
     method: "POST",
