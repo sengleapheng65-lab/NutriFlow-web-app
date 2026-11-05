@@ -15,7 +15,7 @@ public class AdminAccessService {
 
     public AdminAccessService(@Value("${app.admin-emails:}") String configuredEmails) {
         this.adminEmails = Arrays.stream(configuredEmails.split(","))
-            .map(String::trim)
+            .map(value -> value.trim())
             .map(email -> email.toLowerCase(Locale.ROOT))
             .filter(email -> !email.isBlank())
             .collect(Collectors.toUnmodifiableSet());

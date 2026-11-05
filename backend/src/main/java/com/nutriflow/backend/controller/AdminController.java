@@ -12,10 +12,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.nutriflow.backend.model.Meal;
 import com.nutriflow.backend.model.User;
 import com.nutriflow.backend.repository.MealRepository;
 import com.nutriflow.backend.repository.PasswordResetTokenRepository;
@@ -43,7 +41,7 @@ public class AdminController {
                 || user.getFullName().toLowerCase(Locale.ROOT).contains(normalizedSearch)
                 || user.getEmail().toLowerCase(Locale.ROOT).contains(normalizedSearch))
             .map(user -> new UserSummary(user.getId(), user.getFullName(), user.getEmail(), meals.countByUserId(user.getId())))
-            .sorted(Comparator.comparing(UserSummary::id).reversed())
+            .sorted(Comparator.comparing((UserSummary summary) -> summary.id()).reversed())
             .toList();
     }
 
@@ -62,7 +60,7 @@ public class AdminController {
     @DeleteMapping("/users/{id}")
     @Transactional
     @org.springframework.web.bind.annotation.ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteUser(@PathVariable Long id, Authentication authentication) {
+    public void deleteUser(@PathVariable Long id) {
         User user = users.findById(id)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found."));
         resetTokens.deleteAllByUserId(id);

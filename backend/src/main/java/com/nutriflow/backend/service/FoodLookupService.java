@@ -1,8 +1,6 @@
 package com.nutriflow.backend.service;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClient;
@@ -19,7 +17,7 @@ public class FoodLookupService {
     public FoodItem findByBarcode(String barcode) {
         String url = "https://world.openfoodfacts.org/api/v2/product/" + barcode + ".json";
 
-        Map<String, Object> response;
+        JsonNode response;
 
         try {
             response = restClient.get()
@@ -27,7 +25,7 @@ public class FoodLookupService {
                     // Open Food Facts asks apps to send their name
                     .header("User-Agent", "NutriFlow/0.1 (SJSU CS160 student project)")
                     .retrieve()
-                    .body(Map.class);
+                    .body(JsonNode.class);
         } catch (HttpClientErrorException.NotFound e) {
             // They send 404 when the barcode is not in their database
             return null;
@@ -38,29 +36,25 @@ public class FoodLookupService {
         }
 
         // status is 1 when the product was found
-        Number status = (Number) response.get("status");
-        if (status == null || status.intValue() != 1) {
+        if (response.path("status").asInt() != 1) {
             return null;
         }
 
-        Map<String, Object> product = (Map<String, Object>) response.get("product");
-        if (product == null) {
+        JsonNode product = response.path("product");
+        if (!product.isObject()) {
             return null;
         }
 
-        String name = (String) product.get("product_name");
+        String name = textOrNull(product, "product_name");
         if (name == null || name.isEmpty()) {
             name = "Unknown product";
         }
 
-        String brand = (String) product.get("brands");
-        String servingSize = (String) product.get("serving_size");
+        String brand = textOrNull(product, "brands");
+        String servingSize = textOrNull(product, "serving_size");
 
         // Nutrition info is inside "nutriments"
-        Map<String, Object> nutriments = (Map<String, Object>) product.get("nutriments");
-        if (nutriments == null) {
-            nutriments = new HashMap<>();
-        }
+        JsonNode nutriments = product.path("nutriments");
 
         // Package labels use serving values, so prefer them whenever the
         // database provides the full set. Fall back to its standard 100 g data.
@@ -73,10 +67,10 @@ public class FoodLookupService {
                 && servingCarbs != null
                 && servingFat != null;
 
-        double calories = hasServingNutrition ? servingCalories : getNumber(nutriments, "energy-kcal_100g");
-        double protein = hasServingNutrition ? servingProtein : getNumber(nutriments, "proteins_100g");
-        double carbs = hasServingNutrition ? servingCarbs : getNumber(nutriments, "carbohydrates_100g");
-        double fat = hasServingNutrition ? servingFat : getNumber(nutriments, "fat_100g");
+        double calories = hasServingNutrition ? getNumber(nutriments, "energy-kcal_serving") : getNumber(nutriments, "energy-kcal_100g");
+        double protein = hasServingNutrition ? getNumber(nutriments, "proteins_serving") : getNumber(nutriments, "proteins_100g");
+        double carbs = hasServingNutrition ? getNumber(nutriments, "carbohydrates_serving") : getNumber(nutriments, "carbohydrates_100g");
+        double fat = hasServingNutrition ? getNumber(nutriments, "fat_serving") : getNumber(nutriments, "fat_100g");
         String nutritionBasis = hasServingNutrition ? "per serving" : "per 100 g";
 
         return new FoodItem(
@@ -92,27 +86,26 @@ public class FoodLookupService {
     }
 
     // Get a number from nutriments, or 0 if it's missing
-    private double getNumber(Map<String, Object> nutriments, String key) {
+    private double getNumber(JsonNode nutriments, String key) {
         Double value = getNumberOrNull(nutriments, key);
-        return value == null ? 0 : value;
+        return value == null ? 0 : value.doubleValue();
     }
 
     // Some food records serialize their nutrition values as strings.
-    private Double getNumberOrNull(Map<String, Object> nutriments, String key) {
-        Object value = nutriments.get(key);
-
-        if (value instanceof Number number) {
-            return number.doubleValue();
+    private Double getNumberOrNull(JsonNode nutriments, String key) {
+        JsonNode value = nutriments.get(key);
+        if (value == null || value.isNull()) return null;
+        if (value.isNumber()) return value.doubleValue();
+        if (!value.isTextual()) return null;
+        try {
+            return Double.parseDouble(value.textValue());
+        } catch (NumberFormatException ignored) {
+            return null;
         }
+    }
 
-        if (value instanceof String stringValue) {
-            try {
-                return Double.parseDouble(stringValue);
-            } catch (NumberFormatException ignored) {
-                return null;
-            }
-        }
-
-        return null;
+    private String textOrNull(JsonNode object, String key) {
+        JsonNode value = object.get(key);
+        return value == null || value.isNull() || !value.isTextual() ? null : value.textValue();
     }
 }
