@@ -8,7 +8,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 // Allow the React frontend (Vite dev server) to call the backend API
 @Configuration
 public class CorsConfig implements WebMvcConfigurer {
-	@Value("${APP_FRONTEND_URLS:http://localhost:5173}")
+	@Value("${APP_FRONTEND_URLS:${APP_FRONTEND_URL:http://localhost:5173}}")
 	private String frontendUrls;
 
 	@Override
