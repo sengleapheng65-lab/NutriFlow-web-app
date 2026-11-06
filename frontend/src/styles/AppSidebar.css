@@ -228,13 +228,13 @@
 
 /* The active link owns its highlight so it stays aligned when navigation spacing changes. */
 .sidebar-active-indicator {
-  display: none;
+  display: block;
 }
 
 .app-sidebar-links a.active {
-  background: var(--green-light) !important;
-  border-left: 4px solid var(--green) !important;
-  padding-left: 9px !important;
+  background: transparent !important;
+  border-left: 0 !important;
+  padding-left: 13px !important;
   color: var(--green-dark) !important;
 }
 
