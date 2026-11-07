@@ -80,6 +80,9 @@ export async function register(fullName: string, email: string, password: string
     credentials: "include",
     body: JSON.stringify({ fullName, email, password }),
   });
+  if (response.status === 409) {
+    throw new Error("An account with this email already exists. Please sign in instead.");
+  }
   if (!response.ok) throw new Error(await readError(response, "Could not create your account."));
   return response.json();
 }
