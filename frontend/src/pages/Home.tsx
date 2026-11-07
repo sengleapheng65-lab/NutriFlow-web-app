@@ -72,7 +72,7 @@ type DemoMeal = {
   image?: string;
 };
 
-function useCountUp(target: number, duration = 900) {
+function useCountUp(target: number, duration = 900, restartKey = 0) {
   const [value, setValue] = useState(0);
 
   useEffect(() => {
@@ -93,7 +93,7 @@ function useCountUp(target: number, duration = 900) {
     animationFrame = window.requestAnimationFrame(animate);
 
     return () => window.cancelAnimationFrame(animationFrame);
-  }, [target, duration]);
+  }, [target, duration, restartKey]);
 
   return Math.round(value);
 }
@@ -104,6 +104,7 @@ function Home() {
   const pullStartY = useRef<number | null>(null);
   const [pullDistance, setPullDistance] = useState(0);
   const [isRefreshingPreview, setIsRefreshingPreview] = useState(false);
+  const [previewRefreshKey, setPreviewRefreshKey] = useState(0);
   const [demoMeals] = useState<DemoMeal[]>([
     {
       id: 1,
@@ -147,6 +148,7 @@ function Home() {
       window.setTimeout(() => {
         setIsRefreshingPreview(false);
         setPullDistance(0);
+        setPreviewRefreshKey((key) => key + 1);
       }, 700);
       return;
     }
@@ -168,10 +170,10 @@ function Home() {
     [demoMeals],
   );
 
-  const animatedCalories = useCountUp(demoTotals.calories);
-  const animatedProtein = useCountUp(demoTotals.protein);
-  const animatedCarbs = useCountUp(demoTotals.carbs);
-  const animatedFat = useCountUp(demoTotals.fat);
+  const animatedCalories = useCountUp(demoTotals.calories, 900, previewRefreshKey);
+  const animatedProtein = useCountUp(demoTotals.protein, 900, previewRefreshKey);
+  const animatedCarbs = useCountUp(demoTotals.carbs, 900, previewRefreshKey);
+  const animatedFat = useCountUp(demoTotals.fat, 900, previewRefreshKey);
   const animatedCalorieProgress = Math.min(100, (animatedCalories / 2000) * 100);
 
   return (
