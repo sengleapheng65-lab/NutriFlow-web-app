@@ -65,6 +65,9 @@ export async function loginWithGoogleCode(code: string, registerIntent = false):
     body: JSON.stringify({ code, register: registerIntent }),
   });
   if (!response.ok) {
+    if (response.status === 409) {
+      throw new Error("An account with this Google email already exists. Please sign in instead.");
+    }
     const body = (await response.json().catch(() => ({}))) as { detail?: string; message?: string };
     throw new Error(body.detail || body.message || `Google sign-in failed (${response.status}).`);
   }
