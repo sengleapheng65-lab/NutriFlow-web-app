@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { loginWithGoogleCode } from "../services/authApi";
 
 declare global {
@@ -9,8 +9,6 @@ declare global {
 
 type Props = { onSuccess: () => void; onError: (message: string) => void; registerIntent?: boolean };
 
-let initializedClientId = "";
-let codeClient: { requestCode: () => void } | null = null;
 let scriptPromise: Promise<void> | null = null;
 
 function loadGoogleScript() {
@@ -30,12 +28,13 @@ function loadGoogleScript() {
 /** Loads Google's OAuth script and exchanges the returned authorization code with the backend. */
 function GoogleSignInButton({ onSuccess, onError, registerIntent = false }: Props) {
   const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID as string | undefined;
+  const codeClientRef = useRef<{ requestCode: () => void } | null>(null);
 
   useEffect(() => {
     if (!clientId) return;
     void loadGoogleScript().then(() => {
-      if (!window.google || initializedClientId === clientId) return;
-      codeClient = window.google.accounts.oauth2.initCodeClient({
+      if (!window.google) return;
+      codeClientRef.current = window.google.accounts.oauth2.initCodeClient({
         client_id: clientId,
         scope: "openid email profile",
         ux_mode: "popup",
@@ -46,14 +45,13 @@ function GoogleSignInButton({ onSuccess, onError, registerIntent = false }: Prop
         },
         error_callback: () => onError("Google sign-in popup could not be opened."),
       });
-      initializedClientId = clientId;
     }).catch((error: Error) => onError(error.message));
-  }, [clientId, onError, onSuccess]);
+  }, [clientId, onError, onSuccess, registerIntent]);
 
   if (!clientId) return null;
   return (
     <button className="social-button" type="button" aria-label="Continue with Google" title="Continue with Google"
-      onClick={() => codeClient?.requestCode()}>
+      onClick={() => codeClientRef.current?.requestCode()}>
       <img src="https://developers.google.com/identity/images/g-logo.png" alt="" width="20" height="20" />
     </button>
   );
