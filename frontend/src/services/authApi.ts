@@ -57,12 +57,12 @@ export async function loginWithGoogle(credential: string): Promise<AuthUser> {
   return user;
 }
 
-export async function loginWithGoogleCode(code: string): Promise<AuthUser> {
+export async function loginWithGoogleCode(code: string, registerIntent = false): Promise<AuthUser> {
   const response = await fetch(`${API_URL}/auth/google/code`, {
     method: "POST",
     headers: { "Content-Type": "application/json", "X-Requested-With": "XMLHttpRequest" },
     credentials: "include",
-    body: JSON.stringify({ code }),
+    body: JSON.stringify({ code, register: registerIntent }),
   });
   if (!response.ok) {
     const body = (await response.json().catch(() => ({}))) as { detail?: string; message?: string };

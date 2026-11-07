@@ -7,7 +7,7 @@ declare global {
   }
 }
 
-type Props = { onSuccess: () => void; onError: (message: string) => void };
+type Props = { onSuccess: () => void; onError: (message: string) => void; registerIntent?: boolean };
 
 let initializedClientId = "";
 let codeClient: { requestCode: () => void } | null = null;
@@ -28,7 +28,7 @@ function loadGoogleScript() {
 }
 
 /** Loads Google's OAuth script and exchanges the returned authorization code with the backend. */
-function GoogleSignInButton({ onSuccess, onError }: Props) {
+function GoogleSignInButton({ onSuccess, onError, registerIntent = false }: Props) {
   const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID as string | undefined;
 
   useEffect(() => {
@@ -42,7 +42,7 @@ function GoogleSignInButton({ onSuccess, onError }: Props) {
         select_account: true,
         callback: (response) => {
           if (!response.code) { onError(response.error || "Google sign-in was cancelled."); return; }
-          void loginWithGoogleCode(response.code).then(onSuccess).catch((error: Error) => onError(error.message));
+          void loginWithGoogleCode(response.code, registerIntent).then(onSuccess).catch((error: Error) => onError(error.message));
         },
         error_callback: () => onError("Google sign-in popup could not be opened."),
       });

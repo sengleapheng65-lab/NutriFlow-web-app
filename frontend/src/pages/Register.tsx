@@ -179,7 +179,7 @@ function Register() {
             </div>
 
             <div className="social-buttons">
-              <GoogleSignInButton onSuccess={() => window.location.assign("/dashboard")} onError={setServerError} />
+              <GoogleSignInButton registerIntent onSuccess={() => window.location.assign("/dashboard")} onError={setServerError} />
 
               <button
                 className="social-button facebook-button"

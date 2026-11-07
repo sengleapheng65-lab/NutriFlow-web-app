@@ -140,11 +140,13 @@ public class AuthController {
             HttpResponse<String> tokenResponse = HttpClient.newHttpClient().send(tokenRequest, HttpResponse.BodyHandlers.ofString());
             if (tokenResponse.statusCode() != 200) throw new IllegalArgumentException("Google code exchange failed");
             String idToken = objectMapper.readTree(tokenResponse.body()).path("id_token").asText();
-            User user = googleUserFromToken(idToken);
+            User user = googleUserFromToken(idToken, Boolean.TRUE.equals(request.register()));
             Authentication authentication = UsernamePasswordAuthenticationToken.authenticated(
                 user.getEmail(), null, authoritiesFor(user.getEmail()));
             establishSession(authentication, httpRequest, httpResponse);
             return userResponse(user);
+        } catch (ExistingGoogleAccountException error) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "An account with this Google email already exists. Please sign in instead.");
         } catch (InterruptedException error) {
             Thread.currentThread().interrupt();
             throw new ResponseStatusException(HttpStatus.BAD_GATEWAY, "Google sign-in was interrupted.");
@@ -153,7 +155,7 @@ public class AuthController {
         }
     }
 
-    private User googleUserFromToken(String idToken) throws java.io.IOException, InterruptedException {
+    private User googleUserFromToken(String idToken, boolean registerIntent) throws java.io.IOException, InterruptedException {
         HttpRequest tokenRequest = HttpRequest.newBuilder(URI.create(
                 "https://oauth2.googleapis.com/tokeninfo?id_token=" + encode(idToken))).GET().build();
         HttpResponse<String> tokenResponse = HttpClient.newHttpClient().send(tokenRequest, HttpResponse.BodyHandlers.ofString());
@@ -163,6 +165,9 @@ public class AuthController {
             throw new IllegalArgumentException("Google token was not issued for this app");
         }
         String email = normalizeEmail(token.path("email").asText());
+        if (registerIntent && users.existsByEmailIgnoreCase(email)) {
+            throw new ExistingGoogleAccountException();
+        }
         return users.findByEmailIgnoreCase(email).orElseGet(() ->
             users.save(new User(token.path("name").asText("Google user"), email,
                 passwordEncoder.encode(java.util.UUID.randomUUID().toString()))));
@@ -232,7 +237,11 @@ public class AuthController {
     public record RegisterRequest(String fullName, String email, String password) {}
     public record LoginRequest(String email, String password) {}
     public record GoogleLoginRequest(String credential) {}
-    public record GoogleCodeRequest(String code) {}
+    public record GoogleCodeRequest(String code, Boolean register) {}
     public record ForgotPasswordRequest(String email) {}
     public record ResetPasswordRequest(String token, String password) {}
+
+    private static class ExistingGoogleAccountException extends RuntimeException {
+        private static final long serialVersionUID = 1L;
+    }
 }
