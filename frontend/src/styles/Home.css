@@ -2226,6 +2226,37 @@ html {
   color: var(--text);
 }
 
+.home-mobile-pull-indicator {
+  position: absolute;
+  z-index: 20;
+  top: 0;
+  left: 50%;
+  min-width: 105px;
+  min-height: 24px;
+  padding: 4px 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--surface) 88%, transparent);
+  color: var(--green-dark);
+  font-size: 0.45rem;
+  font-weight: 700;
+  box-shadow: 0 5px 13px var(--page-shadow);
+  pointer-events: none;
+  transition: transform 160ms ease;
+}
+
+.home-mobile-pull-indicator .spinning {
+  animation: home-preview-refresh-spin 720ms linear infinite;
+}
+
+@keyframes home-preview-refresh-spin {
+  to { transform: rotate(360deg); }
+}
+
 .home-mobile-greeting {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;

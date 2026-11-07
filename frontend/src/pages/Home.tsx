@@ -1,5 +1,5 @@
 // useState remembers whether the mobile menu is open
-import { useEffect, useMemo, useState, type CSSProperties } from "react";
+import { useEffect, useMemo, useRef, useState, type CSSProperties, type TouchEvent } from "react";
 import { Link } from "react-router-dom";
 
 import MacroIcon from "../components/MacroIcon";
@@ -100,6 +100,9 @@ function useCountUp(target: number, duration = 900) {
 function Home() {
   // The mobile menu starts closed
   const [menuOpen, setMenuOpen] = useState(false);
+  const pullStartY = useRef<number | null>(null);
+  const [pullDistance, setPullDistance] = useState(0);
+  const [isRefreshingPreview, setIsRefreshingPreview] = useState(false);
   const [demoMeals] = useState<DemoMeal[]>([
     {
       id: 1,
@@ -115,6 +118,39 @@ function Home() {
   // Close the mobile menu
   function closeMenu() {
     setMenuOpen(false);
+  }
+
+  function handlePreviewTouchStart(event: TouchEvent<HTMLElement>) {
+    if (event.touches.length === 1 && !isRefreshingPreview) {
+      pullStartY.current = event.touches[0].clientY;
+    }
+  }
+
+  function handlePreviewTouchMove(event: TouchEvent<HTMLElement>) {
+    if (pullStartY.current === null || isRefreshingPreview) return;
+
+    const distance = event.touches[0].clientY - pullStartY.current;
+
+    if (distance > 0) {
+      event.preventDefault();
+      setPullDistance(Math.min(70, distance * 0.45));
+    }
+  }
+
+  function handlePreviewTouchEnd() {
+    if (pullStartY.current === null) return;
+    pullStartY.current = null;
+
+    if (pullDistance >= 42) {
+      setIsRefreshingPreview(true);
+      window.setTimeout(() => {
+        setIsRefreshingPreview(false);
+        setPullDistance(0);
+      }, 700);
+      return;
+    }
+
+    setPullDistance(0);
   }
 
   const demoTotals = useMemo(
@@ -318,7 +354,23 @@ function Home() {
             <span className="phone-volume-up" aria-hidden="true" />
             <span className="phone-volume-down" aria-hidden="true" />
             <span className="phone-power-button" aria-hidden="true" />
-            <div className="nutrition-preview" id="demo">
+            <div
+              className="nutrition-preview"
+              id="demo"
+              onTouchStart={handlePreviewTouchStart}
+              onTouchMove={handlePreviewTouchMove}
+              onTouchEnd={handlePreviewTouchEnd}
+              onTouchCancel={handlePreviewTouchEnd}
+            >
+              {(pullDistance > 0 || isRefreshingPreview) && (
+                <div
+                  className="home-mobile-pull-indicator"
+                  style={{ transform: `translate(-50%, ${pullDistance - 42}px)` }}
+                >
+                  <i className={isRefreshingPreview ? "bi bi-arrow-clockwise spinning" : "bi bi-arrow-down"} aria-hidden="true" />
+                  <span>{isRefreshingPreview ? "Refreshing…" : pullDistance >= 42 ? "Release to refresh" : "Pull to refresh"}</span>
+                </div>
+              )}
               <section className="home-mobile-dashboard" aria-label="Daily nutrition overview">
                 <header className="home-mobile-greeting">
                   <div>
