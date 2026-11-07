@@ -1,7 +1,7 @@
 import { useState, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../styles/Auth.css";
-import { register } from "../services/authApi";
+import { login, register } from "../services/authApi";
 import GoogleSignInButton from "../components/GoogleSignInButton";
 
 /** Collects validated registration details and creates a new NutriFlow account. */
@@ -31,7 +31,8 @@ function Register() {
     setServerError("");
     setIsSubmitting(true);
     void register(fullName, email, password)
-      .then(() => navigate("/login"))
+      .then(() => login(email, password))
+      .then(() => window.location.assign("/dashboard"))
       .catch((requestError: Error) => setServerError(requestError.message))
       .finally(() => setIsSubmitting(false));
   }
