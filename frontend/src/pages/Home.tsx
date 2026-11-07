@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 
 import MacroIcon from "../components/MacroIcon";
 import MealBowlIcon from "../components/MealBowlIcon";
+import PullToRefresh from "../components/PullToRefresh";
 import "../styles/Home.css";
 
 // Information displayed in the feature cards
@@ -175,6 +176,7 @@ function Home() {
 
   return (
     <main className="home-page">
+      <PullToRefresh />
       {/* =========================
           DESKTOP NAVIGATION
           ========================= */}
