@@ -665,7 +665,8 @@
   }
 
   .mobile-selected-day-content {
-    animation: mobile-day-content-enter 380ms cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation: mobile-day-content-enter 380ms cubic-bezier(0.22, 1, 0.36, 1)
+      both;
   }
 
   @keyframes mobile-day-content-enter {
@@ -687,7 +688,11 @@
     padding: 23px 23px 105px;
     border-radius: 33px;
     background:
-      radial-gradient(circle at 72% 5%, rgba(224, 255, 238, 0.26), transparent 33%),
+      radial-gradient(
+        circle at 72% 5%,
+        rgba(224, 255, 238, 0.26),
+        transparent 33%
+      ),
       linear-gradient(145deg, #3b976f 0%, #2f855f 48%, #216948 100%);
     color: var(--white);
     box-shadow: 0 15px 28px rgba(8, 61, 39, 0.28);
@@ -1031,7 +1036,6 @@
   .mobile-week-picker {
     grid-template-columns: repeat(14, 1fr);
   }
-
 }
 
 @media (min-width: 651px) and (max-width: 900px) {

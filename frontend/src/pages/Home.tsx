@@ -1,8 +1,9 @@
 // useState remembers whether the mobile menu is open
-import { useMemo, useState, type CSSProperties } from "react";
+import { useEffect, useMemo, useState, type CSSProperties } from "react";
 import { Link } from "react-router-dom";
 
 import MacroIcon from "../components/MacroIcon";
+import MealBowlIcon from "../components/MealBowlIcon";
 import "../styles/Home.css";
 
 // Information displayed in the feature cards
@@ -70,79 +71,36 @@ type DemoMeal = {
   image?: string;
 };
 
-const quickMeals: Omit<DemoMeal, "id">[] = [
-  {
-    name: "Chicken Rice Bowl",
-    calories: 520,
-    protein: 38,
-    carbs: 55,
-    fat: 14,
-    icon: "🍗",
-    image: "/chicken.png",
-  },
-  {
-    name: "Garden Salad",
-    calories: 180,
-    protein: 6,
-    carbs: 18,
-    fat: 10,
-    icon: "🥗",
-  },
-  {
-    name: "Boiled Eggs",
-    calories: 156,
-    protein: 13,
-    carbs: 1,
-    fat: 11,
-    icon: "🥚",
-  },
-  {
-    name: "Banana",
-    calories: 105,
-    protein: 1,
-    carbs: 27,
-    fat: 0,
-    icon: "🍌",
-  },
-  {
-    name: "Milk",
-    calories: 122,
-    protein: 8,
-    carbs: 12,
-    fat: 5,
-    icon: "🥛",
-  },
-  {
-    name: "Greek Yogurt",
-    calories: 180,
-    protein: 16,
-    carbs: 22,
-    fat: 3,
-    icon: "🥣",
-  },
-  {
-    name: "Salmon Salad",
-    calories: 350,
-    protein: 26,
-    carbs: 12,
-    fat: 22,
-    icon: "🐟",
-    image: "/salad.png",
-  },
-  {
-    name: "Protein Shake",
-    calories: 220,
-    protein: 30,
-    carbs: 8,
-    fat: 3,
-    icon: "🥤",
-  },
-];
+function useCountUp(target: number, duration = 900) {
+  const [value, setValue] = useState(0);
+
+  useEffect(() => {
+    let animationFrame = 0;
+    const startedAt = performance.now();
+
+    function animate(now: number) {
+      const progress = Math.min((now - startedAt) / duration, 1);
+      const easedProgress = 1 - Math.pow(1 - progress, 3);
+
+      setValue(target * easedProgress);
+
+      if (progress < 1) {
+        animationFrame = window.requestAnimationFrame(animate);
+      }
+    }
+
+    animationFrame = window.requestAnimationFrame(animate);
+
+    return () => window.cancelAnimationFrame(animationFrame);
+  }, [target, duration]);
+
+  return Math.round(value);
+}
 
 function Home() {
   // The mobile menu starts closed
   const [menuOpen, setMenuOpen] = useState(false);
-  const [demoMeals, setDemoMeals] = useState<DemoMeal[]>([
+  const [demoMeals] = useState<DemoMeal[]>([
     {
       id: 1,
       name: "Oatmeal & Banana",
@@ -153,40 +111,10 @@ function Home() {
       icon: "🥣",
     },
   ]);
-  const [dashboardMessage, setDashboardMessage] = useState("");
 
   // Close the mobile menu
   function closeMenu() {
     setMenuOpen(false);
-  }
-
-  function addQuickMeal(meal: Omit<DemoMeal, "id">) {
-    setDemoMeals((currentMeals) => [
-      { ...meal, id: Date.now() },
-      ...currentMeals,
-    ]);
-    setDashboardMessage(`${meal.name} added`);
-  }
-
-  function deleteDemoMeal(mealId: number) {
-    setDemoMeals((currentMeals) =>
-      currentMeals.filter((meal) => meal.id !== mealId),
-    );
-  }
-
-  function resetDashboard() {
-    setDemoMeals([
-      {
-        id: 1,
-        name: "Oatmeal & Banana",
-        calories: 580,
-        protein: 34,
-        carbs: 72,
-        fat: 6,
-        icon: "🥣",
-      },
-    ]);
-    setDashboardMessage("Dashboard reset");
   }
 
   const demoTotals = useMemo(
@@ -203,8 +131,11 @@ function Home() {
     [demoMeals],
   );
 
-  const remainingCalories = 2000 - demoTotals.calories;
-  const calorieProgress = Math.min(100, (demoTotals.calories / 2000) * 100);
+  const animatedCalories = useCountUp(demoTotals.calories);
+  const animatedProtein = useCountUp(demoTotals.protein);
+  const animatedCarbs = useCountUp(demoTotals.carbs);
+  const animatedFat = useCountUp(demoTotals.fat);
+  const animatedCalorieProgress = Math.min(100, (animatedCalories / 2000) * 100);
 
   return (
     <main className="home-page">
@@ -383,170 +314,82 @@ function Home() {
           {/* Right-side dashboard preview */}
           <div className="phone-mockup" aria-label="NutriFlow dashboard preview">
             <div className="phone-speaker" aria-hidden="true" />
+            <span className="phone-action-button" aria-hidden="true" />
+            <span className="phone-volume-up" aria-hidden="true" />
+            <span className="phone-volume-down" aria-hidden="true" />
+            <span className="phone-power-button" aria-hidden="true" />
             <div className="nutrition-preview" id="demo">
-            <div className="preview-heading">
-              <div>
-                <div className="preview-eyebrow">
-                  <img src="/NutriFlow.png" alt="" aria-hidden="true" />
-                  <small>Today's overview</small>
-                </div>
-                <h2>
-                  Daily Progress <span className="progress-status">On Track</span>
-                </h2>
-              </div>
-
-              <div className="dashboard-actions">
-                <button type="button" onClick={resetDashboard}>
-                  <i className="bi bi-arrow-counterclockwise" aria-hidden="true" />
-                  Reset
-                </button>
-                <div className="user-icon">
-                  <i className="bi bi-person-fill" aria-hidden="true" />
-                </div>
-              </div>
-            </div>
-
-            <div className="calorie-summary">
-              <div
-                className="calorie-circle"
-                style={{
-                  "--calorie-progress": `${calorieProgress}%`,
-                } as CSSProperties}
-              >
-                <div>
-                  <strong>{demoTotals.calories.toLocaleString()}</strong>
-                  <span>of 2,000 kcal</span>
-                </div>
-              </div>
-
-              <div className="nutrient-list">
-                <div className="nutrient">
-                  <div className="nutrient-heading">
-                    <span className="protein-nutrient-label">
-                      <MacroIcon type="protein" />
-                      Protein
-                    </span>
-                    <strong>{demoTotals.protein} / 120g</strong>
+              <section className="home-mobile-dashboard" aria-label="Daily nutrition overview">
+                <header className="home-mobile-greeting">
+                  <div>
+                    <p>DAILY NUTRITION</p>
+                    <h2>Good morning, there</h2>
                   </div>
-
-                  <div className="nutrient-track">
-                    <span
-                      className="protein-progress"
-                      style={{ width: `${Math.min(100, (demoTotals.protein / 120) * 100)}%` }}
-                    />
+                  <div className="home-mobile-header-actions">
+                    <button type="button" aria-label="Profile">
+                      <i className="bi bi-person-fill" aria-hidden="true" />
+                    </button>
+                    <button type="button" aria-label="Notifications">
+                      <i className="bi bi-bell" aria-hidden="true" />
+                    </button>
                   </div>
+                </header>
+
+                <div className="home-mobile-week" aria-label="Current week">
+                  {["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"].map((day, index) => (
+                    <div className={index === 4 ? "active" : ""} key={day}>
+                      <span>{day}</span>
+                      <strong>{17 + index}</strong>
+                    </div>
+                  ))}
                 </div>
 
-                <div className="nutrient">
-                  <div className="nutrient-heading">
-                    <span className="carbs-nutrient-label">
-                      <MacroIcon type="carbs" />
-                      Carbohydrates
-                    </span>
-                    <strong>{demoTotals.carbs} / 220g</strong>
+                <article className="home-mobile-goal-card">
+                  <div className="home-mobile-goal-topline">
+                    <strong>Daily goal</strong>
+                    <span>2,000</span>
                   </div>
+                  <div className="home-mobile-goal-macros">
+                    <span><i className="bi bi-fire" aria-hidden="true" /> 2,000 calories burned</span>
+                    <span><MealBowlIcon /> {animatedCalories.toLocaleString()} calories eaten</span>
+                  </div>
+                  <div className="home-mobile-goal-total">
+                    <strong>{animatedCalories.toLocaleString()}</strong><span>kcal</span>
+                  </div>
+                  <div className="home-mobile-goal-dots" style={{ "--goal-progress": `${animatedCalorieProgress}%` } as CSSProperties} aria-hidden="true" />
+                </article>
 
-                  <div className="nutrient-track">
-                    <span
-                      className="carb-progress"
-                      style={{ width: `${Math.min(100, (demoTotals.carbs / 220) * 100)}%` }}
-                    />
-                  </div>
+                <div className="home-mobile-macros">
+                  <article><MacroIcon type="protein" /><strong>{animatedProtein}<small>/ 120g</small></strong></article>
+                  <article><MacroIcon type="carbs" /><strong>{animatedCarbs}<small>/ 250g</small></strong></article>
+                  <article><MacroIcon type="fat" /><strong>{animatedFat}<small>/ 65g</small></strong></article>
                 </div>
 
-                <div className="nutrient">
-                  <div className="nutrient-heading">
-                    <span className="fat-nutrient-label">
-                      <MacroIcon type="fat" />
-                      Fat
-                    </span>
-                    <strong>{demoTotals.fat} / 65g</strong>
+                <section className="home-mobile-history" aria-label="Meal history preview">
+                  <div className="home-mobile-history-heading">
+                    <strong>Meal history</strong>
+                    <span>View all</span>
                   </div>
+                  {demoMeals.slice(0, 1).map((meal) => (
+                    <article key={meal.id}>
+                      <span className="home-mobile-meal-icon" aria-hidden="true">{meal.icon}</span>
+                      <div>
+                        <strong>{meal.name}</strong>
+                        <small>{meal.protein}g P · {meal.carbs}g C · {meal.fat}g F</small>
+                      </div>
+                      <b>{meal.calories} kcal</b>
+                    </article>
+                  ))}
+                </section>
 
-                  <div className="nutrient-track">
-                    <span
-                      className="fat-progress"
-                      style={{ width: `${Math.min(100, (demoTotals.fat / 65) * 100)}%` }}
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <span className="remaining-calories">
-              {remainingCalories >= 0
-                ? `${remainingCalories.toLocaleString()} kcal remaining`
-                : `${Math.abs(remainingCalories).toLocaleString()} kcal over goal`}
-            </span>
-
-            <div className="quick-meals-heading">
-              <strong>
-                <i className="bi bi-lightning-charge-fill" aria-hidden="true" />
-                Quick add meals
-              </strong>
-              <span>Click to add to widget</span>
-            </div>
-
-            <div className="quick-meal-buttons">
-              {quickMeals.map((meal) => (
-                <button
-                  key={meal.name}
-                  type="button"
-                  onClick={() => addQuickMeal(meal)}
-                >
-                  {meal.image ? (
-                    <img src={meal.image} alt="" aria-hidden="true" />
-                  ) : (
-                    <span aria-hidden="true">{meal.icon}</span>
-                  )}
-                  {meal.name} <b>+{meal.calories} kcal</b>
-                </button>
-              ))}
-            </div>
-
-            {dashboardMessage && (
-              <p className="dashboard-message" role="status">
-                <i className="bi bi-check-circle-fill" aria-hidden="true" />
-                {dashboardMessage}
-              </p>
-            )}
-
-            <div className="demo-meal-feed" aria-live="polite">
-              {demoMeals.slice(0, 2).map((meal) => (
-                <div className="meal-preview featured-meal" key={meal.id}>
-                  <div className="meal-icon meal-emoji" aria-hidden="true">
-                    {meal.image ? (
-                      <img className="meal-food-image" src={meal.image} alt="" />
-                    ) : (
-                      meal.icon
-                    )}
-                  </div>
-
-                  <div className="meal-information">
-                    <strong>{meal.name}</strong>
-                    <small>
-                      {meal.protein}g P · {meal.carbs}g C · {meal.fat}g F
-                    </small>
-                  </div>
-
-                  <strong className="meal-calories">{meal.calories} kcal</strong>
-                  <button
-                    className="meal-delete-button"
-                    type="button"
-                    onClick={() => deleteDemoMeal(meal.id)}
-                    aria-label={`Delete ${meal.name} meal`}
-                    title="Delete meal"
-                  >
-                    <i className="bi bi-trash3" aria-hidden="true" />
-                  </button>
-                </div>
-              ))}
-              {demoMeals.length > 2 && (
-                <p className="phone-more-meals">
-                  +{demoMeals.length - 2} more meal{demoMeals.length - 2 === 1 ? "" : "s"}
-                </p>
-              )}
-            </div>
+                <nav className="home-mobile-tabbar" aria-label="Primary navigation preview">
+                  <span className="active"><i className="bi bi-house-door-fill" aria-hidden="true" /><small>Home</small></span>
+                  <span><i className="bi bi-journal-text" aria-hidden="true" /><small>History</small></span>
+                  <span className="add"><i className="bi bi-plus-lg" aria-hidden="true" /><small>Add meal</small></span>
+                  <span><i className="bi bi-graph-up-arrow" aria-hidden="true" /><small>Goals</small></span>
+                  <span><i className="bi bi-gear-wide-connected" aria-hidden="true" /><small>Settings</small></span>
+                </nav>
+              </section>
             </div>
           </div>
         </div>
