@@ -1,5 +1,8 @@
 package com.nutriflow.backend.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
@@ -73,6 +76,13 @@ public class FoodLookupService {
         double fat = hasServingNutrition ? getNumber(nutriments, "fat_serving") : getNumber(nutriments, "fat_100g");
         String nutritionBasis = hasServingNutrition ? "per serving" : "per 100 g";
 
+        // Allergens look like "en:peanuts", and diet info looks like "en:vegan" or "en:non-vegan"
+        List<String> allergens = readTags(product, "allergens_tags");
+        List<String> analysis = readTags(product, "ingredients_analysis_tags");
+        Boolean vegan = analysis.contains("vegan") ? Boolean.TRUE : analysis.contains("non-vegan") ? Boolean.FALSE : null;
+        Boolean vegetarian = analysis.contains("vegetarian") ? Boolean.TRUE
+                : analysis.contains("non-vegetarian") ? Boolean.FALSE : null;
+
         return new FoodItem(
                 barcode,
                 name,
@@ -82,7 +92,10 @@ public class FoodLookupService {
                 (int) Math.round(calories),
                 protein,
                 carbs,
-                fat);
+                fat,
+                allergens,
+                vegan,
+                vegetarian);
     }
 
     // Get a number from nutriments, or 0 if it's missing
@@ -102,6 +115,17 @@ public class FoodLookupService {
         } catch (NumberFormatException ignored) {
             return null;
         }
+    }
+
+    // Read a tag list and drop the language prefix, so "en:peanuts" becomes "peanuts"
+    private List<String> readTags(JsonNode product, String key) {
+        List<String> tags = new ArrayList<>();
+        for (JsonNode tag : product.path(key)) {
+            String value = tag.asText();
+            int colon = value.indexOf(':');
+            tags.add(colon >= 0 ? value.substring(colon + 1) : value);
+        }
+        return tags;
     }
 
     private String textOrNull(JsonNode object, String key) {
