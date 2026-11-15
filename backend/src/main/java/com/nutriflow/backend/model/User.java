@@ -8,6 +8,13 @@ import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import jakarta.persistence.Column;
 import jakarta.persistence.Lob;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.JoinColumn;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "app_user", uniqueConstraints = @UniqueConstraint(name = "uk_app_user_email", columnNames = "email"))
@@ -29,6 +36,11 @@ public class User {
     private String activityLevel;
     @Lob
     private String photo;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "user_dietary_restrictions", joinColumns = @JoinColumn(name = "user_id"))
+    @Column(name = "restriction")
+    private List<String> dietaryRestrictions = new ArrayList<>();
 
     protected User() {}
 
@@ -58,4 +70,10 @@ public class User {
     public void setWeight(String weight) { this.weight = weight; }
     public void setActivityLevel(String activityLevel) { this.activityLevel = activityLevel; }
     public void setPhoto(String photo) { this.photo = photo; }
+
+    public List<String> getDietaryRestrictions() { return dietaryRestrictions; }
+    public void setDietaryRestrictions(List<String> restrictions) {
+        dietaryRestrictions.clear();
+        dietaryRestrictions.addAll(restrictions);
+    }
 }
