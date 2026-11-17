@@ -331,6 +331,11 @@ function Dashboard() {
           </button>
         </header>
 
+        <Link className="mobile-plan-meals-link" to="/meal-planner">
+          <span><i className="bi bi-calendar2-week" aria-hidden="true" /> Plan your meals</span>
+          <i className="bi bi-arrow-right" aria-hidden="true" />
+        </Link>
+
         <div className="mobile-week-picker" aria-label="Current week" ref={weekPickerRef}>
           <span
             className={

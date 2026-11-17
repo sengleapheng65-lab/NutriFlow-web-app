@@ -577,6 +577,31 @@
     margin: 0;
   }
 
+  .mobile-plan-meals-link {
+    margin: 16px 0 18px;
+    padding: 12px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid #cfe6d8;
+    border-radius: 13px;
+    background: #f2fbf5;
+    color: var(--green-dark);
+    font-size: .84rem;
+    font-weight: 750;
+    text-decoration: none;
+  }
+
+  .mobile-plan-meals-link span {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .mobile-plan-meals-link > i {
+    color: var(--green);
+  }
+
   .mobile-dashboard-greeting-label {
     margin: 0 0 5px;
     color: var(--green);
