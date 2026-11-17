@@ -2,6 +2,8 @@ import type { Meal } from "../types/Meal";
 
 const API_URL = (import.meta.env.VITE_API_URL || "/api").replace(/\/$/, "");
 
+// Every meal-plan request uses the same API prefix and the browser session cookie.
+
 export type MealPlanTotals = {
   calories: number;
   protein: number;
@@ -70,10 +72,12 @@ export type MealPlanDraft = {
 };
 
 function timeZoneHeaders() {
+  // The backend uses the browser's timezone to decide which 14 days to return.
   return { "X-Time-Zone": Intl.DateTimeFormat().resolvedOptions().timeZone };
 }
 
 async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
+  // Keep response parsing in one place so backend validation messages reach the UI.
   const response = await fetch(`${API_URL}/meal-plan${path}`, {
     ...options,
     credentials: "include",
@@ -94,10 +98,12 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
 }
 
 export function getMealPlan() {
+  // Loads the current 14-day window and its daily totals.
   return request<MealPlan>("");
 }
 
 export function addMealPlanEntry(draft: MealPlanDraft) {
+  // Creates a planned meal, either from a saved meal or manual nutrition values.
   return request<MealPlanEntry>("/entries", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -106,6 +112,7 @@ export function addMealPlanEntry(draft: MealPlanDraft) {
 }
 
 export function updateMealPlanEntry(id: number, draft: MealPlanDraft) {
+  // Updates details or completion state without replacing the whole entry.
   return request<MealPlanEntry>(`/entries/${id}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
@@ -130,6 +137,7 @@ export function repeatMealPlanEntry(id: number, dates: string[]) {
 }
 
 export function getPrepList(from?: string, to?: string) {
+  // Groups planned meals into a kitchen-friendly preparation list.
   const params = new URLSearchParams();
   if (from) params.set("from", from);
   if (to) params.set("to", to);

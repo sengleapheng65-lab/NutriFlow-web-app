@@ -21,7 +21,7 @@ import jakarta.persistence.Table;
 @Table(name = "meal_plan_entry",
         indexes = @Index(name = "idx_meal_plan_entry_user_date", columnList = "user_id, plan_date"))
 
-//Represents a meal entry in the meal plan
+// Represents one scheduled meal and its separate prepared/eaten states.
 public class MealPlanEntry {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

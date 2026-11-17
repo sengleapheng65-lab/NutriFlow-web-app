@@ -27,6 +27,7 @@ import com.nutriflow.backend.repository.MealRepository;
 
 @Service
 public class MealPlanService {
+    // Business rules for dates, ownership, nutrition validation, and meal status updates.
     public static final int PLAN_DAYS = 14;
     public static final int MAX_ENTRIES_PER_DAY = 12;
     public static final List<String> MEAL_TYPES = List.of("breakfast", "lunch", "dinner", "snack");
