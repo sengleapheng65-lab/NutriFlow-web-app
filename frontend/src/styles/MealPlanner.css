@@ -411,6 +411,28 @@
   background: var(--surface);
   box-shadow: 0 25px 70px rgba(0, 0, 0, 0.2);
 }
+
+:root[data-theme="dark"] .planner-totals-strip {
+  border-color: #39604a;
+  background: linear-gradient(118deg, #193d2b 0%, var(--surface) 62%);
+}
+
+:root[data-theme="dark"] .planner-totals-strip::before {
+  background: #65d99a;
+}
+
+:root[data-theme="dark"] .planner-totals-strip div {
+  border-left-color: rgba(126, 202, 153, 0.25);
+}
+
+:root[data-theme="dark"] .planner-totals-strip span,
+:root[data-theme="dark"] .planner-totals-strip small {
+  color: #b5c9bc;
+}
+
+:root[data-theme="dark"] .planner-totals-strip strong {
+  color: #e3f8e9;
+}
 .planner-form {
   display: grid;
   gap: 14px;
