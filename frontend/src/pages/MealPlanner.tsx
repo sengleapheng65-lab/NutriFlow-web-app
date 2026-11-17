@@ -36,6 +36,7 @@ function MealCard({ entry, onDelete, onTogglePrepared, onToggleEaten }: {
   onTogglePrepared: (entry: MealPlanEntry) => void;
   onToggleEaten: (entry: MealPlanEntry) => void;
 }) {
+  // Each card keeps preparation and eating as separate user actions.
   return (
     <article className={`planner-meal-card${entry.prepared ? " is-prepared" : ""}${entry.eaten ? " is-eaten" : ""}`}>
       <div className="planner-meal-card-top">
@@ -72,6 +73,7 @@ function TotalsStrip({ totals, label }: { totals: MealPlan["totals"]; label: str
 }
 
 function MealPlanner() {
+  // The planner owns the 14-day view, add-meal dialog, and prep-list panel.
   const [plan, setPlan] = useState<MealPlan | null>(null);
   const [savedMeals, setSavedMeals] = useState<Meal[]>([]);
   const [prepItems, setPrepItems] = useState<PrepItem[]>([]);
@@ -93,6 +95,7 @@ function MealPlanner() {
   const [error, setError] = useState("");
 
   async function loadPlan() {
+    // Reload both the plan and saved meals after every mutation so totals stay fresh.
     setError("");
     try {
       const [nextPlan, meals] = await Promise.all([getMealPlan(), getMeals()]);
@@ -125,6 +128,7 @@ function MealPlanner() {
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setIsSaving(true); setError("");
+    // Saved meals provide nutrition automatically; manual meals provide their own values.
     const draft: MealPlanDraft = {
       date: selectedDate, mealType, ...(savedMealId ? { mealId: Number(savedMealId) } : { name: customName }),
       calories: calories ? Number(calories) : undefined, protein: protein ? Number(protein) : undefined,
@@ -147,6 +151,7 @@ function MealPlanner() {
   }
 
   async function handleTogglePrepared(entry: MealPlanEntry) {
+    // Prepared means ready in the kitchen; it does not count as eaten.
     try {
       await updateMealPlanEntry(entry.id, { date: entry.date, mealType: entry.mealType, prepared: !entry.prepared });
       await loadPlan();
@@ -154,6 +159,7 @@ function MealPlanner() {
   }
 
   async function handleToggleEaten(entry: MealPlanEntry) {
+    // Eaten is the state consumed by the Dashboard's daily totals.
     try {
       await updateMealPlanEntry(entry.id, { date: entry.date, mealType: entry.mealType, eaten: !entry.eaten });
       await loadPlan();

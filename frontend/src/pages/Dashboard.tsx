@@ -153,6 +153,7 @@ function Dashboard() {
         setError("");
 
         // GET /api/meals
+        // Load saved meals and eaten planner meals together so the dashboard shows one total.
         const [backendMeals, mealPlan] = await Promise.all([getMeals(), getMealPlan()]);
 
         setMeals(backendMeals);
@@ -228,6 +229,7 @@ function Dashboard() {
       return getLocalDateKey(mealDate) === selectedDateKey;
     }).map((meal) => ({ ...meal, source: "saved" as const }));
 
+    // Only planner entries marked eaten are promoted into today's consumed list.
     const plannedMeals = eatenPlanEntries
       .filter((entry) => entry.date === selectedDateKey)
       .map((entry) => ({

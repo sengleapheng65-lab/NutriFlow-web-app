@@ -33,6 +33,7 @@ import com.nutriflow.backend.service.MealPlanService.PrepItem;
 @RestController
 @RequestMapping("/api/meal-plan")
 public class MealPlanController {
+    // The controller exposes the authenticated user's rolling 14-day meal plan.
     private static final String TIME_ZONE_HEADER = "X-Time-Zone";
 
     private final MealPlanService mealPlans;
