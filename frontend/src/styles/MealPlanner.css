@@ -240,6 +240,10 @@
   border-color: #8bc9a5;
   background: #f1fbf5;
 }
+.planner-meal-card.is-eaten {
+  border-color: #70bd91;
+  background: #eaf8ef;
+}
 .planner-meal-card-top {
   display: flex;
   align-items: center;
@@ -310,6 +314,37 @@
 }
 .planner-eaten-button.is-eaten i {
   color: var(--green);
+}
+
+:root[data-theme="dark"] .planner-meal-card.is-prepared {
+  border-color: #7d7040;
+  background: #29291b;
+}
+
+:root[data-theme="dark"] .planner-meal-card.is-eaten {
+  border-color: #4c9d70;
+  background: #193d2b;
+}
+
+:root[data-theme="dark"] .planner-prepared-button {
+  color: #d2c995;
+}
+
+:root[data-theme="dark"] .planner-prepared-button i {
+  color: #e3c95a;
+}
+
+:root[data-theme="dark"] .planner-eaten-button {
+  color: #b5c9bc;
+}
+
+:root[data-theme="dark"] .planner-eaten-button i,
+:root[data-theme="dark"] .planner-eaten-button.is-eaten i {
+  color: #72d99b;
+}
+
+:root[data-theme="dark"] .planner-eaten-button.is-eaten {
+  color: #d8f8e2;
 }
 .planner-empty-day {
   min-height: 100px;
