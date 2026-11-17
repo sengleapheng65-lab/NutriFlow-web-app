@@ -538,6 +538,28 @@
   color: #f4b94c;
 }
 
+:root[data-theme="dark"] .dashboard-plan-button {
+  border-color: #39604a;
+  background: #1b2d22;
+  color: #b7efcc;
+}
+
+:root[data-theme="dark"] .dashboard-plan-button:hover {
+  border-color: #5fd398;
+  background: #24402f;
+  color: #d8f8e2;
+}
+
+:root[data-theme="dark"] .mobile-plan-meals-link {
+  border-color: #39604a;
+  background: #193d2b;
+  color: #b7efcc;
+}
+
+:root[data-theme="dark"] .mobile-plan-meals-link > i {
+  color: #72d99b;
+}
+
 /* ================================
    TABLET
    ================================ */
