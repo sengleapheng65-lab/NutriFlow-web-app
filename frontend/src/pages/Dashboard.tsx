@@ -13,6 +13,7 @@ import MacroIcon from "../components/MacroIcon";
 import MealBowlIcon from "../components/MealBowlIcon";
 import type { Meal } from "../types/Meal";
 import { deleteMeal as deleteMealFromApi, getMeals } from "../services/mealApi";
+import { getMealPlan, type MealPlanEntry } from "../services/mealPlanApi";
 
 import "../styles/Dashboard.css";
 import { getUserStorageKey } from "../services/userStorage";
@@ -30,6 +31,8 @@ type MobileProfile = {
   firstName: string;
   photo: string;
 };
+
+type DashboardMeal = Meal & { source: "saved" | "planned"; planEntryId?: number };
 
 // Goals used when the user has not saved custom settings
 const defaultGoals: NutritionGoals = {
@@ -121,6 +124,7 @@ function useCountUp(target: number, duration = 900) {
 function Dashboard() {
   // All meals returned by Spring Boot
   const [meals, setMeals] = useState<Meal[]>([]);
+  const [eatenPlanEntries, setEatenPlanEntries] = useState<MealPlanEntry[]>([]);
 
   // Track loading and error states
   const [isLoading, setIsLoading] = useState(true);
@@ -149,9 +153,10 @@ function Dashboard() {
         setError("");
 
         // GET /api/meals
-        const backendMeals = await getMeals();
+        const [backendMeals, mealPlan] = await Promise.all([getMeals(), getMealPlan()]);
 
         setMeals(backendMeals);
+        setEatenPlanEntries(mealPlan.plan.flatMap((day) => day.entries.filter((entry) => entry.eaten)));
       } catch (requestError) {
         console.error(requestError);
 
@@ -208,8 +213,8 @@ function Dashboard() {
   }, []);
 
   // Only include meals created on the day selected in the phone date picker.
-  const todayMeals = useMemo(() => {
-    return meals.filter((meal) => {
+  const todayMeals = useMemo<DashboardMeal[]>(() => {
+    const savedMeals = meals.filter((meal) => {
       if (!meal.createdAt) {
         return false;
       }
@@ -221,8 +226,24 @@ function Dashboard() {
       }
 
       return getLocalDateKey(mealDate) === selectedDateKey;
-    });
-  }, [meals, selectedDateKey]);
+    }).map((meal) => ({ ...meal, source: "saved" as const }));
+
+    const plannedMeals = eatenPlanEntries
+      .filter((entry) => entry.date === selectedDateKey)
+      .map((entry) => ({
+        id: -entry.id,
+        name: entry.name,
+        calories: entry.calories * entry.servings,
+        protein: entry.protein * entry.servings,
+        carbs: entry.carbs * entry.servings,
+        fat: entry.fat * entry.servings,
+        createdAt: `${entry.date}T12:00:00`,
+        source: "planned" as const,
+        planEntryId: entry.id,
+      }));
+
+    return [...savedMeals, ...plannedMeals];
+  }, [eatenPlanEntries, meals, selectedDateKey]);
 
   // Calculate today's calories
   const totalCalories = todayMeals.reduce(
@@ -648,7 +669,7 @@ function Dashboard() {
                 <div className="meal-card-information">
                   <h3>{meal.name}</h3>
 
-                  <p>Meal {index + 1}</p>
+                <p>{meal.source === "planned" ? "Planned meal · eaten" : `Meal ${index + 1}`}</p>
                 </div>
 
                 <div className="meal-nutrition">
@@ -681,16 +702,19 @@ function Dashboard() {
                   </div>
                 </div>
 
-                {/* Delete meal */}
-                <button
-                  className="delete-meal-button"
-                  type="button"
-                  onClick={() => void handleDeleteMeal(meal.id)}
-                  aria-label={`Delete ${meal.name}`}
-                  title={`Delete ${meal.name}`}
-                >
-                  <i className="bi bi-trash3" aria-hidden="true" />
-                </button>
+                {meal.source === "saved" ? (
+                  <button
+                    className="delete-meal-button"
+                    type="button"
+                    onClick={() => void handleDeleteMeal(meal.id)}
+                    aria-label={`Delete ${meal.name}`}
+                    title={`Delete ${meal.name}`}
+                  >
+                    <i className="bi bi-trash3" aria-hidden="true" />
+                  </button>
+                ) : (
+                  <span className="planned-meal-check" title="Marked eaten"><i className="bi bi-check-circle-fill" aria-hidden="true" /></span>
+                )}
               </article>
             ))}
           </div>

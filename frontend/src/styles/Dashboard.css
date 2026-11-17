@@ -448,6 +448,15 @@
   color: #d93f3f;
 }
 
+.planned-meal-check {
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  color: var(--green);
+  font-size: 1.05rem;
+}
+
 /* ================================
    EMPTY MEAL STATE
    ================================ */
