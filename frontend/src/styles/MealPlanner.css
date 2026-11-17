@@ -194,19 +194,21 @@
   gap: 8px;
 }
 .planner-day-add {
-  width: 32px;
-  height: 32px;
+  width: 28px;
+  height: 28px;
   display: grid;
   place-items: center;
-  border: 1px solid var(--green);
-  border-radius: 50%;
-  background: var(--green);
-  color: #fff;
+  padding: 0;
+  border: 1px solid #a9cdb8;
+  border-radius: 8px;
+  background: var(--green-pale);
+  color: var(--green-dark);
   font-size: 0.78rem;
-  box-shadow: 0 4px 10px rgba(25, 135, 84, 0.18);
+  line-height: 1;
   cursor: pointer;
 }
-.planner-day-add:hover { border-color: var(--green-dark); background: var(--green-dark); transform: translateY(-1px); }
+.planner-day-add i { display: block; line-height: 1; }
+.planner-day-add:hover { border-color: var(--green); background: var(--green-light); }
 .planner-day-header div {
   display: flex;
   flex-direction: column;
@@ -367,14 +369,14 @@
 }
 
 :root[data-theme="dark"] .planner-day-add {
-  border-color: #72d99b;
-  background: #4fca88;
-  color: #092d20;
+  border-color: #4c8060;
+  background: #193d2b;
+  color: #b7efcc;
 }
 
 :root[data-theme="dark"] .planner-day-add:hover {
   border-color: #72d99b;
-  background: #8de0b1;
+  background: #245238;
 }
 .planner-empty-day {
   min-height: 100px;
