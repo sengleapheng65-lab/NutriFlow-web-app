@@ -48,6 +48,7 @@ public class MealPlanEntry {
     @Column(length = 500)
     private String notes;
     private boolean prepared;
+    private boolean eaten;
     private Long sourceMealId;
     private Instant createdAt;
 
@@ -71,6 +72,7 @@ public class MealPlanEntry {
         copy.notes = notes;
         copy.sourceMealId = sourceMealId;
         copy.prepared = false;
+        copy.eaten = false;
         return copy;
     }
 
@@ -97,6 +99,8 @@ public class MealPlanEntry {
     public void setNotes(String notes) { this.notes = notes; }
     public boolean isPrepared() { return prepared; }
     public void setPrepared(boolean prepared) { this.prepared = prepared; }
+    public boolean isEaten() { return eaten; }
+    public void setEaten(boolean eaten) { this.eaten = eaten; }
     public Long getSourceMealId() { return sourceMealId; }
     public void setSourceMealId(Long sourceMealId) { this.sourceMealId = sourceMealId; }
     public Instant getCreatedAt() { return createdAt; }

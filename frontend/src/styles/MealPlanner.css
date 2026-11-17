@@ -41,8 +41,11 @@
 .planner-meal-type-breakfast { background: #fff1d9; color: #ad7213; }.planner-meal-type-lunch { background: #e3f5ec; color: #198754; }.planner-meal-type-dinner { background: #e7f0ff; color: #3f7fdd; }.planner-meal-type-snack { background: #eee6ff; color: #8357ca; }
 .planner-meal-card strong { display: block; margin-top: 7px; overflow: hidden; color: var(--text); font-size: .83rem; text-overflow: ellipsis; white-space: nowrap; }
 .planner-meal-meta { display: block; margin-top: 4px; color: var(--muted); font-size: .7rem; }
-.planner-prepared-button { margin-top: 8px; padding: 0; border: 0; background: transparent; color: var(--muted); font: inherit; font-size: .7rem; cursor: pointer; }
+.planner-prepared-button, .planner-eaten-button { display: block; margin-top: 8px; padding: 0; border: 0; background: transparent; color: var(--muted); font: inherit; font-size: .7rem; cursor: pointer; text-align: left; }
 .planner-prepared-button i { margin-right: 4px; color: var(--green); }
+.planner-eaten-button i { margin-right: 4px; color: #b67b18; }
+.planner-eaten-button.is-eaten { color: var(--green-dark); font-weight: 700; }
+.planner-eaten-button.is-eaten i { color: var(--green); }
 .planner-empty-day { min-height: 100px; display: grid; place-items: center; align-content: center; gap: 5px; border: 1px dashed var(--border); border-radius: 11px; color: var(--muted); font-size: .75rem; }
 .planner-empty-day i { color: var(--green); font-size: 1.2rem; }
 .planner-add-day { margin-top: 12px; padding: 8px; border: 1px dashed #a9cdb8; border-radius: 9px; background: transparent; color: var(--green-dark); font: inherit; font-size: .77rem; font-weight: 750; cursor: pointer; }

@@ -30,10 +30,11 @@ function formatNumber(value: number) {
   return Number.isInteger(value) ? String(value) : value.toFixed(1);
 }
 
-function MealCard({ entry, onDelete, onTogglePrepared }: {
+function MealCard({ entry, onDelete, onTogglePrepared, onToggleEaten }: {
   entry: MealPlanEntry;
   onDelete: (id: number) => void;
   onTogglePrepared: (entry: MealPlanEntry) => void;
+  onToggleEaten: (entry: MealPlanEntry) => void;
 }) {
   return (
     <article className={`planner-meal-card${entry.prepared ? " is-prepared" : ""}`}>
@@ -50,6 +51,10 @@ function MealCard({ entry, onDelete, onTogglePrepared }: {
       <button type="button" className="planner-prepared-button" onClick={() => onTogglePrepared(entry)}>
         <i className={`bi ${entry.prepared ? "bi-check-circle-fill" : "bi-circle"}`} aria-hidden="true" />
         {entry.prepared ? "Prepared" : "Mark prepared"}
+      </button>
+      <button type="button" className={`planner-eaten-button${entry.eaten ? " is-eaten" : ""}`} onClick={() => onToggleEaten(entry)}>
+        <i className={`bi ${entry.eaten ? "bi-check-circle-fill" : "bi-circle"}`} aria-hidden="true" />
+        {entry.eaten ? "Eaten · counts toward goals" : "Mark eaten"}
       </button>
     </article>
   );
@@ -148,6 +153,13 @@ function MealPlanner() {
     } catch (requestError) { setError(requestError instanceof Error ? requestError.message : "Could not update this meal."); }
   }
 
+  async function handleToggleEaten(entry: MealPlanEntry) {
+    try {
+      await updateMealPlanEntry(entry.id, { date: entry.date, mealType: entry.mealType, eaten: !entry.eaten });
+      await loadPlan();
+    } catch (requestError) { setError(requestError instanceof Error ? requestError.message : "Could not update this meal."); }
+  }
+
   async function handleClearDay(day: MealPlanDay) {
     if (!day.entries.length || !window.confirm(`Clear all meals planned for ${formatDate(day.date)}?`)) return;
     try { await clearMealPlanDay(day.date); await loadPlan(); }
@@ -178,7 +190,7 @@ function MealPlanner() {
           <article className={`planner-day${day.date === new Date().toISOString().slice(0, 10) ? " is-today" : ""}`} key={day.date}>
             <header className="planner-day-header"><div><span>{day.dayOfWeek.slice(0, 3)}</span><strong>{formatDate(day.date)}</strong></div><button type="button" className="planner-day-menu" onClick={() => void handleClearDay(day)} aria-label={`Clear ${day.dayOfWeek}`}><i className="bi bi-three-dots" /></button></header>
             <div className="planner-day-total">{day.totals.calories} kcal · {day.entries.length} meal{day.entries.length === 1 ? "" : "s"}</div>
-            <div className="planner-day-meals">{day.entries.map((entry) => <MealCard key={entry.id} entry={entry} onDelete={handleDelete} onTogglePrepared={handleTogglePrepared} />)}{!day.entries.length && <div className="planner-empty-day"><i className="bi bi-plus-circle" /><span>No meals yet</span></div>}</div>
+            <div className="planner-day-meals">{day.entries.map((entry) => <MealCard key={entry.id} entry={entry} onDelete={handleDelete} onTogglePrepared={handleTogglePrepared} onToggleEaten={handleToggleEaten} />)}{!day.entries.length && <div className="planner-empty-day"><i className="bi bi-plus-circle" /><span>No meals yet</span></div>}</div>
             <button type="button" className="planner-add-day" onClick={() => openAddForm(day)}><i className="bi bi-plus" /> Add meal</button>
           </article>
         ))}

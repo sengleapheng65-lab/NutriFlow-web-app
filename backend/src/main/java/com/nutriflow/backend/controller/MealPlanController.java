@@ -122,7 +122,7 @@ public class MealPlanController {
     private EntryResponse response(MealPlanEntry entry) {
         return new EntryResponse(entry.getId(), entry.getPlanDate().toString(), entry.getMealType(), entry.getName(),
                 entry.getCalories(), entry.getProtein(), entry.getCarbs(), entry.getFat(), entry.getServings(),
-                entry.getNotes(), entry.isPrepared(), entry.getSourceMealId());
+                entry.getNotes(), entry.isPrepared(), entry.isEaten(), entry.getSourceMealId());
     }
 
     private Totals totals(List<EntryResponse> entries) {
@@ -140,7 +140,7 @@ public class MealPlanController {
     public record RepeatRequest(List<String> dates) {}
 
     public record EntryResponse(Long id, String date, String mealType, String name, int calories, double protein,
-                                double carbs, double fat, double servings, String notes, boolean prepared, Long sourceMealId) {}
+                                double carbs, double fat, double servings, String notes, boolean prepared, boolean eaten, Long sourceMealId) {}
 
     public record Totals(long calories, double protein, double carbs, double fat) {}
 

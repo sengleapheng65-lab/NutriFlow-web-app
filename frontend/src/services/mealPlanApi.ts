@@ -21,6 +21,7 @@ export type MealPlanEntry = {
   servings: number;
   notes: string | null;
   prepared: boolean;
+  eaten: boolean;
   sourceMealId: number | null;
 };
 
@@ -65,6 +66,7 @@ export type MealPlanDraft = {
   servings?: number;
   notes?: string;
   prepared?: boolean;
+  eaten?: boolean;
 };
 
 function timeZoneHeaders() {
