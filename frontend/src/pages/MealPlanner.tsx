@@ -185,7 +185,6 @@ function MealPlanner() {
       {error && <div className="planner-alert" role="alert"><i className="bi bi-exclamation-circle" /> {error}</div>}
       {plan && <TotalsStrip totals={plan.totals} label="Two-week overview" />}
       <section className="planner-intro"><div><h2>Your plan</h2><p>{plan ? `${formatDate(plan.startDate)} – ${formatDate(plan.endDate)}` : ""}</p></div><span className="planner-hint"><i className="bi bi-lightbulb" /> Tap a day to add a meal</span></section>
-      {plan && <button type="button" className="planner-mobile-add-button" onClick={() => openAddForm(plan.plan.find((day) => day.date === new Date().toISOString().slice(0, 10)) || plan.plan[0])}><i className="bi bi-plus-lg" /> Add meal to today’s plan</button>}
       <section className="planner-grid" aria-label="Two-week meal plan">
         {plan?.plan.map((day) => (
           <article className={`planner-day${day.date === new Date().toISOString().slice(0, 10) ? " is-today" : ""}`} key={day.date}>
