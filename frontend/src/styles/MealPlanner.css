@@ -207,7 +207,7 @@
   line-height: 1;
   cursor: pointer;
 }
-.planner-day-add i { display: block; line-height: 1; }
+.planner-day-add i { position: relative; top: 1px; display: block; line-height: 1; }
 .planner-day-add:hover { border-color: var(--green); background: var(--green-light); }
 .planner-day-header div {
   display: flex;
@@ -232,18 +232,12 @@
   cursor: pointer;
 }
 .planner-day-menu {
-  width: 28px;
-  height: 28px;
-  display: grid;
-  place-items: center;
-  padding: 0;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  background: var(--surface);
+  padding: 2px 0;
+  border: 0;
+  background: transparent;
   font-size: 1.05rem;
 }
-.planner-day-menu:hover { border-color: var(--green); color: var(--green-dark); background: var(--green-pale); }
-.planner-day-menu i { line-height: 1; }
+.planner-day-menu:hover { color: var(--green-dark); }
 .planner-day-total {
   padding: 10px 0;
   color: var(--muted);
@@ -388,17 +382,6 @@
   background: #245238;
 }
 
-:root[data-theme="dark"] .planner-day-menu {
-  border-color: #3c5848;
-  background: #16231b;
-  color: #b5c9bc;
-}
-
-:root[data-theme="dark"] .planner-day-menu:hover {
-  border-color: #72d99b;
-  background: #193d2b;
-  color: #d8f8e2;
-}
 .planner-empty-day {
   min-height: 100px;
   display: grid;
