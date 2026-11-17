@@ -37,7 +37,7 @@ function MealCard({ entry, onDelete, onTogglePrepared, onToggleEaten }: {
   onToggleEaten: (entry: MealPlanEntry) => void;
 }) {
   return (
-    <article className={`planner-meal-card${entry.prepared ? " is-prepared" : ""}`}>
+    <article className={`planner-meal-card${entry.prepared ? " is-prepared" : ""}${entry.eaten ? " is-eaten" : ""}`}>
       <div className="planner-meal-card-top">
         <span className={`planner-meal-type planner-meal-type-${entry.mealType}`}>
           {entry.mealType}
