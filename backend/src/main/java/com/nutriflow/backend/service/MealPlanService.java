@@ -185,6 +185,7 @@ public class MealPlanService {
             entry.setNotes(notes.isEmpty() ? null : notes);
         }
         if (draft.prepared() != null) entry.setPrepared(draft.prepared());
+        if (draft.eaten() != null) entry.setEaten(draft.eaten());
     }
 
     private void ensureRoom(User user, LocalDate date) {
@@ -258,7 +259,7 @@ public class MealPlanService {
     }
 
     public record EntryDraft(String date, String mealType, Long mealId, String name, Double calories,
-                             Double protein, Double carbs, Double fat, Double servings, String notes, Boolean prepared) {}
+                             Double protein, Double carbs, Double fat, Double servings, String notes, Boolean prepared, Boolean eaten) {}
 
     public record PrepItem(String name, Long sourceMealId, double totalServings, double preparedServings,
                            long totalCalories, double totalProtein, double totalCarbs, double totalFat,
