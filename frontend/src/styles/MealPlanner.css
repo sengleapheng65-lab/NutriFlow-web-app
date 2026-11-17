@@ -24,7 +24,7 @@
 .planner-intro p { font-size: .9rem; }
 .planner-hint { color: var(--muted); font-size: .83rem; }
 .planner-grid { display: grid; grid-template-columns: repeat(7, minmax(165px, 1fr)); gap: 12px; overflow-x: auto; padding-bottom: 8px; }
-.planner-day { min-height: 330px; padding: 14px; display: flex; flex-direction: column; border: 1px solid var(--border); border-radius: 16px; background: var(--surface); box-shadow: 0 7px 22px var(--page-shadow); }
+.planner-day { height: 420px; box-sizing: border-box; padding: 14px; display: flex; flex-direction: column; border: 1px solid var(--border); border-radius: 16px; background: var(--surface); box-shadow: 0 7px 22px var(--page-shadow); }
 .planner-day.is-today { border-color: var(--green); box-shadow: 0 0 0 2px rgba(25,135,84,.12), 0 7px 22px var(--page-shadow); }
 .planner-day-header { display: flex; justify-content: space-between; align-items: flex-start; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
 .planner-day-header div { display: flex; flex-direction: column; gap: 2px; }
@@ -33,7 +33,7 @@
 .planner-day-menu, .planner-icon-button { border: 0; background: transparent; color: var(--muted); cursor: pointer; }
 .planner-day-menu { padding: 2px 0; font-size: 1.05rem; }
 .planner-day-total { padding: 10px 0; color: var(--muted); font-size: .75rem; }
-.planner-day-meals { flex: 1; display: flex; flex-direction: column; gap: 8px; }
+.planner-day-meals { min-height: 0; flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; padding-right: 4px; scrollbar-color: #b8d7c2 transparent; scrollbar-width: thin; }
 .planner-meal-card { padding: 10px; border: 1px solid var(--border); border-radius: 11px; background: var(--page-bg); }
 .planner-meal-card.is-prepared { border-color: #8bc9a5; background: #f1fbf5; }
 .planner-meal-card-top { display: flex; align-items: center; justify-content: space-between; }
