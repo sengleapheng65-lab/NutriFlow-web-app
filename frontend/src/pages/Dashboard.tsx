@@ -451,11 +451,16 @@ function Dashboard() {
           <p>A simple view of your nutrition progress today.</p>
         </div>
 
-        <Link className="dashboard-add-button" to="/add-meal">
-          <i className="bi bi-plus-lg" aria-hidden="true" />
-
-          <span>Add Meal</span>
-        </Link>
+        <div className="dashboard-header-actions">
+          <Link className="dashboard-plan-button" to="/meal-planner">
+            <i className="bi bi-calendar2-week" aria-hidden="true" />
+            <span>Plan Meals</span>
+          </Link>
+          <Link className="dashboard-add-button" to="/add-meal">
+            <i className="bi bi-plus-lg" aria-hidden="true" />
+            <span>Add Meal</span>
+          </Link>
+        </div>
       </header>
 
       {/* Display a backend error */}
