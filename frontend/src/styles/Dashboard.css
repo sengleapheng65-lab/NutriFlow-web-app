@@ -50,6 +50,32 @@
   color: var(--muted);
 }
 
+.dashboard-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.dashboard-plan-button {
+  min-height: 46px;
+  padding: 0 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  background: var(--surface);
+  color: var(--green-dark);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.dashboard-plan-button:hover {
+  border-color: var(--green);
+  color: var(--green-dark);
+}
+
 /* Add Meal button */
 .dashboard-add-button {
   min-height: 46px;

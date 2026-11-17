@@ -1,4 +1,5 @@
 import { useState, type FormEvent } from "react";
+import { Link } from "react-router-dom";
 
 import MacroIcon from "../components/MacroIcon";
 import "../styles/Goals.css";
@@ -73,6 +74,12 @@ function Goals() {
           <i className="bi bi-bullseye" aria-hidden="true" />
         </div>
       </header>
+
+      <Link className="goals-planner-link" to="/meal-planner">
+        <span className="goals-planner-link-icon"><i className="bi bi-calendar2-week" aria-hidden="true" /></span>
+        <span><strong>Plan meals around your targets</strong><small>Turn these daily goals into a two-week meal plan.</small></span>
+        <i className="bi bi-arrow-right" aria-hidden="true" />
+      </Link>
 
       <div className="goals-content">
         {/* Goal form */}
