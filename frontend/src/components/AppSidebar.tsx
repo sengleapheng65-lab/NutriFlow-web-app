@@ -120,6 +120,7 @@ function AppSidebar({ isAdmin }: { isAdmin: boolean }) {
             {
               ["--active-index"]: [
                 "/dashboard",
+                "/meal-planner",
                 "/add-meal",
                 "/goals",
                 "/history",
@@ -138,6 +139,15 @@ function AppSidebar({ isAdmin }: { isAdmin: boolean }) {
           >
             <i className="bi bi-house-door-fill" aria-hidden="true" />
             <span>Dashboard</span>
+          </NavLink>
+
+          {/* Meal Planner */}
+          <NavLink
+            to="/meal-planner"
+            className={({ isActive }) => (isActive ? "active" : "")}
+          >
+            <i className="bi bi-calendar2-week" aria-hidden="true" />
+            <span>Meal Planner</span>
           </NavLink>
 
           {/* Add Meal */}

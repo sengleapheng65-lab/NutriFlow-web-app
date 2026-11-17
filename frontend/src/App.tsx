@@ -13,6 +13,7 @@ import Settings from "./pages/Settings";
 import AdminDashboard from "./pages/AdminDashboard";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
+import MealPlanner from "./pages/MealPlanner";
 
 import AppLayout from "./components/AppLayout";
 import ThemeToggle from "./components/ThemeToggle";
@@ -57,6 +58,7 @@ function AppContent() {
         <Route element={<ProtectedRoute isLoading={isLoading} isAuthenticated={Boolean(user)} />}>
           <Route element={<AppLayout isAdmin={Boolean(user?.isAdmin)} />}>
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/meal-planner" element={<MealPlanner />} />
           <Route path="/add-meal" element={<AddMeal />} />
           <Route path="/goals" element={<Goals />} />
           <Route path="/profile" element={<Profile />} />
