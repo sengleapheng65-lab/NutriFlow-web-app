@@ -171,7 +171,7 @@ function MealPlanner() {
         <div className="planner-header-actions"><button type="button" className="planner-secondary-button" onClick={() => void togglePrepList()}><i className="bi bi-basket2" aria-hidden="true" /> Prep list</button><Link className="planner-primary-button" to="/add-meal"><i className="bi bi-plus-lg" aria-hidden="true" /> Save a meal</Link></div>
       </header>
       {error && <div className="planner-alert" role="alert"><i className="bi bi-exclamation-circle" /> {error}</div>}
-      {plan && <TotalsStrip totals={plan.totals} label="Two-week total" />}
+      {plan && <TotalsStrip totals={plan.totals} label="Two-week overview" />}
       <section className="planner-intro"><div><h2>Your plan</h2><p>{plan ? `${formatDate(plan.startDate)} – ${formatDate(plan.endDate)}` : ""}</p></div><span className="planner-hint"><i className="bi bi-lightbulb" /> Tap a day to add a meal</span></section>
       <section className="planner-grid" aria-label="Two-week meal plan">
         {plan?.plan.map((day) => (
