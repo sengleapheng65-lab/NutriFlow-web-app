@@ -48,6 +48,8 @@ public class AuthController {
     private String googleClientId;
     @Value("${app.google-client-secret:}")
     private String googleClientSecret;
+    @Value("${app.frontend-url:http://localhost:5173}")
+    private String frontendUrl;
     private final SecurityContextRepository securityContextRepository = new HttpSessionSecurityContextRepository();
 
     public AuthController(UserRepository users, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager,
@@ -126,10 +128,10 @@ public class AuthController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Google sign-in is not configured.");
         }
         String origin = httpRequest.getHeader("Origin");
-        if (origin == null || origin.isBlank()) throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Missing request origin.");
+        String redirectOrigin = origin == null || origin.isBlank() ? frontendUrl : origin;
         try {
             String form = "code=" + encode(request.code()) + "&client_id=" + encode(googleClientId)
-                + "&client_secret=" + encode(googleClientSecret) + "&redirect_uri=" + encode(origin)
+                + "&client_secret=" + encode(googleClientSecret) + "&redirect_uri=" + encode(redirectOrigin)
                 + "&grant_type=authorization_code";
             HttpRequest tokenRequest = HttpRequest.newBuilder(URI.create("https://oauth2.googleapis.com/token"))
                 .header("Content-Type", "application/x-www-form-urlencoded")
