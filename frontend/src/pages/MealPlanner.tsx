@@ -54,7 +54,7 @@ function MealCard({ entry, onDelete, onTogglePrepared, onToggleEaten }: {
       </button>
       <button type="button" className={`planner-eaten-button${entry.eaten ? " is-eaten" : ""}`} onClick={() => onToggleEaten(entry)}>
         <i className={`bi ${entry.eaten ? "bi-check-circle-fill" : "bi-circle"}`} aria-hidden="true" />
-        {entry.eaten ? "Eaten · counts toward goals" : "Mark eaten"}
+        {entry.eaten ? "Eaten" : "Mark eaten"}
       </button>
     </article>
   );
