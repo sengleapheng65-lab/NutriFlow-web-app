@@ -1,10 +1,10 @@
-.meal-planner-page { max-width: 1500px; margin: 0 auto; padding: 34px 40px 60px; color: var(--text); }
+.meal-planner-page { width: 100%; max-width: 1450px; min-width: 0; min-height: 100vh; margin: 0 auto; padding: 35px 40px 60px; color: var(--text); }
 .planner-header, .planner-intro, .planner-panel-heading { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
-.planner-header { margin-bottom: 26px; }
-.planner-eyebrow { margin: 0 0 5px; color: var(--green); font-size: .76rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+.planner-header { min-height: 82px; margin-bottom: 26px; }
+.planner-eyebrow { margin: 0; color: var(--green); font-size: .78rem; font-weight: 750; letter-spacing: .06em; text-transform: uppercase; }
 .planner-header h1, .planner-intro h2, .planner-panel-heading h2 { margin: 0; color: var(--green-dark); letter-spacing: -.035em; }
-.planner-header h1 { font-size: clamp(2rem, 4vw, 2.7rem); }
-.planner-header p:last-child, .planner-intro p { margin: 6px 0 0; color: var(--muted); }
+.planner-header h1 { margin: 5px 0; font-size: clamp(1.8rem, 3vw, 2.3rem); font-weight: 750; letter-spacing: -.03em; }
+.planner-header > div > p:last-child, .planner-intro p { margin: 0; color: var(--muted); }
 .planner-header-actions, .planner-form-actions { display: flex; align-items: center; gap: 10px; }
 .planner-primary-button, .planner-secondary-button { min-height: 43px; padding: 0 16px; border: 1px solid transparent; border-radius: 11px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; font: inherit; font-weight: 700; text-decoration: none; cursor: pointer; }
 .planner-primary-button { background: var(--green); color: #fff; box-shadow: 0 8px 18px rgba(25,135,84,.18); }
