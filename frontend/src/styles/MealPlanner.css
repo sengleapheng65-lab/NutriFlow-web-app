@@ -12,10 +12,12 @@
 .planner-secondary-button { border-color: var(--border); background: var(--surface); color: var(--text); }
 .planner-secondary-button:hover { border-color: var(--green); color: var(--green-dark); }
 .planner-alert { margin: 0 0 18px; padding: 12px 15px; border: 1px solid #f1c5c5; border-radius: 12px; background: #fff3f3; color: #a83232; }
-.planner-totals-strip { margin-bottom: 27px; padding: 18px 22px; display: grid; grid-template-columns: 1.5fr repeat(3, 1fr); gap: 18px; border: 1px solid var(--border); border-radius: 18px; background: var(--surface); box-shadow: 0 8px 24px var(--page-shadow); }
-.planner-totals-strip div { display: flex; flex-direction: column; gap: 4px; }
-.planner-totals-strip span { color: var(--muted); font-size: .75rem; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; }
-.planner-totals-strip strong { color: var(--text); font-size: 1.25rem; }
+.planner-totals-strip { position: relative; overflow: hidden; margin-bottom: 27px; padding: 20px 22px; display: grid; grid-template-columns: 1.5fr repeat(3, 1fr); gap: 0; border: 1px solid #cfe6d8; border-radius: 18px; background: linear-gradient(118deg, #f3fbf6 0%, var(--surface) 58%); box-shadow: 0 8px 24px var(--page-shadow); }
+.planner-totals-strip::before { position: absolute; inset: 0 auto 0 0; width: 4px; background: var(--green); content: ""; }
+.planner-totals-strip div { min-width: 0; padding: 0 20px; display: flex; flex-direction: column; justify-content: center; gap: 5px; border-left: 1px solid rgba(135, 180, 151, .32); }
+.planner-totals-strip div:first-child { padding-left: 2px; border-left: 0; }
+.planner-totals-strip span { color: var(--muted); font-size: .72rem; font-weight: 750; text-transform: uppercase; letter-spacing: .06em; }
+.planner-totals-strip strong { color: var(--green-dark); font-size: 1.35rem; font-weight: 750; letter-spacing: -.02em; }
 .planner-totals-strip small { margin-left: 3px; color: var(--muted); font-size: .75rem; font-weight: 600; }
 .planner-intro { margin-bottom: 15px; }
 .planner-intro h2 { font-size: 1.45rem; }
