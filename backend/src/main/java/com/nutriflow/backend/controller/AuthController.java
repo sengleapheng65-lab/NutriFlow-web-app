@@ -125,9 +125,6 @@ public class AuthController {
         if (googleClientId.isBlank() || googleClientSecret.isBlank() || request.code() == null || request.code().isBlank()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Google sign-in is not configured.");
         }
-        if (!"XMLHttpRequest".equals(httpRequest.getHeader("X-Requested-With"))) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Invalid Google sign-in request.");
-        }
         String origin = httpRequest.getHeader("Origin");
         if (origin == null || origin.isBlank()) throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Missing request origin.");
         try {
