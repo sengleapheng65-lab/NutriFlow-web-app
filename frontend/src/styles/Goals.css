@@ -81,6 +81,30 @@
 .goals-planner-link small { margin-top: 2px; color: var(--muted); font-size: .76rem; }
 .goals-planner-link > i { color: var(--green); }
 
+:root[data-theme="dark"] .goals-planner-link {
+  border-color: #39604a;
+  background: #193d2b;
+  color: #e3f8e9;
+}
+
+:root[data-theme="dark"] .goals-planner-link:hover {
+  border-color: #5fd398;
+  color: #ffffff;
+}
+
+:root[data-theme="dark"] .goals-planner-link-icon {
+  background: #245238;
+  color: #8de0b1;
+}
+
+:root[data-theme="dark"] .goals-planner-link small {
+  color: #b5c9bc;
+}
+
+:root[data-theme="dark"] .goals-planner-link > i {
+  color: #72d99b;
+}
+
 /* ================================
    CONTENT LAYOUT
    ================================ */
