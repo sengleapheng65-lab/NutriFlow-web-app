@@ -188,6 +188,23 @@
   padding-bottom: 10px;
   border-bottom: 1px solid var(--border);
 }
+.planner-day-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.planner-day-add {
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  border: 1px solid #a9cdb8;
+  border-radius: 8px;
+  background: var(--green-pale);
+  color: var(--green-dark);
+  cursor: pointer;
+}
+.planner-day-add:hover { border-color: var(--green); background: var(--green-light); }
 .planner-day-header div {
   display: flex;
   flex-direction: column;
@@ -345,6 +362,17 @@
 
 :root[data-theme="dark"] .planner-eaten-button.is-eaten {
   color: #d8f8e2;
+}
+
+:root[data-theme="dark"] .planner-day-add {
+  border-color: #4c8060;
+  background: #193d2b;
+  color: #b7efcc;
+}
+
+:root[data-theme="dark"] .planner-day-add:hover {
+  border-color: #72d99b;
+  background: #245238;
 }
 .planner-empty-day {
   min-height: 100px;

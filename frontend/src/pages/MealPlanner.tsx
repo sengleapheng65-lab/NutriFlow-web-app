@@ -188,10 +188,9 @@ function MealPlanner() {
       <section className="planner-grid" aria-label="Two-week meal plan">
         {plan?.plan.map((day) => (
           <article className={`planner-day${day.date === new Date().toISOString().slice(0, 10) ? " is-today" : ""}`} key={day.date}>
-            <header className="planner-day-header"><div><span>{day.dayOfWeek.slice(0, 3)}</span><strong>{formatDate(day.date)}</strong></div><button type="button" className="planner-day-menu" onClick={() => void handleClearDay(day)} aria-label={`Clear ${day.dayOfWeek}`}><i className="bi bi-three-dots" /></button></header>
+            <header className="planner-day-header"><div><span>{day.dayOfWeek.slice(0, 3)}</span><strong>{formatDate(day.date)}</strong></div><div className="planner-day-actions"><button type="button" className="planner-day-add" onClick={() => openAddForm(day)} aria-label={`Add meal to ${day.dayOfWeek}`}><i className="bi bi-plus-lg" /></button><button type="button" className="planner-day-menu" onClick={() => void handleClearDay(day)} aria-label={`Clear ${day.dayOfWeek}`}><i className="bi bi-three-dots" /></button></div></header>
             <div className="planner-day-total">{day.totals.calories} kcal · {day.entries.length} meal{day.entries.length === 1 ? "" : "s"}</div>
             <div className="planner-day-meals">{day.entries.map((entry) => <MealCard key={entry.id} entry={entry} onDelete={handleDelete} onTogglePrepared={handleTogglePrepared} onToggleEaten={handleToggleEaten} />)}{!day.entries.length && <div className="planner-empty-day"><i className="bi bi-plus-circle" /><span>No meals yet</span></div>}</div>
-            <button type="button" className="planner-add-day" onClick={() => openAddForm(day)}><i className="bi bi-plus" /> Add meal</button>
           </article>
         ))}
       </section>
