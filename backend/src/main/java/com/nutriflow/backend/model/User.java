@@ -12,6 +12,7 @@ import jakarta.persistence.ElementCollection;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OrderColumn;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +40,7 @@ public class User {
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "user_dietary_restrictions", joinColumns = @JoinColumn(name = "user_id"))
+    @OrderColumn(name = "restriction_order")
     @Column(name = "restriction")
     private List<String> dietaryRestrictions = new ArrayList<>();
 
